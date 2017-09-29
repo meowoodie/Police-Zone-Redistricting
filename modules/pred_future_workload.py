@@ -19,8 +19,6 @@ with open("data/beat_year_data.csv", "r") as f1, \
 	y_beats = np.delete(beat_year_map.transpose()[0], 0, axis=0).astype(int).tolist()
 	_       = np.delete(beat_year_map, 0, axis=0)
 	y_mat   = np.delete(_, 0, axis=1).astype(int)
-	# print y_years
-	# print y_beats
 
 	# Preprocess of beat_census_data
 	beat_census_data = [ line.strip("\n").split(",") for line in f2 ]
@@ -28,8 +26,7 @@ with open("data/beat_year_data.csv", "r") as f1, \
 	x_beats = map(int, list(set(np.array(beat_census_data).transpose()[0].tolist())))
 	x_years.sort()
 	x_beats.sort()
-	# print len(x_years), x_years
-	# print len(x_beats), x_beats
+
 	x_census_mat = np.zeros((len(x_beats), len(x_years), len(beat_census_data[0])-2))
 	for x_census in beat_census_data:
 		x_beat   = int(x_census.pop(0))
@@ -37,37 +34,23 @@ with open("data/beat_year_data.csv", "r") as f1, \
 		x_census = np.array(map(float, x_census))
 		x_census_mat[x_beats.index(x_beat), x_years.index(x_year)] = x_census
 
-	#
+	# ys and Xs
 	ys = []
 	Xs = []
 	for year in y_years:
 		for beat in y_beats:
-			print year, beat
 			if beat in x_beats and year in x_years and year-1 in y_years:
 				y = y_mat[y_beats.index(beat), y_years.index(year)].tolist()
 				X = x_census_mat[x_beats.index(beat), x_years.index(year)].tolist() +\
 					[y_mat[y_beats.index(beat), y_years.index(year-1)], year]
-				# X = np.concatenate(
-				# 	(x_census_mat[x_beats.index(beat), x_years.index], np.array([year])), axis=0).tolist()
 				ys.append(y)
 				Xs.append(X)
 
 	Xs = np.array(Xs)
-	ys = np.array(ys)
-	print Xs.shape, ys.shape
-
 	Xs = sm.add_constant(Xs)
+	ys = np.array(ys)
 
+	# Linear regression
 	model   = sm.OLS(ys, Xs)
 	results = model.fit()
 	print results.summary()
-
-	print results.f_pvalue
-
-
-
-
-
-	
-
-
