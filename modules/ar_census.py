@@ -1,10 +1,14 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import sys
 import numpy as np
 from statsmodels.tsa.api import VAR
 
+"""
+"""
 
-lag    = 2
-
+lag          = 2
 zipcode_list = [
 	"30314", "30305", "30318", "30306", "30363", "30317", 
 	"30307", "30308", "30303", "30309", "30324", "30334", 
@@ -27,11 +31,12 @@ unknown_dict = {
 	"null": 0.0
 }
 
-ind = 0
+start_flag = True
 for line in sys.stdin:
-	if ind == 0:
-		ind += 1
+	if start_flag:
+		start_flag = False
 		continue
+
 	data = line.strip("\n").split(",")
 	zipcode = data.pop(0)
 	year    = data.pop(0)
@@ -43,19 +48,13 @@ for line in sys.stdin:
 
 P = np.zeros((len(attr_list), len(future_list), len(zipcode_list)))
 for i in range(len(attr_list)):
-	X = Xs[i]
-	# zeros_cols_inds = X.any(axis=0).tolist().index(False) 
-	# X = np.delete(X, zeros_cols_inds, axis=1)
+	X     = Xs[i]
 	noise = np.random.rand(X.shape[0], X.shape[1])
-	X = noise + X
+	X     += noise
 
 	model_xi = VAR(X)
 	result   = model_xi.fit(lag)
-	pred     = result.forecast(X, len(future_list))
-	
-	P[i] = pred
-
-# P = P.reshape(len(zipcode_list), len(future_list), len(attr_list))
+	P[i]     = result.forecast(X, len(future_list))
 
 for i in range(len(zipcode_list)):
 	for j in range(len(future_list)):
