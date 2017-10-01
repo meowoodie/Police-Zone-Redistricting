@@ -13,7 +13,7 @@ attr_list = [
 with open("data/beat_year_data.csv", "r") as f1, \
      open("data/beat_census_data.csv", "r") as f2:
 
-     # Preprocess of beat_year_data
+	# Preprocess of beat_year_data
 	beat_year_map = np.array([ line.strip("\n").split(",") for line in f1 ])
 	y_years = np.delete(beat_year_map[0], 0, axis=0).astype(int).tolist()
 	y_beats = np.delete(beat_year_map.transpose()[0], 0, axis=0).astype(int).tolist()
