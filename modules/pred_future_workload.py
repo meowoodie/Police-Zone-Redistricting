@@ -10,7 +10,7 @@ attr_list = [
 	"establishment", "paid_employees", "quarter_payroll", "annual_payroll", 
 	"high_school_per", "house_units", "median_income", "poverty_per"]
 
-with open("data/beat_year_data.csv", "r") as f1, \
+with open("data/workload_beat_year_data.csv", "r") as f1, \
      open("data/beat_census_data.csv", "r") as f2:
 
 	# Preprocess of beat_year_data
