@@ -5,13 +5,15 @@ import pandas as pd
 import numpy as np
 import statsmodels.api as sm
 
-attr_list = [
-	"total_pop", "pop_15_34", "mid_age_35_54", "median_age", 
-	"establishment", "paid_employees", "quarter_payroll", "annual_payroll", 
-	"high_school_per", "house_units", "median_income", "poverty_per"]
+# attr_list = [
+# 	"total_pop", "pop_15_34", "mid_age_35_54", "median_age", 
+# 	"establishment", "paid_employees", "quarter_payroll", "annual_payroll", 
+# 	"high_school_per", "house_units", "median_income", "poverty_per"]
 
-with open("data/workload_beat_year_data.csv", "r") as f1, \
-     open("data/beat_census_data.csv", "r") as f2:
+
+
+with open("data/workload_by_beat.csv", "r") as f1, \
+     open("temp/census_by_beat.csv", "r") as f2:
 
 	# Preprocess of beat_year_data
 	beat_year_map = np.array([ line.strip("\n").split(",") for line in f1 ])
