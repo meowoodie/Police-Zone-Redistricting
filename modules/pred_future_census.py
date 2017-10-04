@@ -75,34 +75,4 @@ def main():
 						",".join(map(str, preds[zip_ind, year_ind, :].tolist()))))
 
 if __name__ == "__main__":
-	main()		
-
-# start_flag = True
-# for line in sys.stdin:
-# 	if start_flag:
-# 		start_flag = False
-# 		continue
-
-# 	data = line.strip("\n").split(",")
-# 	zipcode = data.pop(0)
-# 	year    = data.pop(0)
-
-# 	formatted_data = map(lambda x: float(x) if x not in unknown_dict.keys() else unknown_dict[x], data)
-
-# 	for i in range(len(formatted_data)):
-# 		Xs[i, year_list.index(year), zipcode_list.index(zipcode)] = formatted_data[i]
-
-# P = np.zeros((len(attr_list), len(future_list), len(zipcode_list)))
-# for i in range(len(attr_list)):
-# 	X     = Xs[i]
-# 	noise = np.random.rand(X.shape[0], X.shape[1])
-# 	X     += noise
-
-# 	model_xi = VAR(X)
-# 	result   = model_xi.fit(lag)
-# 	P[i]     = result.forecast(X, len(future_list))
-
-# for i in range(len(zipcode_list)):
-# 	for j in range(len(future_list)):
-# 		output = [zipcode_list[i]] + [future_list[j]] + map(str, P[:, j, i].tolist())
-# 		print ",".join(output)
+	main()

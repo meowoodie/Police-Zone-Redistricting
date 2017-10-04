@@ -69,12 +69,11 @@ def main():
 		with open(args.output, "w") as output_h:
 			for beatcode in beat_list:
 				for year in year_list:
-					line = ",".join(map(str, beat_mat[
-						beat_list.index(beatcode), 
-						year_list.index(year)].tolist()))
-					output_h.write("%s,%s,%s\n" % (beatcode, year, line))
-
-				# reordered_census *= weights
+					if beatcode is not "":
+						line = ",".join(map(str, beat_mat[
+							beat_list.index(beatcode), 
+							year_list.index(year)].tolist()))
+						output_h.write("%s,%s,%s\n" % (beatcode, year, line))
 
 
 if __name__ == "__main__":
