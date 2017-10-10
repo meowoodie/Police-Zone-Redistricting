@@ -33,9 +33,10 @@ def plot_beat_heat_map(beat_geo_dict, data_mat, year_list, beat_list, feature_na
 				continue
 			ys = points[:, 0]
 			xs = points[:, 1]
-			c  = (data_mat[beat_list.index(beat), year_list.index(year)] - min_c)/(max_c - min_c)
+			# c  = (data_mat[beat_list.index(beat), year_list.index(year)] - min_c)/(max_c - min_c)
+			c  = data_mat[beat_list.index(beat), year_list.index(year)]
 			cs = [ c for i in range(len(xs)) ]
-			sc = plt.scatter(xs, ys, c=cs, vmin=0, vmax=1, s=2, lw=0, cmap=cm)
+			sc = plt.scatter(xs, ys, c=cs, vmin=min_c, vmax=max_c, s=2, lw=0, cmap=cm)
 
 		plt.colorbar(sc)
 		fig.savefig("results/%s_%s.png" % (feature_name, year))
@@ -126,5 +127,5 @@ def main_workload():
 
 
 if __name__ == "__main__":
-	# main_workload()
-	main_census()
+	main_workload()
+	# main_census()
