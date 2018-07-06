@@ -1,0 +1,189 @@
+GEO.id,Id
+GEO.id2,Id2
+GEO.display-label,Geography
+HC01_EST_VC01,Total; Estimate; Population 3 years and over enrolled in school
+HC01_MOE_VC01,Total; Margin of Error; Population 3 years and over enrolled in school
+HC02_EST_VC01,Percent of enrolled population  - In public school; Estimate; Population 3 years and over enrolled in school
+HC02_MOE_VC01,Percent of enrolled population  - In public school; Margin of Error; Population 3 years and over enrolled in school
+HC03_EST_VC01,Percent of enrolled population  - In private school; Estimate; Population 3 years and over enrolled in school
+HC03_MOE_VC01,Percent of enrolled population  - In private school; Margin of Error; Population 3 years and over enrolled in school
+HC01_EST_VC02,"Total; Estimate; Nursery school, preschool"
+HC01_MOE_VC02,"Total; Margin of Error; Nursery school, preschool"
+HC02_EST_VC02,"Percent of enrolled population  - In public school; Estimate; Nursery school, preschool"
+HC02_MOE_VC02,"Percent of enrolled population  - In public school; Margin of Error; Nursery school, preschool"
+HC03_EST_VC02,"Percent of enrolled population  - In private school; Estimate; Nursery school, preschool"
+HC03_MOE_VC02,"Percent of enrolled population  - In private school; Margin of Error; Nursery school, preschool"
+HC01_EST_VC03,Total; Estimate; Kindergarten to 12th grade
+HC01_MOE_VC03,Total; Margin of Error; Kindergarten to 12th grade
+HC02_EST_VC03,Percent of enrolled population  - In public school; Estimate; Kindergarten to 12th grade
+HC02_MOE_VC03,Percent of enrolled population  - In public school; Margin of Error; Kindergarten to 12th grade
+HC03_EST_VC03,Percent of enrolled population  - In private school; Estimate; Kindergarten to 12th grade
+HC03_MOE_VC03,Percent of enrolled population  - In private school; Margin of Error; Kindergarten to 12th grade
+HC01_EST_VC04,Total; Estimate; Kindergarten to 12th grade - Kindergarten
+HC01_MOE_VC04,Total; Margin of Error; Kindergarten to 12th grade - Kindergarten
+HC02_EST_VC04,Percent of enrolled population  - In public school; Estimate; Kindergarten to 12th grade - Kindergarten
+HC02_MOE_VC04,Percent of enrolled population  - In public school; Margin of Error; Kindergarten to 12th grade - Kindergarten
+HC03_EST_VC04,Percent of enrolled population  - In private school; Estimate; Kindergarten to 12th grade - Kindergarten
+HC03_MOE_VC04,Percent of enrolled population  - In private school; Margin of Error; Kindergarten to 12th grade - Kindergarten
+HC01_EST_VC05,Total; Estimate; Kindergarten to 12th grade - Elementary: grade 1 to grade 4
+HC01_MOE_VC05,Total; Margin of Error; Kindergarten to 12th grade - Elementary: grade 1 to grade 4
+HC02_EST_VC05,Percent of enrolled population  - In public school; Estimate; Kindergarten to 12th grade - Elementary: grade 1 to grade 4
+HC02_MOE_VC05,Percent of enrolled population  - In public school; Margin of Error; Kindergarten to 12th grade - Elementary: grade 1 to grade 4
+HC03_EST_VC05,Percent of enrolled population  - In private school; Estimate; Kindergarten to 12th grade - Elementary: grade 1 to grade 4
+HC03_MOE_VC05,Percent of enrolled population  - In private school; Margin of Error; Kindergarten to 12th grade - Elementary: grade 1 to grade 4
+HC01_EST_VC06,Total; Estimate; Kindergarten to 12th grade - Elementary: grade 5 to grade 8
+HC01_MOE_VC06,Total; Margin of Error; Kindergarten to 12th grade - Elementary: grade 5 to grade 8
+HC02_EST_VC06,Percent of enrolled population  - In public school; Estimate; Kindergarten to 12th grade - Elementary: grade 5 to grade 8
+HC02_MOE_VC06,Percent of enrolled population  - In public school; Margin of Error; Kindergarten to 12th grade - Elementary: grade 5 to grade 8
+HC03_EST_VC06,Percent of enrolled population  - In private school; Estimate; Kindergarten to 12th grade - Elementary: grade 5 to grade 8
+HC03_MOE_VC06,Percent of enrolled population  - In private school; Margin of Error; Kindergarten to 12th grade - Elementary: grade 5 to grade 8
+HC01_EST_VC07,Total; Estimate; Kindergarten to 12th grade - High school: grade 9 to grade 12
+HC01_MOE_VC07,Total; Margin of Error; Kindergarten to 12th grade - High school: grade 9 to grade 12
+HC02_EST_VC07,Percent of enrolled population  - In public school; Estimate; Kindergarten to 12th grade - High school: grade 9 to grade 12
+HC02_MOE_VC07,Percent of enrolled population  - In public school; Margin of Error; Kindergarten to 12th grade - High school: grade 9 to grade 12
+HC03_EST_VC07,Percent of enrolled population  - In private school; Estimate; Kindergarten to 12th grade - High school: grade 9 to grade 12
+HC03_MOE_VC07,Percent of enrolled population  - In private school; Margin of Error; Kindergarten to 12th grade - High school: grade 9 to grade 12
+HC01_EST_VC08,"Total; Estimate; College, undergraduate"
+HC01_MOE_VC08,"Total; Margin of Error; College, undergraduate"
+HC02_EST_VC08,"Percent of enrolled population  - In public school; Estimate; College, undergraduate"
+HC02_MOE_VC08,"Percent of enrolled population  - In public school; Margin of Error; College, undergraduate"
+HC03_EST_VC08,"Percent of enrolled population  - In private school; Estimate; College, undergraduate"
+HC03_MOE_VC08,"Percent of enrolled population  - In private school; Margin of Error; College, undergraduate"
+HC01_EST_VC09,"Total; Estimate; Graduate, professional school"
+HC01_MOE_VC09,"Total; Margin of Error; Graduate, professional school"
+HC02_EST_VC09,"Percent of enrolled population  - In public school; Estimate; Graduate, professional school"
+HC02_MOE_VC09,"Percent of enrolled population  - In public school; Margin of Error; Graduate, professional school"
+HC03_EST_VC09,"Percent of enrolled population  - In private school; Estimate; Graduate, professional school"
+HC03_MOE_VC09,"Percent of enrolled population  - In private school; Margin of Error; Graduate, professional school"
+HC01_EST_VC12,Total; Estimate; Percent of age group enrolled in school -- - 3 and 4 years
+HC01_MOE_VC12,Total; Margin of Error; Percent of age group enrolled in school -- - 3 and 4 years
+HC02_EST_VC12,Percent of enrolled population  - In public school; Estimate; Percent of age group enrolled in school -- - 3 and 4 years
+HC02_MOE_VC12,Percent of enrolled population  - In public school; Margin of Error; Percent of age group enrolled in school -- - 3 and 4 years
+HC03_EST_VC12,Percent of enrolled population  - In private school; Estimate; Percent of age group enrolled in school -- - 3 and 4 years
+HC03_MOE_VC12,Percent of enrolled population  - In private school; Margin of Error; Percent of age group enrolled in school -- - 3 and 4 years
+HC01_EST_VC13,Total; Estimate; Percent of age group enrolled in school -- - 5 to 9 years
+HC01_MOE_VC13,Total; Margin of Error; Percent of age group enrolled in school -- - 5 to 9 years
+HC02_EST_VC13,Percent of enrolled population  - In public school; Estimate; Percent of age group enrolled in school -- - 5 to 9 years
+HC02_MOE_VC13,Percent of enrolled population  - In public school; Margin of Error; Percent of age group enrolled in school -- - 5 to 9 years
+HC03_EST_VC13,Percent of enrolled population  - In private school; Estimate; Percent of age group enrolled in school -- - 5 to 9 years
+HC03_MOE_VC13,Percent of enrolled population  - In private school; Margin of Error; Percent of age group enrolled in school -- - 5 to 9 years
+HC01_EST_VC14,Total; Estimate; Percent of age group enrolled in school -- - 10 to 14 years
+HC01_MOE_VC14,Total; Margin of Error; Percent of age group enrolled in school -- - 10 to 14 years
+HC02_EST_VC14,Percent of enrolled population  - In public school; Estimate; Percent of age group enrolled in school -- - 10 to 14 years
+HC02_MOE_VC14,Percent of enrolled population  - In public school; Margin of Error; Percent of age group enrolled in school -- - 10 to 14 years
+HC03_EST_VC14,Percent of enrolled population  - In private school; Estimate; Percent of age group enrolled in school -- - 10 to 14 years
+HC03_MOE_VC14,Percent of enrolled population  - In private school; Margin of Error; Percent of age group enrolled in school -- - 10 to 14 years
+HC01_EST_VC15,Total; Estimate; Percent of age group enrolled in school -- - 15 to 17 years
+HC01_MOE_VC15,Total; Margin of Error; Percent of age group enrolled in school -- - 15 to 17 years
+HC02_EST_VC15,Percent of enrolled population  - In public school; Estimate; Percent of age group enrolled in school -- - 15 to 17 years
+HC02_MOE_VC15,Percent of enrolled population  - In public school; Margin of Error; Percent of age group enrolled in school -- - 15 to 17 years
+HC03_EST_VC15,Percent of enrolled population  - In private school; Estimate; Percent of age group enrolled in school -- - 15 to 17 years
+HC03_MOE_VC15,Percent of enrolled population  - In private school; Margin of Error; Percent of age group enrolled in school -- - 15 to 17 years
+HC01_EST_VC16,Total; Estimate; Percent of age group enrolled in school -- - 18 and 19 years
+HC01_MOE_VC16,Total; Margin of Error; Percent of age group enrolled in school -- - 18 and 19 years
+HC02_EST_VC16,Percent of enrolled population  - In public school; Estimate; Percent of age group enrolled in school -- - 18 and 19 years
+HC02_MOE_VC16,Percent of enrolled population  - In public school; Margin of Error; Percent of age group enrolled in school -- - 18 and 19 years
+HC03_EST_VC16,Percent of enrolled population  - In private school; Estimate; Percent of age group enrolled in school -- - 18 and 19 years
+HC03_MOE_VC16,Percent of enrolled population  - In private school; Margin of Error; Percent of age group enrolled in school -- - 18 and 19 years
+HC01_EST_VC17,Total; Estimate; Percent of age group enrolled in school -- - 20 to 24 years
+HC01_MOE_VC17,Total; Margin of Error; Percent of age group enrolled in school -- - 20 to 24 years
+HC02_EST_VC17,Percent of enrolled population  - In public school; Estimate; Percent of age group enrolled in school -- - 20 to 24 years
+HC02_MOE_VC17,Percent of enrolled population  - In public school; Margin of Error; Percent of age group enrolled in school -- - 20 to 24 years
+HC03_EST_VC17,Percent of enrolled population  - In private school; Estimate; Percent of age group enrolled in school -- - 20 to 24 years
+HC03_MOE_VC17,Percent of enrolled population  - In private school; Margin of Error; Percent of age group enrolled in school -- - 20 to 24 years
+HC01_EST_VC18,Total; Estimate; Percent of age group enrolled in school -- - 25 to 34 years
+HC01_MOE_VC18,Total; Margin of Error; Percent of age group enrolled in school -- - 25 to 34 years
+HC02_EST_VC18,Percent of enrolled population  - In public school; Estimate; Percent of age group enrolled in school -- - 25 to 34 years
+HC02_MOE_VC18,Percent of enrolled population  - In public school; Margin of Error; Percent of age group enrolled in school -- - 25 to 34 years
+HC03_EST_VC18,Percent of enrolled population  - In private school; Estimate; Percent of age group enrolled in school -- - 25 to 34 years
+HC03_MOE_VC18,Percent of enrolled population  - In private school; Margin of Error; Percent of age group enrolled in school -- - 25 to 34 years
+HC01_EST_VC19,Total; Estimate; Percent of age group enrolled in school -- - 35 years and over
+HC01_MOE_VC19,Total; Margin of Error; Percent of age group enrolled in school -- - 35 years and over
+HC02_EST_VC19,Percent of enrolled population  - In public school; Estimate; Percent of age group enrolled in school -- - 35 years and over
+HC02_MOE_VC19,Percent of enrolled population  - In public school; Margin of Error; Percent of age group enrolled in school -- - 35 years and over
+HC03_EST_VC19,Percent of enrolled population  - In private school; Estimate; Percent of age group enrolled in school -- - 35 years and over
+HC03_MOE_VC19,Percent of enrolled population  - In private school; Margin of Error; Percent of age group enrolled in school -- - 35 years and over
+HC01_EST_VC21,Total; Estimate; Population 18 years and over
+HC01_MOE_VC21,Total; Margin of Error; Population 18 years and over
+HC02_EST_VC21,Percent of enrolled population  - In public school; Estimate; Population 18 years and over
+HC02_MOE_VC21,Percent of enrolled population  - In public school; Margin of Error; Population 18 years and over
+HC03_EST_VC21,Percent of enrolled population  - In private school; Estimate; Population 18 years and over
+HC03_MOE_VC21,Percent of enrolled population  - In private school; Margin of Error; Population 18 years and over
+HC01_EST_VC22,Total; Estimate; Enrolled in college or graduate school
+HC01_MOE_VC22,Total; Margin of Error; Enrolled in college or graduate school
+HC02_EST_VC22,Percent of enrolled population  - In public school; Estimate; Enrolled in college or graduate school
+HC02_MOE_VC22,Percent of enrolled population  - In public school; Margin of Error; Enrolled in college or graduate school
+HC03_EST_VC22,Percent of enrolled population  - In private school; Estimate; Enrolled in college or graduate school
+HC03_MOE_VC22,Percent of enrolled population  - In private school; Margin of Error; Enrolled in college or graduate school
+HC01_EST_VC23,Total; Estimate; Enrolled in college or graduate school - Males 18 years and over
+HC01_MOE_VC23,Total; Margin of Error; Enrolled in college or graduate school - Males 18 years and over
+HC02_EST_VC23,Percent of enrolled population  - In public school; Estimate; Enrolled in college or graduate school - Males 18 years and over
+HC02_MOE_VC23,Percent of enrolled population  - In public school; Margin of Error; Enrolled in college or graduate school - Males 18 years and over
+HC03_EST_VC23,Percent of enrolled population  - In private school; Estimate; Enrolled in college or graduate school - Males 18 years and over
+HC03_MOE_VC23,Percent of enrolled population  - In private school; Margin of Error; Enrolled in college or graduate school - Males 18 years and over
+HC01_EST_VC24,Total; Estimate; Enrolled in college or graduate school
+HC01_MOE_VC24,Total; Margin of Error; Enrolled in college or graduate school
+HC02_EST_VC24,Percent of enrolled population  - In public school; Estimate; Enrolled in college or graduate school
+HC02_MOE_VC24,Percent of enrolled population  - In public school; Margin of Error; Enrolled in college or graduate school
+HC03_EST_VC24,Percent of enrolled population  - In private school; Estimate; Enrolled in college or graduate school
+HC03_MOE_VC24,Percent of enrolled population  - In private school; Margin of Error; Enrolled in college or graduate school
+HC01_EST_VC25,Total; Estimate; Enrolled in college or graduate school - Females 18 years and over
+HC01_MOE_VC25,Total; Margin of Error; Enrolled in college or graduate school - Females 18 years and over
+HC02_EST_VC25,Percent of enrolled population  - In public school; Estimate; Enrolled in college or graduate school - Females 18 years and over
+HC02_MOE_VC25,Percent of enrolled population  - In public school; Margin of Error; Enrolled in college or graduate school - Females 18 years and over
+HC03_EST_VC25,Percent of enrolled population  - In private school; Estimate; Enrolled in college or graduate school - Females 18 years and over
+HC03_MOE_VC25,Percent of enrolled population  - In private school; Margin of Error; Enrolled in college or graduate school - Females 18 years and over
+HC01_EST_VC26,Total; Estimate; Enrolled in college or graduate school
+HC01_MOE_VC26,Total; Margin of Error; Enrolled in college or graduate school
+HC02_EST_VC26,Percent of enrolled population  - In public school; Estimate; Enrolled in college or graduate school
+HC02_MOE_VC26,Percent of enrolled population  - In public school; Margin of Error; Enrolled in college or graduate school
+HC03_EST_VC26,Percent of enrolled population  - In private school; Estimate; Enrolled in college or graduate school
+HC03_MOE_VC26,Percent of enrolled population  - In private school; Margin of Error; Enrolled in college or graduate school
+HC01_EST_VC28,Total; Estimate; Population 18 to 24 years
+HC01_MOE_VC28,Total; Margin of Error; Population 18 to 24 years
+HC02_EST_VC28,Percent of enrolled population  - In public school; Estimate; Population 18 to 24 years
+HC02_MOE_VC28,Percent of enrolled population  - In public school; Margin of Error; Population 18 to 24 years
+HC03_EST_VC28,Percent of enrolled population  - In private school; Estimate; Population 18 to 24 years
+HC03_MOE_VC28,Percent of enrolled population  - In private school; Margin of Error; Population 18 to 24 years
+HC01_EST_VC29,Total; Estimate; Enrolled in college or graduate school
+HC01_MOE_VC29,Total; Margin of Error; Enrolled in college or graduate school
+HC02_EST_VC29,Percent of enrolled population  - In public school; Estimate; Enrolled in college or graduate school
+HC02_MOE_VC29,Percent of enrolled population  - In public school; Margin of Error; Enrolled in college or graduate school
+HC03_EST_VC29,Percent of enrolled population  - In private school; Estimate; Enrolled in college or graduate school
+HC03_MOE_VC29,Percent of enrolled population  - In private school; Margin of Error; Enrolled in college or graduate school
+HC01_EST_VC30,Total; Estimate; Enrolled in college or graduate school - Males 18 to 24 years
+HC01_MOE_VC30,Total; Margin of Error; Enrolled in college or graduate school - Males 18 to 24 years
+HC02_EST_VC30,Percent of enrolled population  - In public school; Estimate; Enrolled in college or graduate school - Males 18 to 24 years
+HC02_MOE_VC30,Percent of enrolled population  - In public school; Margin of Error; Enrolled in college or graduate school - Males 18 to 24 years
+HC03_EST_VC30,Percent of enrolled population  - In private school; Estimate; Enrolled in college or graduate school - Males 18 to 24 years
+HC03_MOE_VC30,Percent of enrolled population  - In private school; Margin of Error; Enrolled in college or graduate school - Males 18 to 24 years
+HC01_EST_VC31,Total; Estimate; Enrolled in college or graduate school
+HC01_MOE_VC31,Total; Margin of Error; Enrolled in college or graduate school
+HC02_EST_VC31,Percent of enrolled population  - In public school; Estimate; Enrolled in college or graduate school
+HC02_MOE_VC31,Percent of enrolled population  - In public school; Margin of Error; Enrolled in college or graduate school
+HC03_EST_VC31,Percent of enrolled population  - In private school; Estimate; Enrolled in college or graduate school
+HC03_MOE_VC31,Percent of enrolled population  - In private school; Margin of Error; Enrolled in college or graduate school
+HC01_EST_VC32,Total; Estimate; Enrolled in college or graduate school - Females 18 to 24 years
+HC01_MOE_VC32,Total; Margin of Error; Enrolled in college or graduate school - Females 18 to 24 years
+HC02_EST_VC32,Percent of enrolled population  - In public school; Estimate; Enrolled in college or graduate school - Females 18 to 24 years
+HC02_MOE_VC32,Percent of enrolled population  - In public school; Margin of Error; Enrolled in college or graduate school - Females 18 to 24 years
+HC03_EST_VC32,Percent of enrolled population  - In private school; Estimate; Enrolled in college or graduate school - Females 18 to 24 years
+HC03_MOE_VC32,Percent of enrolled population  - In private school; Margin of Error; Enrolled in college or graduate school - Females 18 to 24 years
+HC01_EST_VC33,Total; Estimate; Enrolled in college or graduate school
+HC01_MOE_VC33,Total; Margin of Error; Enrolled in college or graduate school
+HC02_EST_VC33,Percent of enrolled population  - In public school; Estimate; Enrolled in college or graduate school
+HC02_MOE_VC33,Percent of enrolled population  - In public school; Margin of Error; Enrolled in college or graduate school
+HC03_EST_VC33,Percent of enrolled population  - In private school; Estimate; Enrolled in college or graduate school
+HC03_MOE_VC33,Percent of enrolled population  - In private school; Margin of Error; Enrolled in college or graduate school
+HC01_EST_VC36,Total; Estimate; PERCENT IMPUTED - School enrollment
+HC01_MOE_VC36,Total; Margin of Error; PERCENT IMPUTED - School enrollment
+HC02_EST_VC36,Percent of enrolled population  - In public school; Estimate; PERCENT IMPUTED - School enrollment
+HC02_MOE_VC36,Percent of enrolled population  - In public school; Margin of Error; PERCENT IMPUTED - School enrollment
+HC03_EST_VC36,Percent of enrolled population  - In private school; Estimate; PERCENT IMPUTED - School enrollment
+HC03_MOE_VC36,Percent of enrolled population  - In private school; Margin of Error; PERCENT IMPUTED - School enrollment
+HC01_EST_VC37,Total; Estimate; PERCENT IMPUTED - Grade enrolled
+HC01_MOE_VC37,Total; Margin of Error; PERCENT IMPUTED - Grade enrolled
+HC02_EST_VC37,Percent of enrolled population  - In public school; Estimate; PERCENT IMPUTED - Grade enrolled
+HC02_MOE_VC37,Percent of enrolled population  - In public school; Margin of Error; PERCENT IMPUTED - Grade enrolled
+HC03_EST_VC37,Percent of enrolled population  - In private school; Estimate; PERCENT IMPUTED - Grade enrolled
+HC03_MOE_VC37,Percent of enrolled population  - In private school; Margin of Error; PERCENT IMPUTED - Grade enrolled

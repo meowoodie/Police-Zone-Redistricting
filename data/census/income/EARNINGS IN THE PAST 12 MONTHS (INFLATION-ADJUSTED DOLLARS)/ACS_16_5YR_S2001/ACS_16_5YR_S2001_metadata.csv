@@ -1,0 +1,129 @@
+GEO.id,Id
+GEO.id2,Id2
+GEO.display-label,Geography
+HC01_EST_VC01,Total; Estimate; Population 16 years and over with earnings
+HC01_MOE_VC01,Total; Margin of Error; Population 16 years and over with earnings
+HC02_EST_VC01,Male; Estimate; Population 16 years and over with earnings
+HC02_MOE_VC01,Male; Margin of Error; Population 16 years and over with earnings
+HC03_EST_VC01,Female; Estimate; Population 16 years and over with earnings
+HC03_MOE_VC01,Female; Margin of Error; Population 16 years and over with earnings
+HC01_EST_VC02,Total; Estimate; Median earnings (dollars)
+HC01_MOE_VC02,Total; Margin of Error; Median earnings (dollars)
+HC02_EST_VC02,Male; Estimate; Median earnings (dollars)
+HC02_MOE_VC02,Male; Margin of Error; Median earnings (dollars)
+HC03_EST_VC02,Female; Estimate; Median earnings (dollars)
+HC03_MOE_VC02,Female; Margin of Error; Median earnings (dollars)
+HC01_EST_VC04,"Total; Estimate; Full-time, year-round workers with earnings"
+HC01_MOE_VC04,"Total; Margin of Error; Full-time, year-round workers with earnings"
+HC02_EST_VC04,"Male; Estimate; Full-time, year-round workers with earnings"
+HC02_MOE_VC04,"Male; Margin of Error; Full-time, year-round workers with earnings"
+HC03_EST_VC04,"Female; Estimate; Full-time, year-round workers with earnings"
+HC03_MOE_VC04,"Female; Margin of Error; Full-time, year-round workers with earnings"
+HC01_EST_VC05,"Total; Estimate; Full-time, year-round workers with earnings - $1 to $9,999 or loss"
+HC01_MOE_VC05,"Total; Margin of Error; Full-time, year-round workers with earnings - $1 to $9,999 or loss"
+HC02_EST_VC05,"Male; Estimate; Full-time, year-round workers with earnings - $1 to $9,999 or loss"
+HC02_MOE_VC05,"Male; Margin of Error; Full-time, year-round workers with earnings - $1 to $9,999 or loss"
+HC03_EST_VC05,"Female; Estimate; Full-time, year-round workers with earnings - $1 to $9,999 or loss"
+HC03_MOE_VC05,"Female; Margin of Error; Full-time, year-round workers with earnings - $1 to $9,999 or loss"
+HC01_EST_VC06,"Total; Estimate; Full-time, year-round workers with earnings - $10,000 to $14,999"
+HC01_MOE_VC06,"Total; Margin of Error; Full-time, year-round workers with earnings - $10,000 to $14,999"
+HC02_EST_VC06,"Male; Estimate; Full-time, year-round workers with earnings - $10,000 to $14,999"
+HC02_MOE_VC06,"Male; Margin of Error; Full-time, year-round workers with earnings - $10,000 to $14,999"
+HC03_EST_VC06,"Female; Estimate; Full-time, year-round workers with earnings - $10,000 to $14,999"
+HC03_MOE_VC06,"Female; Margin of Error; Full-time, year-round workers with earnings - $10,000 to $14,999"
+HC01_EST_VC07,"Total; Estimate; Full-time, year-round workers with earnings - $15,000 to $24,999"
+HC01_MOE_VC07,"Total; Margin of Error; Full-time, year-round workers with earnings - $15,000 to $24,999"
+HC02_EST_VC07,"Male; Estimate; Full-time, year-round workers with earnings - $15,000 to $24,999"
+HC02_MOE_VC07,"Male; Margin of Error; Full-time, year-round workers with earnings - $15,000 to $24,999"
+HC03_EST_VC07,"Female; Estimate; Full-time, year-round workers with earnings - $15,000 to $24,999"
+HC03_MOE_VC07,"Female; Margin of Error; Full-time, year-round workers with earnings - $15,000 to $24,999"
+HC01_EST_VC08,"Total; Estimate; Full-time, year-round workers with earnings - $25,000 to $34,999"
+HC01_MOE_VC08,"Total; Margin of Error; Full-time, year-round workers with earnings - $25,000 to $34,999"
+HC02_EST_VC08,"Male; Estimate; Full-time, year-round workers with earnings - $25,000 to $34,999"
+HC02_MOE_VC08,"Male; Margin of Error; Full-time, year-round workers with earnings - $25,000 to $34,999"
+HC03_EST_VC08,"Female; Estimate; Full-time, year-round workers with earnings - $25,000 to $34,999"
+HC03_MOE_VC08,"Female; Margin of Error; Full-time, year-round workers with earnings - $25,000 to $34,999"
+HC01_EST_VC09,"Total; Estimate; Full-time, year-round workers with earnings - $35,000 to $49,999"
+HC01_MOE_VC09,"Total; Margin of Error; Full-time, year-round workers with earnings - $35,000 to $49,999"
+HC02_EST_VC09,"Male; Estimate; Full-time, year-round workers with earnings - $35,000 to $49,999"
+HC02_MOE_VC09,"Male; Margin of Error; Full-time, year-round workers with earnings - $35,000 to $49,999"
+HC03_EST_VC09,"Female; Estimate; Full-time, year-round workers with earnings - $35,000 to $49,999"
+HC03_MOE_VC09,"Female; Margin of Error; Full-time, year-round workers with earnings - $35,000 to $49,999"
+HC01_EST_VC10,"Total; Estimate; Full-time, year-round workers with earnings - $50,000 to $64,999"
+HC01_MOE_VC10,"Total; Margin of Error; Full-time, year-round workers with earnings - $50,000 to $64,999"
+HC02_EST_VC10,"Male; Estimate; Full-time, year-round workers with earnings - $50,000 to $64,999"
+HC02_MOE_VC10,"Male; Margin of Error; Full-time, year-round workers with earnings - $50,000 to $64,999"
+HC03_EST_VC10,"Female; Estimate; Full-time, year-round workers with earnings - $50,000 to $64,999"
+HC03_MOE_VC10,"Female; Margin of Error; Full-time, year-round workers with earnings - $50,000 to $64,999"
+HC01_EST_VC11,"Total; Estimate; Full-time, year-round workers with earnings - $65,000 to $74,999"
+HC01_MOE_VC11,"Total; Margin of Error; Full-time, year-round workers with earnings - $65,000 to $74,999"
+HC02_EST_VC11,"Male; Estimate; Full-time, year-round workers with earnings - $65,000 to $74,999"
+HC02_MOE_VC11,"Male; Margin of Error; Full-time, year-round workers with earnings - $65,000 to $74,999"
+HC03_EST_VC11,"Female; Estimate; Full-time, year-round workers with earnings - $65,000 to $74,999"
+HC03_MOE_VC11,"Female; Margin of Error; Full-time, year-round workers with earnings - $65,000 to $74,999"
+HC01_EST_VC12,"Total; Estimate; Full-time, year-round workers with earnings - $75,000 to $99,999"
+HC01_MOE_VC12,"Total; Margin of Error; Full-time, year-round workers with earnings - $75,000 to $99,999"
+HC02_EST_VC12,"Male; Estimate; Full-time, year-round workers with earnings - $75,000 to $99,999"
+HC02_MOE_VC12,"Male; Margin of Error; Full-time, year-round workers with earnings - $75,000 to $99,999"
+HC03_EST_VC12,"Female; Estimate; Full-time, year-round workers with earnings - $75,000 to $99,999"
+HC03_MOE_VC12,"Female; Margin of Error; Full-time, year-round workers with earnings - $75,000 to $99,999"
+HC01_EST_VC13,"Total; Estimate; Full-time, year-round workers with earnings - $100,000 or more"
+HC01_MOE_VC13,"Total; Margin of Error; Full-time, year-round workers with earnings - $100,000 or more"
+HC02_EST_VC13,"Male; Estimate; Full-time, year-round workers with earnings - $100,000 or more"
+HC02_MOE_VC13,"Male; Margin of Error; Full-time, year-round workers with earnings - $100,000 or more"
+HC03_EST_VC13,"Female; Estimate; Full-time, year-round workers with earnings - $100,000 or more"
+HC03_MOE_VC13,"Female; Margin of Error; Full-time, year-round workers with earnings - $100,000 or more"
+HC01_EST_VC15,Total; Estimate; Median earnings (dollars)
+HC01_MOE_VC15,Total; Margin of Error; Median earnings (dollars)
+HC02_EST_VC15,Male; Estimate; Median earnings (dollars)
+HC02_MOE_VC15,Male; Margin of Error; Median earnings (dollars)
+HC03_EST_VC15,Female; Estimate; Median earnings (dollars)
+HC03_MOE_VC15,Female; Margin of Error; Median earnings (dollars)
+HC01_EST_VC16,Total; Estimate; Mean earnings (dollars)
+HC01_MOE_VC16,Total; Margin of Error; Mean earnings (dollars)
+HC02_EST_VC16,Male; Estimate; Mean earnings (dollars)
+HC02_MOE_VC16,Male; Margin of Error; Mean earnings (dollars)
+HC03_EST_VC16,Female; Estimate; Mean earnings (dollars)
+HC03_MOE_VC16,Female; Margin of Error; Mean earnings (dollars)
+HC01_EST_VC19,Total; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings
+HC01_MOE_VC19,Total; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings
+HC02_EST_VC19,Male; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings
+HC02_MOE_VC19,Male; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings
+HC03_EST_VC19,Female; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings
+HC03_MOE_VC19,Female; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings
+HC01_EST_VC20,Total; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Less than high school graduate
+HC01_MOE_VC20,Total; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Less than high school graduate
+HC02_EST_VC20,Male; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Less than high school graduate
+HC02_MOE_VC20,Male; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Less than high school graduate
+HC03_EST_VC20,Female; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Less than high school graduate
+HC03_MOE_VC20,Female; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Less than high school graduate
+HC01_EST_VC21,Total; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - High school graduate (includes equivalency)
+HC01_MOE_VC21,Total; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - High school graduate (includes equivalency)
+HC02_EST_VC21,Male; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - High school graduate (includes equivalency)
+HC02_MOE_VC21,Male; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - High school graduate (includes equivalency)
+HC03_EST_VC21,Female; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - High school graduate (includes equivalency)
+HC03_MOE_VC21,Female; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - High school graduate (includes equivalency)
+HC01_EST_VC22,Total; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Some college or associate's degree
+HC01_MOE_VC22,Total; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Some college or associate's degree
+HC02_EST_VC22,Male; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Some college or associate's degree
+HC02_MOE_VC22,Male; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Some college or associate's degree
+HC03_EST_VC22,Female; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Some college or associate's degree
+HC03_MOE_VC22,Female; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Some college or associate's degree
+HC01_EST_VC23,Total; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Bachelor's degree
+HC01_MOE_VC23,Total; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Bachelor's degree
+HC02_EST_VC23,Male; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Bachelor's degree
+HC02_MOE_VC23,Male; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Bachelor's degree
+HC03_EST_VC23,Female; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Bachelor's degree
+HC03_MOE_VC23,Female; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Bachelor's degree
+HC01_EST_VC24,Total; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Graduate or professional degree
+HC01_MOE_VC24,Total; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Graduate or professional degree
+HC02_EST_VC24,Male; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Graduate or professional degree
+HC02_MOE_VC24,Male; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Graduate or professional degree
+HC03_EST_VC24,Female; Estimate; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Graduate or professional degree
+HC03_MOE_VC24,Female; Margin of Error; MEDIAN EARNINGS BY EDUCATIONAL ATTAINMENT - Population 25 years and over with earnings - Graduate or professional degree
+HC01_EST_VC27,Total; Estimate; PERCENT ALLOCATED - Earnings in the past 12 months
+HC01_MOE_VC27,Total; Margin of Error; PERCENT ALLOCATED - Earnings in the past 12 months
+HC02_EST_VC27,Male; Estimate; PERCENT ALLOCATED - Earnings in the past 12 months
+HC02_MOE_VC27,Male; Margin of Error; PERCENT ALLOCATED - Earnings in the past 12 months
+HC03_EST_VC27,Female; Estimate; PERCENT ALLOCATED - Earnings in the past 12 months
+HC03_MOE_VC27,Female; Margin of Error; PERCENT ALLOCATED - Earnings in the past 12 months
