@@ -19,5 +19,4 @@ read.census(data.dir, "Educational Attainment")
 
 # census.education.rawdata = read.csv(census.education.2011, header = FALSE, sep = ",")
 # 
-# names(dat) <- as.matrix(census.education.rawdata[1, ])
-# dat <- dat[-1, ]
+

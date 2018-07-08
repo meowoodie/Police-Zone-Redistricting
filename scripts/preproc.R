@@ -14,7 +14,9 @@ read.census = function (root.dir, category, factors) {
       for (file in dir(year.census.path)) {
         if (grepl("with_ann.csv", file)){
           file.year.census.path = paste(c(year.census.path, file), collapse = '/')
-          rawdata = read.csv(file.year.census.path, header = FALSE, sep = ",")
+          rawdata        = read.csv(file.year.census.path, header = FALSE, sep = ",")
+          names(rawdata) = as.matrix(rawdata[2, ]) # set second row as the names of the dataframe
+          rawdata        = rawdata[-2, ]           # remove the metadata of the dataframe
           break
         }
       }
