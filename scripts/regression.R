@@ -5,9 +5,11 @@
 # By Shixiang Zhu
 # Contact: shixiang.zhu@gatech.edu
 
-root.dir   = "Desktop/workspace/Atlanta-Zoning"
-data.dir   = paste(root.dir, "data/census", sep="/")
-source(paste(root.dir, "scripts/preproc.R", sep="/"))
+root.dir      = 'Desktop/workstation/Atlanta-Zoning'
+data.dir      = paste(root.dir, 'data/census', sep='/')
+map.path      = 'Desktop/workstation/Atlanta-Zoning/data/cross_map.csv'
+workload.paht = 'Desktop/workstation/Atlanta-Zoning/data/workload_by_beat.csv'
+source(paste(root.dir, 'scripts/preproc.R', sep='/'))
 
 # Step 1.
 # Read data from local files. The dataset is organized hierarchically by the 
@@ -16,14 +18,33 @@ source(paste(root.dir, "scripts/preproc.R", sep="/"))
 # - Census data for population 
 population.df = read.census(
   data.dir, 
-  "population, age and sex, race and ethnicity", 
-  c("Estimate; SEX AND AGE - Total population", "Estimate; SEX AND AGE - 20 to 24 years", "Estimate; SEX AND AGE - 25 to 34 years"))
+  'population, age and sex, race and ethnicity', 
+  c('Estimate; SEX AND AGE - Total population', 
+    'Estimate; SEX AND AGE - 20 to 24 years', 
+    'Estimate; SEX AND AGE - 25 to 34 years'))
 
 # - Census data for Education
-population.df = read.census(
+education.df = read.census(
   data.dir, 
-  "population, age and sex, race and ethnicity", 
-  c("Estimate; SEX AND AGE - Total population", "Estimate; SEX AND AGE - 20 to 24 years", "Estimate; SEX AND AGE - 25 to 34 years"))
+  'Educational Attainment', 
+  c('Total; Estimate; Less than high school graduate', 
+    'Total; Estimate; High school graduate (includes equivalency)', 
+    "Total; Estimate; Some college or associate's degree",
+    "Total; Estimate; Bachelor's degree or higher"))
+
+# - Census data for Household income in the past 12 months
+employment.df = read.census(
+  data.dir, 
+  'Employment Status', 
+  c('Total; Estimate; Population 16 years and over'))
+
+# Step 2.
+# Merge all the census data into a dataframe, and convert the data in 
+# the table from zipcode to beat.
+df.list           = list(population.df, education.df, employment.df)
+census.zipcode.df = merge.census(df.list)
+census.beat.df    = zip2beat(map.path, census.zipcode.df)
+
 
 
 
