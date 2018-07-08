@@ -7,16 +7,23 @@
 
 root.dir   = "Desktop/workspace/Atlanta-Zoning"
 data.dir   = paste(root.dir, "data/census", sep="/")
-# categories = c("Educational Attainment", "Employment Status", "Marital Status", "population, age and sex, race and ethnicity", "School Enrollment", 
-#                "income/EARNINGS IN THE PAST 12 MONTHS (INFLATION-ADJUSTED DOLLARS)")
 source(paste(root.dir, "scripts/preproc.R", sep="/"))
 
 # Step 1.
 # Read data from local files. The dataset is organized hierarchically by the 
 # categories of census feature and years. The following code would traverse 
 # through the hierarchy of files and read the data into dataframes.
-read.census(data.dir, "Educational Attainment")
+# - Census data for population 
+population.df = read.census(
+  data.dir, 
+  "population, age and sex, race and ethnicity", 
+  c("Estimate; SEX AND AGE - Total population", "Estimate; SEX AND AGE - 20 to 24 years", "Estimate; SEX AND AGE - 25 to 34 years"))
 
-# census.education.rawdata = read.csv(census.education.2011, header = FALSE, sep = ",")
-# 
+# - Census data for Education
+population.df = read.census(
+  data.dir, 
+  "population, age and sex, race and ethnicity", 
+  c("Estimate; SEX AND AGE - Total population", "Estimate; SEX AND AGE - 20 to 24 years", "Estimate; SEX AND AGE - 25 to 34 years"))
+
+
 
