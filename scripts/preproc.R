@@ -22,10 +22,10 @@ read.census = function (root.dir, category, factors, numYearFlag=TRUE, scaleFlag
         if (grepl('with_ann.csv', file)){
           result = tryCatch({
             file.year.census.path = paste(c(year.census.path, file), collapse = '/')
-            rawdata           = read.csv(file.year.census.path, header = FALSE, sep = ',')
+            rawdata           = read.csv(file.year.census.path, header = FALSE, sep = ',', stringsAsFactors=FALSE)
             names(rawdata)    = as.matrix(rawdata[2, ])            # set second row as the names of the dataframe
             rawdata           = rawdata[-(1:3), c('Id2', factors)] # remove the metadata of the dataframe, and get indicated factors
-            if (numYearFlag) { year = strsplit(year, "_")[[1]][2] }
+            if (numYearFlag) { year = strsplit(year, '_')[[1]][2] }
             rawdata['year']   = rep(year, nrow(rawdata))           # add new column (year)
             rownames(rawdata) = seq(length=nrow(rawdata))          # reset the index of rows
             census.data       = rbind(census.data, rawdata)        # append current rawdata to the output (census.data)
@@ -41,7 +41,8 @@ read.census = function (root.dir, category, factors, numYearFlag=TRUE, scaleFlag
       }
     }
   }
-  print(head(census.data))
+  # convert character to numeric type
+  census.data[factors] = sapply(census.data[factors], as.numeric)
   return(census.data)
 }
 
@@ -51,7 +52,8 @@ read.census = function (root.dir, category, factors, numYearFlag=TRUE, scaleFlag
 # Params:
 # - df.list: a list of dataframes
 # - keys:    an array of keys used as primary key in the merging operations.
-merge.census = function (df.list, keys=c("Id2", "year")) {
+merge.census = function (df.list, keys=c('Id2', 'year')) {
+  # merge multiple data frames into one
   census.df = Reduce(function(dtf1, dtf2) merge(dtf1, dtf2, keys=keys), df.list)
   return(census.df)
 }
@@ -63,8 +65,8 @@ merge.census = function (df.list, keys=c("Id2", "year")) {
 # - map.path:  The path of the zip2beat (or cross map) table.
 # - census.df: The dataframe of census data, organized by multiple key (beat, year).
 zip2beat = function (map.path, census.zipcode.df) {
-  # read cross map into dataframe, row name is zipcode, col name is beat
-  cross.map = read.csv(map.path, header = FALSE, sep = ',')
+  # read cross.map into dataframe, row name is zipcode, col name is beat
+  cross.map = read.csv(map.path, header = FALSE, sep = ',', stringsAsFactors=FALSE)
   names(cross.map)    = as.matrix(cross.map[1, ])
   rownames(cross.map) = as.matrix(cross.map[, 1])
   cross.map           = cross.map[-1, -1]
@@ -74,15 +76,17 @@ zip2beat = function (map.path, census.zipcode.df) {
       cross.map[,col] = cross.map[,col] / sum(cross.map[,col])
     }
   }
-  # generate cross.table with columns (zipcode, year, nonzero value)
+  # generate cross.table with columns (zipcode, year, nonzero percentage)
   cross.table = data.frame()
-  # colnames(cross.table) = c("zipcode", 'beat', "percentage")
+  # names(cross.table) = c('zipcode', 'beat', 'percentage')
   for (beat in colnames(cross.map)) {
     for (zipcode in rownames(cross.map)) {
       if (!is.na(beat) & !is.null(cross.map[zipcode, beat]) ) {
         if (cross.map[zipcode, beat] > 0) {
-          print(sprintf("%s %s %f", beat, zipcode, cross.map[zipcode, beat]))
-          cross.table = rbind(cross.table, list(zipcode, beat, cross.map[zipcode, beat]))
+          cross.table = rbind(cross.table, data.frame(
+            'zipcode'=zipcode, 
+            'beat'=beat, 
+            'percentage'=cross.map[zipcode, beat]))
         }
       }
     }
@@ -91,10 +95,23 @@ zip2beat = function (map.path, census.zipcode.df) {
   census.beat.df           = data.frame(matrix(ncol=ncol(census.zipcode.df), nrow=0)) # creat an empty dataframe
   colnames(census.beat.df) = colnames(census.zipcode.df)                              # assign columns names to the dataframe
   for (beat in colnames(cross.map)) {
-    for (year in unique(census.zipcode.df["year"])) {
+    for (year in unique(census.zipcode.df['year'])) {
       if (!is.na(beat)) {
+        zipcode.table = cross.table[cross.table$beat==beat, ]
+        for (i in nrow(zipcode.table)) {
+          zip = zipcode.table[i, 'zipcode']
+          pct = zipcode.table[i, 'percentage']
+          new.df = pct * census.zipcode.df[
+            census.zipcode.df$Id2==as.character(zip) & census.zipcode.df$year==as.character(year), 
+            !(names(census.zipcode.df) %in% c('Id2', 'year'))]
+          new.df$year    = year
+          new.df$Id2     = beat
+          census.beat.df = rbind(census.beat.df, new.df)
+        }
       }
     }
   }
-  return(cross.map)
+  # census.beat.df %>% group_by(Id2, year) %>% summarise_each(funs(sum))
+  rownames(census.beat.df) = seq(length=nrow(census.beat.df)) # reset the index of rows
+  return(census.beat.df)
 }

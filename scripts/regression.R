@@ -5,10 +5,12 @@
 # By Shixiang Zhu
 # Contact: shixiang.zhu@gatech.edu
 
-root.dir      = 'Desktop/workstation/Atlanta-Zoning'
+library(dplyr)
+library(tidyr) 
+root.dir      = 'Desktop/workspace/Atlanta-Zoning'
 data.dir      = paste(root.dir, 'data/census', sep='/')
-map.path      = 'Desktop/workstation/Atlanta-Zoning/data/cross_map.csv'
-workload.paht = 'Desktop/workstation/Atlanta-Zoning/data/workload_by_beat.csv'
+map.path      = 'Desktop/workspace/Atlanta-Zoning/data/cross_map.csv'
+workload.path = 'Desktop/workspace/Atlanta-Zoning/data/workload_by_beat.csv'
 source(paste(root.dir, 'scripts/preproc.R', sep='/'))
 
 # Step 1.
@@ -38,8 +40,13 @@ employment.df = read.census(
   'Employment Status', 
   c('Total; Estimate; Population 16 years and over'))
 
+# - Workload by beat
+workload        = read.csv(workload.path, header=FALSE, sep = ',', stringsAsFactors=FALSE)
+names(workload) = as.matrix(workload[1, ])
+workload        = workload[-1, ]
+
 # Step 2.
-# Merge all the census data into a dataframe, and convert the data in 
+# Merge all the census data into a dataframe, and convert the data in
 # the table from zipcode to beat.
 df.list           = list(population.df, education.df, employment.df)
 census.zipcode.df = merge.census(df.list)
