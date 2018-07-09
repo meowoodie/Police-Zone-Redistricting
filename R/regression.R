@@ -10,10 +10,10 @@ library(tidyr)
 library(glmnet)
 library(stringr)
 library(plotmo)
-root.dir      = 'Desktop/workspace/Atlanta-Zoning'
+root.dir      = 'Desktop/workstation/Atlanta-Zoning'
 data.dir      = paste(root.dir, 'data/census', sep='/')
-map.path      = 'Desktop/workspace/Atlanta-Zoning/data/cross_map.csv'
-workload.path = 'Desktop/workspace/Atlanta-Zoning/data/workload_by_beat.csv'
+map.path      = 'Desktop/workstation/Atlanta-Zoning/data/cross_map.csv'
+workload.path = 'Desktop/workstation/Atlanta-Zoning/data/workload_by_beat.csv'
 population.factors = c('Estimate; SEX AND AGE - Total population', 
                        'Estimate; SEX AND AGE - 20 to 24 years', 
                        'Estimate; SEX AND AGE - 25 to 34 years')
