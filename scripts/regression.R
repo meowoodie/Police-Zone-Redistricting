@@ -10,10 +10,10 @@ library(tidyr)
 library(glmnet)
 library(stringr)
 library(plotmo)
-root.dir      = 'Desktop/workstation/Atlanta-Zoning'
+root.dir      = 'Desktop/workspace/Atlanta-Zoning'
 data.dir      = paste(root.dir, 'data/census', sep='/')
-map.path      = 'Desktop/workstation/Atlanta-Zoning/data/cross_map.csv'
-workload.path = 'Desktop/workstation/Atlanta-Zoning/data/workload_by_beat.csv'
+map.path      = 'Desktop/workspace/Atlanta-Zoning/data/cross_map.csv'
+workload.path = 'Desktop/workspace/Atlanta-Zoning/data/workload_by_beat.csv'
 population.factors = c('Estimate; SEX AND AGE - Total population', 
                        'Estimate; SEX AND AGE - 20 to 24 years', 
                        'Estimate; SEX AND AGE - 25 to 34 years')
@@ -64,8 +64,8 @@ colnames(census.beat.df)[10] = 'beat' # change col name from 'Id2' to 'beat'
 train.df = merge.mdf(list(census.beat.df, workload.df), keys=c('beat', 'year'))
 train.df = train.df[complete.cases(train.df), ]
 # - apply linear regression and lasso
-x = as.matrix(train.df[factors])
-y = as.matrix(train.df['workload'])
+x  = as.matrix(train.df[factors])
+y  = as.matrix(train.df['workload'])
 lr = lm(y ~ x)
 cv.fit = cv.glmnet(x, y, alpha=1)
 

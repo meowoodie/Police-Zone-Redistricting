@@ -92,8 +92,8 @@ zip2beat = function (map.path, census.zipcode.df) {
     }
   }
   # creat census.beat.df with columns names (beat)
-  census.beat.df           = data.frame(matrix(ncol=ncol(census.zipcode.df), nrow=0)) # creat an empty dataframe
-  colnames(census.beat.df) = colnames(census.zipcode.df)                              # assign columns names to the dataframe
+  census.beat.df           = data.frame()                # creat an empty dataframe
+  # colnames(census.beat.df) = colnames(census.zipcode.df) # assign columns names to the dataframe
   for (beat in colnames(cross.map)) {
     for (year in unique(census.zipcode.df['year'])) {
       if (!is.na(beat)) {
