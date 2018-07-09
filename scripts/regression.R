@@ -9,10 +9,11 @@ library(dplyr)
 library(tidyr)
 library(glmnet)
 library(stringr)
-root.dir      = 'Desktop/workspace/Atlanta-Zoning'
+library(plotmo)
+root.dir      = 'Desktop/workstation/Atlanta-Zoning'
 data.dir      = paste(root.dir, 'data/census', sep='/')
-map.path      = 'Desktop/workspace/Atlanta-Zoning/data/cross_map.csv'
-workload.path = 'Desktop/workspace/Atlanta-Zoning/data/workload_by_beat.csv'
+map.path      = 'Desktop/workstation/Atlanta-Zoning/data/cross_map.csv'
+workload.path = 'Desktop/workstation/Atlanta-Zoning/data/workload_by_beat.csv'
 population.factors = c('Estimate; SEX AND AGE - Total population', 
                        'Estimate; SEX AND AGE - 20 to 24 years', 
                        'Estimate; SEX AND AGE - 25 to 34 years')
@@ -59,10 +60,29 @@ colnames(census.beat.df)[10] = 'beat' # change col name from 'Id2' to 'beat'
 
 # Step 3.
 # Linear regression & LASSO
+# - merge response variable and predictor variables
 train.df = merge.mdf(list(census.beat.df, workload.df), keys=c('beat', 'year'))
 train.df = train.df[complete.cases(train.df), ]
+# - apply linear regression and lasso
+x = as.matrix(train.df[factors])
+y = as.matrix(train.df['workload'])
+lr = lm(y ~ x)
+cv.fit = cv.glmnet(x, y, alpha=1)
 
-lr = lm(train.df[, 11] ~ train.df[, 3:10])
-# lasso = glmnet(train.df[,factors], train.df['workload'], alpha = 1)
+# Step 4.
+# plot lr result
+mod           = glmnet(x, y)
+glmcoef       = coef(mod, cv.fit$lambda.min)
+coef.increase = dimnames(glmcoef[glmcoef[,1]>0,0])[[1]]
+coef.decrease = dimnames(glmcoef[glmcoef[,1]<0,0])[[1]]
+# get ordered list of variables as they appear at smallest lambda
+allnames = names(coef(mod)[ ,ncol(coef(mod))][order(coef(mod)[ ,ncol(coef(mod))], decreasing=TRUE)])
+# remove intercept
+allnames = setdiff(allnames, allnames[grep("Intercept",allnames)])
+# assign colors
+cols = rep("gray", length(allnames))
+cols[allnames %in% coef.increase] = "red"      # higher mpg is good
+cols[allnames %in% coef.decrease] = "blue"     # lower mpg is not
 
-
+plot_glmnet(cv.fit$glmnet.fit, label=TRUE, s=cv.fit$lambda.min, col=cols)
+plot(cv.fit)

@@ -111,7 +111,6 @@ zip2beat = function (map.path, census.zipcode.df) {
       }
     }
   }
-  # census.beat.df %>% group_by(Id2, year) %>% summarise_each(funs(sum))
   rownames(census.beat.df) = seq(length=nrow(census.beat.df)) # reset the index of rows
   return(census.beat.df)
 }
