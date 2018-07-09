@@ -52,10 +52,10 @@ read.census = function (root.dir, category, factors, numYearFlag=TRUE, scaleFlag
 # Params:
 # - df.list: a list of dataframes
 # - keys:    an array of keys used as primary key in the merging operations.
-merge.census = function (df.list, keys=c('Id2', 'year')) {
+merge.mdf = function (df.list, keys=c('Id2', 'year')) {
   # merge multiple data frames into one
-  census.df = Reduce(function(dtf1, dtf2) merge(dtf1, dtf2, keys=keys), df.list)
-  return(census.df)
+  merged.df = Reduce(function(dtf1, dtf2) merge(dtf1, dtf2, keys=keys), df.list)
+  return(merged.df)
 }
 
 # Function for converting census data by zipcode to census data by beat areas.
@@ -114,4 +114,27 @@ zip2beat = function (map.path, census.zipcode.df) {
   # census.beat.df %>% group_by(Id2, year) %>% summarise_each(funs(sum))
   rownames(census.beat.df) = seq(length=nrow(census.beat.df)) # reset the index of rows
   return(census.beat.df)
+}
+
+# Function for reading and preparing workload dataframe.
+read.workload = function (workload.path) {
+  workload           = read.csv(workload.path, header=FALSE, sep = ',', stringsAsFactors=FALSE)
+  names(workload)    = as.matrix(workload[1, ])
+  rownames(workload) = as.matrix(workload[, 1])
+  workload           = workload[-1, -1]
+  # generate workload.table with columns (beat, year, workload)
+  workload.table = data.frame()
+  for (year in colnames(workload)) {
+    for (beat in rownames(workload)) {
+      workload.table = rbind(workload.table, data.frame(
+        'beat'=beat, 
+        'year'=year, 
+        'workload'=workload[beat, year]))
+    }
+  }
+  # convert beat and year from factor to character & 
+  # convert workload from integer to numeric
+  workload.table[c('beat', 'year')] = sapply(workload.table[c('beat', 'year')], as.character)
+  workload.table['workload'] = sapply(workload.table['workload'], as.numeric)
+  return(workload.table)
 }
