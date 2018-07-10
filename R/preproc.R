@@ -43,6 +43,8 @@ read.census = function (root.dir, category, factors, numYearFlag=TRUE, scaleFlag
   }
   # convert character to numeric type
   census.data[factors] = sapply(census.data[factors], as.numeric)
+  # remove rows with NA value
+  census.data = census.data[complete.cases(census.data), ]
   return(census.data)
 }
 
