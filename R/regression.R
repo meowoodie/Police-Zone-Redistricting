@@ -5,6 +5,7 @@
 # By Shixiang Zhu
 # Contact: shixiang.zhu@gatech.edu
 
+# Configurations
 library(dplyr)
 library(tidyr)
 library(glmnet)
@@ -62,7 +63,10 @@ colnames(census.beat.df)[2] = 'beat' # change col name from 'Id2' to 'beat'
 
 # - merge response variable and predictor variables
 train.df = merge.mdf(list(census.beat.df, workload.df), keys=c('beat', 'year'))
-train.df = train.df[complete.cases(train.df), ] # remove rows contains NA values
+# - remove rows contains NA values
+train.df = train.df[complete.cases(train.df), ]
+# - standardize the training data
+std.train.df = scale.df(train.df, keys=factors) 
 
 # Step 4.
 # Linear regression & LASSO

@@ -60,6 +60,17 @@ merge.mdf = function (df.list, keys=c('Id2', 'year')) {
   return(merged.df)
 }
 
+# Function for scaling (mean-centering) the indicated columns in the data frame
+# Param:
+# - df:   a dataframe for scaling
+# - keys: the key names for the columns which needs to be mean-centered.
+scale.df = function (df, keys) {
+  new.sub.df = scale(df[, keys], scale=TRUE, center=TRUE)
+  new.df     = merge(df[, !(names(df) %in% keys)], new.sub.df, by='row.names', sort=FALSE)
+  new.df     = new.df[, !colnames(new.df) %in% c('Row.names')]
+  return(new.df)
+}
+
 # Function for converting census data by zipcode to census data by beat areas.
 # It will calculate the percentage of the zipcode composition for each of beats,
 # and add each portion of census data of zipcodes up. 
