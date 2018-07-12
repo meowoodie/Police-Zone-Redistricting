@@ -53,7 +53,7 @@ workload.df = read.workload(workload.path)
 df.list           = list(population.df, education.df, employment.df)
 census.zipcode.df = merge.mdf(df.list)
 census.beat.df    = zip2beat(map.path, census.zipcode.df)
-colnames(census.beat.df)[10] = 'beat' # change col name from 'Id2' to 'beat'
+colnames(census.beat.df)[2] = 'beat' # change col name from 'Id2' to 'beat'
 
 # Step 3.
 # Apply time series model to the census dataframe, and include the 
