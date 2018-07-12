@@ -80,35 +80,40 @@ zip2beat = function (map.path, census.zipcode.df) {
   }
   # generate cross.table with columns (zipcode, year, nonzero percentage)
   cross.table = data.frame()
-  # names(cross.table) = c('zipcode', 'beat', 'percentage')
   for (beat in colnames(cross.map)) {
     for (zipcode in rownames(cross.map)) {
       if (!is.na(beat) & !is.null(cross.map[zipcode, beat]) ) {
         if (cross.map[zipcode, beat] > 0) {
           cross.table = rbind(cross.table, data.frame(
-            'zipcode'=zipcode, 
-            'beat'=beat, 
+            'zipcode'=zipcode,
+            'beat'=beat,
             'percentage'=cross.map[zipcode, beat]))
         }
       }
     }
   }
   # creat census.beat.df with columns names (beat)
-  census.beat.df           = data.frame()                # creat an empty dataframe
-  # colnames(census.beat.df) = colnames(census.zipcode.df) # assign columns names to the dataframe
-  for (beat in colnames(cross.map)) {
-    for (year in unique(census.zipcode.df['year'])) {
+  years          = unique(census.zipcode.df['year'])$year
+  beats          = colnames(cross.map)
+  census.beat.df = data.frame()
+  for (beat in beats) {
+    for (year in years) {
       if (!is.na(beat)) {
         zipcode.table = cross.table[cross.table$beat==beat, ]
-        for (i in nrow(zipcode.table)) {
+        for (i in 1:nrow(zipcode.table)) {
           zip = zipcode.table[i, 'zipcode']
           pct = zipcode.table[i, 'percentage']
-          new.df = pct * census.zipcode.df[
-            census.zipcode.df$Id2==as.character(zip) & census.zipcode.df$year==as.character(year), 
-            !(names(census.zipcode.df) %in% c('Id2', 'year'))]
-          new.df$year    = year
-          new.df$Id2     = beat
-          census.beat.df = rbind(census.beat.df, new.df)
+          # check if the entry (year, zip) exists in census.zipcode.df
+          if (nrow(census.zipcode.df[
+            census.zipcode.df$Id2==as.character(zip) & 
+            census.zipcode.df$year==as.character(year), ]) > 0) {
+            new.df = pct * census.zipcode.df[
+              census.zipcode.df$Id2==as.character(zip) & census.zipcode.df$year==as.character(year),
+              !(names(census.zipcode.df) %in% c('Id2', 'year'))]
+            new.df$year    = year
+            new.df$Id2     = beat
+            census.beat.df = rbind(census.beat.df, new.df)
+          }
         }
       }
     }

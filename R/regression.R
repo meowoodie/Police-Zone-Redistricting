@@ -55,8 +55,6 @@ census.zipcode.df = merge.mdf(df.list)
 census.beat.df    = zip2beat(map.path, census.zipcode.df)
 colnames(census.beat.df)[10] = 'beat' # change col name from 'Id2' to 'beat'
 
-
-
 # Step 3.
 # Apply time series model to the census dataframe, and include the 
 # predicted future census data into the train.df.
@@ -66,28 +64,27 @@ colnames(census.beat.df)[10] = 'beat' # change col name from 'Id2' to 'beat'
 train.df = merge.mdf(list(census.beat.df, workload.df), keys=c('beat', 'year'))
 train.df = train.df[complete.cases(train.df), ] # remove rows contains NA values
 
-# # Step 4.
-# # Linear regression & LASSO
-# # - apply linear regression and lasso
-# x  = as.matrix(train.df[factors])
-# y  = as.matrix(train.df['workload'])
-# lr = lm(y ~ x)
-# cv.fit = cv.glmnet(x, y, alpha=1)
-# 
-# # Step 5.
-# # plot linear regression result
-# mod           = glmnet(x, y)
-# glmcoef       = coef(mod, cv.fit$lambda.min)
-# coef.increase = dimnames(glmcoef[glmcoef[,1]>0,0])[[1]]
-# coef.decrease = dimnames(glmcoef[glmcoef[,1]<0,0])[[1]]
-# # get ordered list of variables as they appear at smallest lambda
-# allnames = names(coef(mod)[ ,ncol(coef(mod))][order(coef(mod)[ ,ncol(coef(mod))], decreasing=TRUE)])
-# # remove intercept
-# allnames = setdiff(allnames, allnames[grep("Intercept",allnames)])
-# # assign colors
-# cols = rep("gray", length(allnames))
-# cols[allnames %in% coef.increase] = "red"      # higher mpg is good
-# cols[allnames %in% coef.decrease] = "blue"     # lower mpg is not
-# 
-# plot_glmnet(cv.fit$glmnet.fit, label=TRUE, s=cv.fit$lambda.min, col=cols)
+# Step 4.
+# Linear regression & LASSO
+# - apply linear regression and lasso
+x  = as.matrix(train.df[factors])
+y  = as.matrix(train.df['workload'])
+lr = lm(y ~ x)
+cv.fit = cv.glmnet(x, y, alpha=1)
+
+# Step 5.
+# plot linear regression result
+mod           = glmnet(x, y)
+glmcoef       = coef(mod, cv.fit$lambda.min)
+coef.increase = dimnames(glmcoef[glmcoef[,1]>0,0])[[1]]
+coef.decrease = dimnames(glmcoef[glmcoef[,1]<0,0])[[1]]
+# get ordered list of variables as they appear at smallest lambda
+allnames = names(coef(mod)[ ,ncol(coef(mod))][order(coef(mod)[ ,ncol(coef(mod))], decreasing=TRUE)])
+# remove intercept
+allnames = setdiff(allnames, allnames[grep("Intercept",allnames)])
+# assign colors
+cols = rep("gray", length(allnames))
+cols[allnames %in% coef.increase] = "red"      # higher mpg is good
+cols[allnames %in% coef.decrease] = "blue"     # lower mpg is not
+plot_glmnet(cv.fit$glmnet.fit, label=TRUE, s=cv.fit$lambda.min, col=cols)
 # plot(cv.fit)
