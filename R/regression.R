@@ -55,18 +55,17 @@ df.list           = list(population.df, education.df, employment.df)
 census.zipcode.df = merge.mdf(df.list)
 census.beat.df    = zip2beat(map.path, census.zipcode.df)
 colnames(census.beat.df)[2] = 'beat' # change col name from 'Id2' to 'beat'
-
-# Step 3.
-# Apply time series model to the census dataframe, and include the 
-# predicted future census data into the train.df.
-
-
 # - merge response variable and predictor variables
 train.df = merge.mdf(list(census.beat.df, workload.df), keys=c('beat', 'year'))
 # - remove rows contains NA values
 train.df = train.df[complete.cases(train.df), ]
 # - standardize the training data
 std.train.df = scale.df(train.df, keys=factors) 
+
+# Step 3.
+# Apply time series model to the census dataframe, and include the 
+# predicted future census data into the train.df.
+future.census.beat.df
 
 # Step 4.
 # Linear regression & LASSO

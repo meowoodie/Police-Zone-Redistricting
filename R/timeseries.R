@@ -16,11 +16,16 @@
 # - p:         p value for the AR model.
 # - n.ahead:   the number of values in the future that the model is going to 
 #              predict.
-ar.census = function (census.df, factors, 
-                      t_key='year', s_key='beat', p=1, n.ahead=3) {
+ar.census = function (census.df, factors, ar.p=2, ar.n.ahead=3) {
   # get X from census.df
-  census.df
+  census.df      = census.df[order(census.df$year), ]
+  time.series.df = census.df[census.df$beat=='110', factors]
+  preds          = lapply(time.series.df, function (factor) {
+    fit  = ar(factor, p=ar.p)
+    pred = predict(fit, n.ahead=ar.n.ahead)
+    return(pred)
+  })
+  # fit    = ar(c(26661.711, 26279.397, 25963.901, 25100.719), p=1) # X is a time series in r
+  # future = predict(fit, n.ahead=1)
   
-  fit    = ar(X, p=p) # X is a time series in r
-  future = predict(fit, n.ahead=n.ahead)
 }
