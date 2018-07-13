@@ -77,7 +77,7 @@ y = as.matrix(train.df['workload'])
 # - fit in lm
 lr = lm(y ~ x)
 # - predict by std.pred.census.beat.df
-pred.workload = as.vector(predict(lr, std.pred.census.beat.df[factors]))
+pred.workload = as.vector(predict(lr, newdata=std.pred.census.beat.df[factors]))
 beat.col = data.matrix(std.pred.census.beat.df['beat'])
 year.col = data.matrix(std.pred.census.beat.df['year'])
 pred.workload.df = data.frame(matrix(
