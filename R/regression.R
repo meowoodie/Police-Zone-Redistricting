@@ -66,7 +66,7 @@ pred.census.beat.df     = ar.census(census.beat.df, factors, ar.p=1, ar.n.ahead=
 std.pred.census.beat.df = scale.df(pred.census.beat.df, keys=factors)
 
 # Step 4.
-# Fit in Linear regression & LASSO
+# Fit in Linear regression & LASSO and predict future workloads
 # - merge response variable and predictor variables
 train.df = merge.mdf(list(census.beat.df, workload.df), keys=c('beat', 'year'))
 # - remove rows contains NA values
@@ -78,8 +78,13 @@ y = as.matrix(train.df['workload'])
 lr = lm(y ~ x)
 # - predict by std.pred.census.beat.df
 pred.workload = as.vector(predict(lr, std.pred.census.beat.df[factors]))
-# cv.fit = cv.glmnet(x, y, alpha=1)
+beat.col = data.matrix(std.pred.census.beat.df['beat'])
+year.col = data.matrix(std.pred.census.beat.df['year'])
+pred.workload.df = data.frame(matrix(
+  c(beat.col, year.col, pred.workload),
+  nrow=length(pred.workload)))
 
+# cv.fit = cv.glmnet(x, y, alpha=1)
 # # plot linear regression result
 # mod           = glmnet(x, y)
 # glmcoef       = coef(mod, cv.fit$lambda.min)

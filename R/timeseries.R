@@ -39,7 +39,8 @@ ar.census = function (census.df, factors, ar.p=1, ar.n.ahead=3) {
     preds.df = rbind(merge.mdf(df.list, keys=c('beat', 'year')), preds.df)
   }
   # change data type from factor to numeric and characters
-  preds.df[c('beat', 'year')] = sapply(preds.df[c('beat', 'year')], as.character)
-  preds.df[factors] = sapply(preds.df[factors], as.double)
+  preds.df[c('year', 'beat')] = sapply(preds.df[c('year', 'beat')], as.character)
+  preds.df[factors] = sapply(preds.df[factors], as.character)
+  preds.df[factors] = sapply(preds.df[factors], as.numeric)
   return(preds.df)
 }
