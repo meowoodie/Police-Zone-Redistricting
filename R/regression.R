@@ -25,6 +25,7 @@ education.factors  = c('Total; Estimate; Less than high school graduate',
 employment.factors = c('Total; Estimate; Population 16 years and over')
 factors = c(population.factors, education.factors, employment.factors)
 source(paste(root.dir, 'R/preproc.R', sep='/'))
+source(paste(root.dir, 'R/timeseries.R', sep='/'))
 
 # Step 1.
 # Read data from local files. The dataset is organized hierarchically by the 
@@ -54,42 +55,43 @@ workload.df = read.workload(workload.path)
 df.list            = list(population.df, education.df, employment.df)
 census.zipcode.df  = merge.mdf(df.list)
 census.beat.df     = zip2beat(map.path, census.zipcode.df)
-census.beat.df     = census.beat.df[complete.cases(census.beat.df), ]
-std.census.beat.df = scale.df(census.beat.df, keys=factors)
-colnames(std.census.beat.df)[2] = 'beat' # change col name from 'Id2' to 'beat'
-
-# # - merge response variable and predictor variables
-# train.df = merge.mdf(list(census.beat.df, workload.df), keys=c('beat', 'year'))
-# # - remove rows contains NA values
-# train.df = train.df[complete.cases(train.df), ]
-# # - standardize the training data
-# std.train.df = scale.df(train.df, keys=factors) 
+census.beat.df     = as.data.frame(census.beat.df[complete.cases(census.beat.df), ])
+colnames(census.beat.df)[2] = 'beat' # change col name from 'Id2' to 'beat'
+# std.census.beat.df = scale.df(census.beat.df, keys=factors)
 
 # Step 3.
 # Apply time series model to the census dataframe, and include the 
 # predicted future census data into the train.df.
+pred.census.beat.df     = ar.census(census.beat.df, factors, ar.p=1, ar.n.ahead=5)
+std.pred.census.beat.df = scale.df(pred.census.beat.df, keys=factors)
 
 # Step 4.
-# Linear regression & LASSO
-# - apply linear regression and lasso
-x  = as.matrix(train.df[factors])
-y  = as.matrix(train.df['workload'])
+# Fit in Linear regression & LASSO
+# - merge response variable and predictor variables
+train.df = merge.mdf(list(census.beat.df, workload.df), keys=c('beat', 'year'))
+# - remove rows contains NA values
+train.df = train.df[complete.cases(train.df), ]
+std.train.df = scale.df(train.df, keys=c(factors, 'workload'))
+x = as.matrix(train.df[factors])
+y = as.matrix(train.df['workload'])
+# - fit in lm
 lr = lm(y ~ x)
-cv.fit = cv.glmnet(x, y, alpha=1)
+# - predict by std.pred.census.beat.df
+pred.workload = as.vector(predict(lr, std.pred.census.beat.df[factors]))
+# cv.fit = cv.glmnet(x, y, alpha=1)
 
-# Step 5.
-# plot linear regression result
-mod           = glmnet(x, y)
-glmcoef       = coef(mod, cv.fit$lambda.min)
-coef.increase = dimnames(glmcoef[glmcoef[,1]>0,0])[[1]]
-coef.decrease = dimnames(glmcoef[glmcoef[,1]<0,0])[[1]]
-# get ordered list of variables as they appear at smallest lambda
-allnames = names(coef(mod)[ ,ncol(coef(mod))][order(coef(mod)[ ,ncol(coef(mod))], decreasing=TRUE)])
-# remove intercept
-allnames = setdiff(allnames, allnames[grep("Intercept",allnames)])
-# assign colors
-cols = rep("gray", length(allnames))
-cols[allnames %in% coef.increase] = "red"      # higher mpg is good
-cols[allnames %in% coef.decrease] = "blue"     # lower mpg is not
-plot_glmnet(cv.fit$glmnet.fit, label=TRUE, s=cv.fit$lambda.min, col=cols)
-# plot(cv.fit)
+# # plot linear regression result
+# mod           = glmnet(x, y)
+# glmcoef       = coef(mod, cv.fit$lambda.min)
+# coef.increase = dimnames(glmcoef[glmcoef[,1]>0,0])[[1]]
+# coef.decrease = dimnames(glmcoef[glmcoef[,1]<0,0])[[1]]
+# # get ordered list of variables as they appear at smallest lambda
+# allnames = names(coef(mod)[ ,ncol(coef(mod))][order(coef(mod)[ ,ncol(coef(mod))], decreasing=TRUE)])
+# # remove intercept
+# allnames = setdiff(allnames, allnames[grep("Intercept",allnames)])
+# # assign colors
+# cols = rep("gray", length(allnames))
+# cols[allnames %in% coef.increase] = "red"      # higher mpg is good
+# cols[allnames %in% coef.decrease] = "blue"     # lower mpg is not
+# plot_glmnet(cv.fit$glmnet.fit, label=TRUE, s=cv.fit$lambda.min, col=cols)
+# # plot(cv.fit)
