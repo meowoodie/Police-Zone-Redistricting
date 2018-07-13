@@ -11,21 +11,32 @@
 #              key for areas, key for time, and p for AR.
 # - factors:   fit AR model independently regarding each of factors in each 
 #              of areas in the dataframe. 
-# - t_key:     the key stands for the time index.
-# - s_key:     the key stands for the space (area). 
-# - p:         p value for the AR model.
+# - ar.p:      p value for the AR model.
 # - n.ahead:   the number of values in the future that the model is going to 
 #              predict.
-ar.census = function (census.df, factors, ar.p=2, ar.n.ahead=3) {
-  # get X from census.df
-  census.df      = census.df[order(census.df$year), ]
-  time.series.df = census.df[census.df$beat=='110', factors]
-  preds          = lapply(time.series.df, function (factor) {
-    fit  = ar(factor, p=ar.p)
-    pred = predict(fit, n.ahead=ar.n.ahead)
-    return(pred)
-  })
-  # fit    = ar(c(26661.711, 26279.397, 25963.901, 25100.719), p=1) # X is a time series in r
-  # future = predict(fit, n.ahead=1)
+ar.census = function (census.df, factors, ar.p=1, ar.n.ahead=3) {
+  start.year     = max(as.numeric(unique(census.df$year))) + 1
+  preds.year     = as.character((start.year):(start.year+ar.n.ahead-1))
+  beats          = unique(census.df$beat)
+  for (beat in beats) {
+    
+    for (factor in factors) {
+      # get rows with (beat, factor) from census.df
+      data    = as.vector(census.df[census.df$beat==beat, factor])
+      # fit rows in ar model and forecast the future
+      fit     = ar(data, FALSE, ar.p)
+      pred    = predict(fit, n.ahead=ar.n.ahead)
+      pred    = as.vector(pred$pred)
+      # convert the prediction into dataframe
+      pred.df = data.frame(matrix(
+        c(rep(beat, length(preds.year)), preds.year, pred),
+        nrow=length(preds.year)))
+      colnames(pred.df) = c('beat', 'year', factor)
+      print(pred.df)
+      # 
+    }
+    merge.mdf(df.list, keys=c('beat', 'year'))
+  }
+  
   
 }

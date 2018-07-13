@@ -147,12 +147,12 @@ read.workload = function (workload.path) {
   for (year in colnames(workload)) {
     for (beat in rownames(workload)) {
       workload.table = rbind(workload.table, data.frame(
-        'beat'=beat, 
-        'year'=year, 
+        'beat'=beat,
+        'year'=year,
         'workload'=workload[beat, year]))
     }
   }
-  # convert beat and year from factor to character & 
+  # convert beat and year from factor to character &
   # convert workload from integer to numeric
   workload.table[c('beat', 'year')] = sapply(workload.table[c('beat', 'year')], as.character)
   workload.table['workload'] = sapply(workload.table['workload'], as.numeric)
