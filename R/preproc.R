@@ -138,23 +138,24 @@ zip2beat = function (map.path, census.zipcode.df) {
 
 # Function for reading and preparing workload dataframe.
 read.workload = function (workload.path) {
-  workload           = read.csv(workload.path, header=FALSE, sep = ',', stringsAsFactors=FALSE)
-  names(workload)    = as.matrix(workload[1, ])
-  rownames(workload) = as.matrix(workload[, 1])
-  workload           = workload[-1, -1]
-  # generate workload.table with columns (beat, year, workload)
-  workload.table = data.frame()
-  for (year in colnames(workload)) {
-    for (beat in rownames(workload)) {
-      workload.table = rbind(workload.table, data.frame(
-        'beat'=beat,
-        'year'=year,
-        'workload'=workload[beat, year]))
-    }
-  }
-  # convert beat and year from factor to character &
-  # convert workload from integer to numeric
-  workload.table[c('beat', 'year')] = sapply(workload.table[c('beat', 'year')], as.character)
-  workload.table['workload'] = sapply(workload.table['workload'], as.numeric)
-  return(workload.table)
+  workload      = read.csv(workload.path, sep = ',', stringsAsFactors=FALSE)
+  workload$year = sapply(workload$year, function (year) { return(year %% 100) })
+  # names(workload)    = as.matrix(workload[1, ])
+  # rownames(workload) = as.matrix(workload[, 1])
+  # workload           = workload[-1, -1]
+  # # generate workload.table with columns (beat, year, workload)
+  # workload.table = data.frame()
+  # for (year in colnames(workload)) {
+  #   for (beat in rownames(workload)) {
+  #     workload.table = rbind(workload.table, data.frame(
+  #       'beat'=beat,
+  #       'year'=year,
+  #       'workload'=workload[beat, year]))
+  #   }
+  # }
+  # # convert beat and year from factor to character &
+  # # convert workload from integer to numeric
+  workload[c('beat', 'year')] = sapply(workload[c('beat', 'year')], as.character)
+  workload['workload']        = sapply(workload['workload'], as.numeric)
+  return(workload)
 }

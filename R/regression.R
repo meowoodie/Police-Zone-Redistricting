@@ -14,7 +14,7 @@ library(plotmo)
 root.dir      = 'Desktop/workspace/Atlanta-Zoning'
 data.dir      = paste(root.dir, 'data/census', sep='/')
 map.path      = 'Desktop/workspace/Atlanta-Zoning/data/cross_map.csv'
-workload.path = 'Desktop/workspace/Atlanta-Zoning/data/workload_by_beat.csv'
+workload.path = 'Desktop/workspace/Atlanta-Zoning/data/workload.csv'
 population.factors = c('Estimate; SEX AND AGE - Total population', 
                        'Estimate; SEX AND AGE - 20 to 24 years', 
                        'Estimate; SEX AND AGE - 25 to 34 years')
@@ -57,7 +57,6 @@ census.zipcode.df  = merge.mdf(df.list)
 census.beat.df     = zip2beat(map.path, census.zipcode.df)
 census.beat.df     = as.data.frame(census.beat.df[complete.cases(census.beat.df), ])
 colnames(census.beat.df)[2] = 'beat' # change col name from 'Id2' to 'beat'
-# std.census.beat.df = scale.df(census.beat.df, keys=factors)
 
 # Step 3.
 # Apply time series model to the census dataframe, and include the 
@@ -68,21 +67,29 @@ std.pred.census.beat.df = scale.df(pred.census.beat.df, keys=factors)
 # Step 4.
 # Fit in Linear regression & LASSO and predict future workloads
 # - merge response variable and predictor variables
-train.df = merge.mdf(list(census.beat.df, workload.df), keys=c('beat', 'year'))
-# - remove rows contains NA values
-train.df = train.df[complete.cases(train.df), ]
+train.df     = merge.mdf(list(census.beat.df, workload.df), keys=c('beat', 'year'))
+# - remove rows contains NA values and scaling
+train.df     = train.df[complete.cases(train.df), ]
 std.train.df = scale.df(train.df, keys=c(factors, 'workload'))
+# - fit in lm
 x = as.matrix(train.df[factors])
 y = as.matrix(train.df['workload'])
-# - fit in lm
 lr = lm(y ~ x)
 # - predict by std.pred.census.beat.df
-pred.workload = as.vector(predict(lr, newdata=std.pred.census.beat.df[factors]))
+newdata       = data.frame(x=I(as.matrix(std.pred.census.beat.df[factors])))
+pred.workload = as.vector(predict(lr, newdata))
+# - merge (beat, year) into a dataframe
 beat.col = data.matrix(std.pred.census.beat.df['beat'])
 year.col = data.matrix(std.pred.census.beat.df['year'])
 pred.workload.df = data.frame(matrix(
   c(beat.col, year.col, pred.workload),
   nrow=length(pred.workload)))
+colnames(pred.workload.df) = c('beat', 'year', 'workload')
+
+# Write results
+write.csv(census.beat.df, file = "census_beat.csv")
+write.csv(pred.census.beat.df, file = "pred_census_beat.csv")
+write.csv(pred.workload.df, file = "pred_workload.csv")
 
 # cv.fit = cv.glmnet(x, y, alpha=1)
 # # plot linear regression result
