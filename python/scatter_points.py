@@ -127,5 +127,5 @@ def main_workload():
 
 
 if __name__ == "__main__":
-	main_workload()
-	# main_census()
+	# main_workload()
+	main_census()
