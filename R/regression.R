@@ -28,6 +28,7 @@ source(paste(root.dir, 'R/preproc.R', sep='/'))
 source(paste(root.dir, 'R/timeseries.R', sep='/'))
 
 # TODO: Given the key name at first. Use 'Id' uniformly for all the process.
+# TODO: Scaling train and predict data together at the begining
 
 # Step 1.
 # Read data from local files. The dataset is organized hierarchically by the 
@@ -69,7 +70,7 @@ census.beat.df     = as.data.frame(census.beat.df[complete.cases(census.beat.df)
 train.df     = merge.mdf(list(census.beat.df, workload.df), keys=c('Id2', 'year'))
 # - remove rows contains NA values and scaling
 train.df     = train.df[complete.cases(train.df), ]
-std.train.df = scale.df(train.df, keys=c(factors, 'last workload', 'current year')) # workload is not scaled
+std.train.df = train.df # scale.df(train.df, keys=c(factors, 'last workload', 'current year')) # workload is not scaled
 # - fit in lm
 x = as.matrix(std.train.df[c(factors, 'last workload', 'current year')])
 y = as.matrix(std.train.df['workload'])
@@ -101,7 +102,7 @@ for (pred.year in pred.years) {
       'workload']
   }
   # organize new data x
-  new.std.train.df = scale.df(new.train.df, keys=c(factors, 'last workload'))
+  new.std.train.df = new.train.df # scale.df(new.train.df, keys=c(factors, 'last workload'))
   new.x            = data.frame(x=I(as.matrix(new.std.train.df[c(factors, 'last workload', 'current year')])))
   # predict by std.pred.census.beat.df
   new.workload     = as.vector(predict(lr, new.x))
@@ -114,6 +115,9 @@ for (pred.year in pred.years) {
   colnames(new.workload.df) = c('Id2', 'year', 'workload')
   pred.workload.df = rbind(pred.workload.df, new.workload.df)
 }
+
+# patch
+pred.workload.df = pred.workload.df[!(pred.workload.df$Id2%in%c("701", "705", "704","703","706","101","702","709")), ]
 
 # Write results
 write.csv(census.beat.df, file = "census_beat.csv")
