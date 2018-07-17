@@ -36,7 +36,7 @@ read.census = function (root.dir, category, factors, numYearFlag=TRUE, scaleFlag
             message('A warning occurred.')
             message(paste(c(cond, '\n'), collapse=''))
           })
-          break
+          break # only read file with 'with_ann.csv'
         }
       }
     }
@@ -130,7 +130,7 @@ zip2beat = function (map.path, census.zipcode.df) {
     }
   }
   # group by (year, beat) and sum up other factors
-  census.beat.df = census.beat.df %>% group_by(.dots=c('year', 'Id2')) %>% summarise_all(funs(mean))
+  census.beat.df = census.beat.df %>% group_by(.dots=c('Id2', 'year')) %>% summarise_all(funs(mean))
   # # reset the index of rows
   # rownames(census.beat.df) = seq(length=nrow(census.beat.df)) 
   return(census.beat.df)
@@ -140,6 +140,8 @@ zip2beat = function (map.path, census.zipcode.df) {
 read.workload = function (workload.path) {
   workload      = read.csv(workload.path, sep = ',', stringsAsFactors=FALSE)
   workload$year = sapply(workload$year, function (year) { return(year %% 100) })
+  # add year as a new factor
+  workload$`current year`  = workload$year
   # assign last workload for each (beat, year)
   workload$`last workload` = workload$workload
   for (i in 1:nrow(workload)) {
@@ -163,5 +165,7 @@ read.workload = function (workload.path) {
   workload[c('beat', 'year')] = sapply(workload[c('beat', 'year')], as.character)
   workload['workload']        = sapply(workload['workload'], as.numeric)
   workload['last workload']   = sapply(workload['last workload'], as.numeric)
+  workload['current year']    = sapply(workload['current year'], as.numeric)
+  colnames(workload)[1]       = 'Id2'
   return(workload)
 }
