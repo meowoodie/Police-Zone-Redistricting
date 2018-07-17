@@ -70,9 +70,9 @@ std.pred.census.beat.df = scale.df(pred.census.beat.df, keys=factors)
 train.df     = merge.mdf(list(census.beat.df, workload.df), keys=c('beat', 'year'))
 # - remove rows contains NA values and scaling
 train.df     = train.df[complete.cases(train.df), ]
-std.train.df = scale.df(train.df, keys=c(factors)) # workload is not scaled
+std.train.df = scale.df(train.df, keys=c(factors, 'last workload')) # workload is not scaled
 # - fit in lm
-x = as.matrix(std.train.df[factors])
+x = as.matrix(std.train.df[c(factors, 'last workload', 'workload')])
 y = as.matrix(std.train.df['workload'])
 lr = lm(y ~ x)
 # - predict by std.pred.census.beat.df
