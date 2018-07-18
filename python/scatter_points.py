@@ -74,6 +74,7 @@ def main_census():
 		beat_list      = list(set([ census[0] for census in census_data[1:] ]))
 		year_list      = list(set([ census[1] for census in census_data[1:] ]))
 		feature_fields = census_data[0][2:]
+		print feature_fields
 		census_mat     = np.zeros((len(beat_list), len(year_list), len(feature_fields)))
 		for census in census_data[1:]:
 			census_mat[beat_list.index(census[0]), year_list.index(census[1])] = \
@@ -84,6 +85,7 @@ def main_census():
 			for beat_ind in range(len(beat_list)):
 				for year_ind in range(len(year_list)):
 					data_mat[beat_ind, year_ind] = census_mat[beat_ind, year_ind, feature_fields.index(feature_name)]
+			feature_name = feature_name.strip("\r")
 			plot_beat_heat_map(beat_geo_dict, data_mat, year_list, beat_list, feature_name)
 
 def main_workload():

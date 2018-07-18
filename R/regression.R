@@ -116,8 +116,8 @@ for (pred.year in pred.years) {
   pred.workload.df = rbind(pred.workload.df, new.workload.df)
 }
 
-# patch
-pred.workload.df = pred.workload.df[!(pred.workload.df$Id2%in%c("701", "705", "704","703","706","101","702","709")), ]
+# # patch
+# pred.workload.df = pred.workload.df[!(pred.workload.df$Id2%in%c("701", "705", "704","703","706","101","702","709")), ]
 
 # Write results
 write.csv(census.beat.df, file = "census_beat.csv")
