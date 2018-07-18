@@ -123,20 +123,3 @@ for (pred.year in pred.years) {
 write.csv(census.beat.df, file = "census_beat.csv")
 write.csv(pred.census.beat.df, file = "pred_census_beat.csv")
 write.csv(pred.workload.df, file = "pred_workload.csv")
-
-# cv.fit = cv.glmnet(x, y, alpha=1)
-# # plot linear regression result
-# mod           = glmnet(x, y)
-# glmcoef       = coef(mod, cv.fit$lambda.min)
-# coef.increase = dimnames(glmcoef[glmcoef[,1]>0,0])[[1]]
-# coef.decrease = dimnames(glmcoef[glmcoef[,1]<0,0])[[1]]
-# # get ordered list of variables as they appear at smallest lambda
-# allnames = names(coef(mod)[ ,ncol(coef(mod))][order(coef(mod)[ ,ncol(coef(mod))], decreasing=TRUE)])
-# # remove intercept
-# allnames = setdiff(allnames, allnames[grep("Intercept",allnames)])
-# # assign colors
-# cols = rep("gray", length(allnames))
-# cols[allnames %in% coef.increase] = "red"      # higher mpg is good
-# cols[allnames %in% coef.decrease] = "blue"     # lower mpg is not
-# plot_glmnet(cv.fit$glmnet.fit, label=TRUE, s=cv.fit$lambda.min, col=cols)
-# # plot(cv.fit)
