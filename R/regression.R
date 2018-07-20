@@ -13,8 +13,8 @@ library(stringr)
 library(plotmo)
 root.dir      = 'Desktop/workspace/Atlanta-Zoning'
 data.dir      = paste(root.dir, 'data/census', sep='/')
-map.path      = 'Desktop/workspace/Atlanta-Zoning/data/cross_map.csv'
-workload.path = 'Desktop/workspace/Atlanta-Zoning/data/workload.csv'
+map.path      = paste(root.dir, 'data/cross_map.csv', sep='/')
+workload.path = paste(root.dir, 'data/workload.csv', sep='/')
 population.factors = c('Estimate; SEX AND AGE - Total population', 
                        'Estimate; SEX AND AGE - 20 to 24 years', 
                        'Estimate; SEX AND AGE - 25 to 34 years')
