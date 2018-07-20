@@ -1,5 +1,6 @@
 # R code for visualizing the Atlanta beat & zone and their configurations 
 # on an interactive map.
+# references: https://rstudio.github.io/leaflet/json.html
 # 
 # By Shixiang Zhu
 # Contact: shixiang.zhu@gatech.edu
@@ -45,28 +46,40 @@ labels = sprintf(
   beats.geo$zone, beats.geo$BEAT, beats.geo$workload
 ) %>% lapply(htmltools::HTML)
 
+
+# zones.geo$features = lapply(zones.geo$features, function(feat) {
+#   feat$properties$style = list(
+#     weight = 2,
+#     color = "black",
+#     opacity = 1,
+#     fillOpacity = 0
+#   )
+#   return(feat)
+# })
+
 # loading data into the initial map and adding background tiles
 leaflet(beats.geo) %>%
   addTiles() %>% 
   addPolygons(
-    fillColor = ~pal(workload),
-    weight = 2,
-    opacity = 1,
-    color = "white",
-    dashArray = "3",
+    fillColor   = ~pal(workload),
+    weight      = 2,
+    opacity     = 1,
+    color       = "white",
+    dashArray   = "3",
     fillOpacity = 0.5,
-    highlight = highlightOptions(
-      weight = 5,
-      color = "#666",
+    highlight   = highlightOptions(
+      weight    = 5,
+      color     = "#666",
       dashArray = "",
-      fillOpacity = 0.7,
+      fillOpacity  = 0.7,
       bringToFront = TRUE),
-    label = labels,
+    label        = labels,
     labelOptions = labelOptions(
-      style = list("font-weight" = "normal", padding = "3px 8px"),
-      textsize = "15px",
+      style     = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize  = "15px",
       direction = "auto")) %>%
   addLegend(
     pal = pal, values = ~workload, 
     opacity = 0.7, title = NULL,
-    position = "bottomright")
+    position = "bottomright") %>%
+  addGeoJSON(zones.geo, weight = 2, color = "black", fillOpacity = 0, opacity = 1)
