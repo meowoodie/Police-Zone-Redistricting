@@ -5,8 +5,8 @@
 # By Shixiang Zhu
 # Contact: shixiang.zhu@gatech.edu
 
-library("leaflet")
-library("geojsonio")
+library('leaflet')
+library('geojsonio')
 
 root.dir      = 'Desktop/workspace/Atlanta-Zoning'
 data.dir      = paste(root.dir, 'data/census', sep='/')
@@ -38,48 +38,55 @@ beats.geo$workload = sapply(beats.geo$BEAT, function(beat) {
 })
 
 # color settings
-pal = colorBin("YlOrRd", domain = beats.geo$workload)
+pal = colorBin('YlOrRd', domain = beats.geo$workload)
 
 # label settings
 labels = sprintf(
-  "<strong>Zone %s</strong><br/>Beat %s<br/>%g hours / year",
+  '<strong>Zone %s</strong><br/><strong>Beat %s</strong><br/>%g hours / year',
   beats.geo$zone, beats.geo$BEAT, beats.geo$workload
 ) %>% lapply(htmltools::HTML)
 
-
-# zones.geo$features = lapply(zones.geo$features, function(feat) {
-#   feat$properties$style = list(
-#     weight = 2,
-#     color = "black",
-#     opacity = 1,
-#     fillOpacity = 0
-#   )
-#   return(feat)
-# })
-
 # loading data into the initial map and adding background tiles
 leaflet(beats.geo) %>%
+  # load base map
   addTiles() %>% 
+  # plot beat polygons
   addPolygons(
     fillColor   = ~pal(workload),
     weight      = 2,
     opacity     = 1,
-    color       = "white",
-    dashArray   = "3",
+    color       = 'white',
+    dashArray   = '3',
     fillOpacity = 0.5,
     highlight   = highlightOptions(
       weight    = 5,
-      color     = "#666",
-      dashArray = "",
+      color     = '#666',
+      dashArray = '',
       fillOpacity  = 0.7,
-      bringToFront = TRUE),
+      bringToFront = FALSE),
     label        = labels,
     labelOptions = labelOptions(
-      style     = list("font-weight" = "normal", padding = "3px 8px"),
-      textsize  = "15px",
-      direction = "auto")) %>%
+      style     = list('font-weight' = 'normal', padding = '3px 8px'),
+      textsize  = '15px',
+      direction = 'auto'),
+    group       = 'Beats Layer') %>%
+  # add legend for beat map
   addLegend(
-    pal = pal, values = ~workload, 
-    opacity = 0.7, title = NULL,
-    position = "bottomright") %>%
-  addGeoJSON(zones.geo, weight = 2, color = "black", fillOpacity = 0, opacity = 1)
+    pal      = pal, 
+    values   = ~workload, 
+    opacity  = 0.7, 
+    title    = NULL,
+    position = 'bottomright') %>%
+  # plot zone polygons
+  addPolygons(
+    data      = zones.geo, 
+    fill      = FALSE, 
+    weight    = 5, 
+    dashArray = '8',
+    color     = 'Grey', 
+    group     = 'Zones Layer')
+  # # add controller for beat and zone layers
+  # addLayersControl(
+  #   overlayGroups = c('Beats Layer', 'Zones Layer'),
+  #   options       = layersControlOptions(collapsed = FALSE)
+  # )
