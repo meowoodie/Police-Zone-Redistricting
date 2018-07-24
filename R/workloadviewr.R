@@ -7,6 +7,7 @@
 library('devtools')
 library('leaflet')
 library('geojsonio')
+library('shiny')
 # devtools::install_github('rstudio/leaflet')
 
 root.dir      = 'Desktop/workspace/Atlanta-Zoning'
