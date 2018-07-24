@@ -1,9 +1,13 @@
 # R code for visualizing the Atlanta beat & zone and their configurations 
-# on an interactive map.
-# references: https://rstudio.github.io/leaflet/json.html
+# with corresponding workload values on an interactive map.
+# 
+# References: 
+# - How to plot geojson on a real map
+#   https://rstudio.github.io/leaflet/json.html
 # 
 # By Shixiang Zhu
 # Contact: shixiang.zhu@gatech.edu
+
 library('devtools')
 library('leaflet')
 library('geojsonio')
