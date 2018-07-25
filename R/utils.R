@@ -23,3 +23,10 @@ plot.cv.fit = function (cv.fit, mod) {
   plot_glmnet(cv.fit$glmnet.fit, label=TRUE, s=cv.fit$lambda.min, col=cols)
 }
 
+# A helper function to create SpatialPolygons objects
+spatial.polygon = function(coord, ID) {
+  SpatialPolygons(
+    list(Polygons(list(Polygon(coord)), ID = ID))
+  )
+}
+
