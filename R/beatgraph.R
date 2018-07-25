@@ -77,6 +77,10 @@ for (i in 1:n.beats) {
   }
 }
 
+# Code patch for minor revising graph manually
+graph.df['407', '406'] = 1
+graph.df['406', '407'] = 1
+
 # Plot undirected graph according to the beats adjacencies.
 m   = as.matrix(graph.df)
 net = graph.adjacency(m, mode = 'undirected')
