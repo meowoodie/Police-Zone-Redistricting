@@ -18,11 +18,20 @@ library('sp')
 
 root.dir      = 'Desktop/workspace/Atlanta-Zoning'
 beat.geo.path = paste(root.dir, 'data/apd_beat.geojson', sep='/')
+colorbar      = c('gray', 'blue', 'black', 'red', 'yellow', 'purple', 'green')
 
 source(paste(root.dir, 'R/utils.R', sep='/'))
 
-beats.geo = geojsonio::geojson_read(beat.geo.path, what = 'sp')
-n.beats   = length(beats.geo@polygons)
+# read geojson into beats.geo
+beats.geo   = geojsonio::geojson_read(beat.geo.path, what = 'sp')
+# zone information for each of the beats
+beats.color = sapply(beats.geo$BEAT, function (beat) {
+  zone  = as.numeric(substr(as.character(beat), 1, 1))
+  color = colorbar[zone + 1]
+  return(color)
+})
+# number of beats
+n.beats     = length(beats.geo@polygons)
 
 # Generate SpatialPolygons objects for each of beats according to 
 # their coordinates in geojson
@@ -44,6 +53,7 @@ for (i in 1:n.beats) {
 beats         = beats[-9]
 polygons[[9]] = NULL
 centroids     = centroids[-9,]
+beats.color   = beats.color[-9]
 n.beats       = n.beats - 1
 # # Remove duplicate elements in beats and polygons
 # # (due to the redundancies in the geojson file)
@@ -53,7 +63,7 @@ n.beats       = n.beats - 1
 # centroids = centroids[!duplicated(beats),]
 # n.beats   = n.beats - length(dups.inds)
 
-# Create adjacent matrix for the beats graph
+# Create adjacency matrix for the beats graph
 # according to whether or not the touches exist between two arbitrary beats
 graph.df = data.frame(matrix(ncol=length(beats), nrow=length(beats)))
 colnames(graph.df) = beats
@@ -69,8 +79,8 @@ for (i in 1:n.beats) {
 
 # Plot undirected graph according to the beats adjacencies.
 m   = as.matrix(graph.df)
-net = graph.adjacency(m, mode = "undirected")
+net = graph.adjacency(m, mode = 'undirected')
 plot(net, layout=as.matrix(centroids),
-     vertex.color="gold", vertex.size=4, 
-     vertex.frame.color="gray", vertex.label.color="black", 
+     vertex.color=beats.color, vertex.size=4, 
+     vertex.frame.color='gray', vertex.label.color='black', 
      vertex.label.cex=0.8, vertex.label.dist=1)
