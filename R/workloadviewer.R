@@ -19,7 +19,7 @@ workload.path = paste(root.dir, 'data/workload.csv', sep='/')
 beat.geo.path = paste(root.dir, 'data/apd_beat.geojson', sep='/')
 zone.geo.path = paste(root.dir, 'data/apd_zone.geojson', sep='/')
 
-source(paste(root.dir, 'R/preproc.R', sep='/'))
+source(paste(root.dir, 'R/lib/preproc.R', sep='/'))
 
 workload.df = read.workload(workload.path)
 beats.geo   = geojsonio::geojson_read(beat.geo.path, what = 'sp')

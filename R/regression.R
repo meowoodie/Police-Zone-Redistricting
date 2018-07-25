@@ -24,8 +24,8 @@ education.factors  = c('Total; Estimate; Less than high school graduate',
                        "Total; Estimate; Bachelor's degree or higher")
 employment.factors = c('Total; Estimate; Population 16 years and over')
 factors = c(population.factors, education.factors, employment.factors)
-source(paste(root.dir, 'R/preproc.R', sep='/'))
-source(paste(root.dir, 'R/timeseries.R', sep='/'))
+source(paste(root.dir, 'R/lib/preproc.R', sep='/'))
+source(paste(root.dir, 'R/lib/timeseries.R', sep='/'))
 
 # TODO: Given the key name at first. Use 'Id' uniformly for all the process.
 # TODO: Scaling train and predict data together at the begining

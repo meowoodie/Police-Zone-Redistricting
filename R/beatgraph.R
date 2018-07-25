@@ -20,7 +20,7 @@ root.dir      = 'Desktop/workspace/Atlanta-Zoning'
 beat.geo.path = paste(root.dir, 'data/apd_beat.geojson', sep='/')
 colorbar      = c('gray', 'blue', 'black', 'red', 'yellow', 'purple', 'green')
 
-source(paste(root.dir, 'R/utils.R', sep='/'))
+source(paste(root.dir, 'R/lib/utils.R', sep='/'))
 
 # read geojson into beats.geo
 beats.geo   = geojsonio::geojson_read(beat.geo.path, what = 'sp')
