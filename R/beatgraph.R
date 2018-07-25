@@ -35,24 +35,24 @@ n.beats     = length(beats.geo@polygons)
 
 # Generate SpatialPolygons objects for each of beats according to 
 # their coordinates in geojson
-beats     = c()
-polygons  = list()
-centroids = data.frame()
+beats        = c()
+polygons     = list()
+centroids.df = data.frame()
 for (i in 1:n.beats) {
   beat      = as.character(beats.geo@data$BEAT[i])
   coord     = beats.geo@polygons[[i]]@Polygons[[1]]@coords
   polygon   = spatial.polygon(coord, beat)
   centroid  = setNames(data.frame(matrix(colMeans(coord), ncol = 2, nrow = 1)), c('longitude', 'latitude'))
   # append to the lists
-  polygons  = append(polygons, polygon)
-  beats     = c(beats, beat)
-  centroids = rbind(centroids, centroid)
+  polygons     = append(polygons, polygon)
+  beats        = c(beats, beat)
+  centroids.df = rbind(centroids.df, centroid)
 }
 # Remove No. 9 elements (corresponding to beat 606),
 # which is an invalid polygons due to data imperfection
 beats         = beats[-9]
 polygons[[9]] = NULL
-centroids     = centroids[-9,]
+centroids.df  = centroids.df[-9,]
 beats.color   = beats.color[-9]
 n.beats       = n.beats - 1
 # # Remove duplicate elements in beats and polygons
@@ -60,8 +60,8 @@ n.beats       = n.beats - 1
 # dups.inds = which(duplicated(beats) %in% c(TRUE))
 # beats     = beats[!duplicated(beats)]
 # polygons[dups.inds] = NULL
-# centroids = centroids[!duplicated(beats),]
-# n.beats   = n.beats - length(dups.inds)
+# centroids.df = centroids.df[!duplicated(beats),]
+# n.beats      = n.beats - length(dups.inds)
 
 # Create adjacency matrix for the beats graph
 # according to whether or not the touches exist between two arbitrary beats
@@ -84,7 +84,12 @@ graph.df['406', '407'] = 1
 # Plot undirected graph according to the beats adjacencies.
 m   = as.matrix(graph.df)
 net = graph.adjacency(m, mode = 'undirected')
-plot(net, layout=as.matrix(centroids),
+plot(net, layout=as.matrix(centroids.df),
      vertex.color=beats.color, vertex.size=4, 
      vertex.frame.color='gray', vertex.label.color='black', 
      vertex.label.cex=0.8, vertex.label.dist=1)
+
+# # Write graph and its coordinates to local file.
+# rownames(centroids.df) = beats
+# write.csv(graph.df, file = "beats_graph.csv")
+# write.csv(centroids.df, file = "beats_centroids.csv")
