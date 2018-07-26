@@ -20,5 +20,9 @@ centroids.df = read.csv(beats.centers.path, header = TRUE, row.names = 1,
 cur.year     = '17'
 
 beats      = rownames(centroids.df)
-# init.zones = 
+init.zones = sapply(beats, function (beat) {
+  zone  = as.numeric(substr(as.character(beat), 1, 1))
+  # color = colorbar[zone + 1]
+  return(color)
+})
 # workloads  =

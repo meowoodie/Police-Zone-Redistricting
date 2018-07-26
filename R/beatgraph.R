@@ -13,6 +13,7 @@
 # Contact: shixiang.zhu@gatech.edu
 
 library('geojsonio')
+library('igraph')
 library('rgeos')
 library('sp')
 
