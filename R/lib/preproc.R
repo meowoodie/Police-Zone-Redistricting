@@ -12,6 +12,9 @@
 # - factors:     the names of columns in data table.
 # - numYearFlag: if true then use numeric year.
 # - scaleFlag:   if true then scale the values of each factor.
+
+library(dplyr)
+
 read.census = function (root.dir, category, factors, numYearFlag=TRUE, scaleFlag=TRUE) {
   census.data = data.frame()
   census.path = paste(c(root.dir, category), collapse = '/')
