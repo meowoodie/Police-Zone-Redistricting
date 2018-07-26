@@ -68,6 +68,55 @@ conti.neighbor = function (beat.design.df, beats, graph.df) {
   return(new.design.dfs)
 }
 
-simulated.annealing = function () {
+simulated.annealing = function (beat.design.df, beats, graph.df, n=10, step=0.1) {
+  alpha = 0.01        # cooling rate
+  beta  = 2           # stage rate
+  ptm   = proc.time() # Start the clock!
   
+  temp  = 1    # temperature
+  stage = 1    # length of stage m   
+  
+  cost  = variance.workload(beat.design.df)
+  iters = c() # init iteration results of cost
+  for (j in 1:n){
+    print(sprintf('iter: %d', j))
+    for (m in 1:stage){
+      # get neighborhoods for the current solution
+      neighbors        = conti.neighbor(beat.design.df, beats, graph.df)
+      res              = c() # init results for cost
+      neighbor.indices = c() # init candidates for neighbor
+      for (i in 1:length(neighbors)){
+        neighbor      = neighbors[[i]]
+        neighbor.cost = variance.workload(neighbor) # calculate cost for each neighbor
+        if (neighbor.cost < cost){
+          res              = c(res, neighbor.cost)
+          neighbor.indices = c(neighbor.indices, i)
+        }
+      }
+      # stop criterion
+      if (length(res) <= 0){
+        # Stop the clock
+        dt     = proc.time() - ptm
+        result = list("solution"   = beat.design.df,
+                      "time"       = dt,
+                      "iterations" = iters)
+        return(result)
+      }
+      # randomly pick a neighbor from candidates
+      cand.ind      = sample(1:length(res), 1)
+      cand.neighbor = neighbors[[neighbor.indices[cand.ind]]]
+      cand.cost     = res[cand.ind]
+      # accept this solution by accept rate
+      acceptRate   = min(1, exp((cost - cand.cost)/temp))
+      if (sample(c(TRUE,FALSE), size=1, replace=TRUE, 
+                 prob=c(acceptRate,1-acceptRate))){
+        beat.design.df = cand.neighbor
+        cost           = cand.cost
+        iters          = c(iters, cost)
+      }
+    }
+    # update temperature and stage
+    temp  = temp/(1+alpha*temp)
+    stage = stage * beta
+  }
 }

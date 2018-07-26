@@ -40,3 +40,5 @@ colnames(beat.workloads.df)[1] = 'beat'
 # dataframe for the initial design (columns: beat, zone, workload)
 beat.design.df    = merge.mdf(list(beat.zones.df, beat.workloads.df), keys=c('beat'))
 
+# redesign by simulated annealing method
+final.res = simulated.annealing(beat.design.df, beats, graph.df, n=100, step=0.1)
