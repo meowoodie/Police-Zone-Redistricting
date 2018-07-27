@@ -19,20 +19,35 @@ library('sp')
 
 root.dir      = 'Desktop/workspace/Atlanta-Zoning'
 beat.geo.path = paste(root.dir, 'data/apd_beat.geojson', sep='/')
+redesign.path = paste(root.dir, 'data/redesign.csv', sep='/')
 colorbar      = c('gray', 'blue', 'black', 'red', 'yellow', 'purple', 'green')
 
 source(paste(root.dir, 'R/lib/utils.R', sep='/'))
 
 # read geojson into beats.geo
-beats.geo   = geojsonio::geojson_read(beat.geo.path, what = 'sp')
+beats.geo = geojsonio::geojson_read(beat.geo.path, what = 'sp')
+# number of beats
+n.beats   = length(beats.geo@polygons)
+
 # zone information for each of the beats
-beats.color = sapply(beats.geo$BEAT, function (beat) {
-  zone  = as.numeric(substr(as.character(beat), 1, 1))
+# # - original zone design
+# beats.color = sapply(beats.geo$BEAT, function (beat) {
+#   zone  = as.numeric(substr(as.character(beat), 1, 1))
+#   color = colorbar[zone + 1]
+#   return(color)
+# })
+# - new zone design from local file
+new.design.df = read.csv(redesign.path, header = TRUE, row.names = 1, 
+                         sep = ',', stringsAsFactors=FALSE, check.names=FALSE) 
+beats.color = unlist(sapply(beats.geo$BEAT, function (beat) {
+  zone = as.numeric(new.design.df[new.design.df$beat==beat, 'zone'])
+  # if zone is not available for some beats, use the original beat design.
+  if (length(zone) == 0) {
+    zone = as.numeric(substr(as.character(beat), 1, 1))
+  }
   color = colorbar[zone + 1]
   return(color)
-})
-# number of beats
-n.beats     = length(beats.geo@polygons)
+}))
 
 # Generate SpatialPolygons objects for each of beats according to 
 # their coordinates in geojson

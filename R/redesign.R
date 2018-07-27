@@ -42,3 +42,9 @@ beat.design.df    = merge.mdf(list(beat.zones.df, beat.workloads.df), keys=c('be
 
 # redesign by simulated annealing method
 final.res = simulated.annealing(beat.design.df, beats, graph.df, n=100)
+print(final.res$iterations)
+print(final.res$time)
+
+# Write results to local file
+redesign.path = paste(root.dir, 'data/redesign.csv', sep='/')
+write.csv(final.res$solution, file=redesign.path)

@@ -125,8 +125,28 @@ leaflet(beats.geo) %>%
       style     = list('font-weight' = 'normal', padding = '3px 8px'),
       textsize  = '15px',
       direction = 'auto'),
-    group       = 'Zones Layer'
-  ) %>%
+    group       = 'Zones Layer') %>%
+  # plot zone polygons in redesign layer
+  addPolygons(
+    data        = merged,
+    fillColor   = ~zone.pal(workload),
+    weight      = 2,
+    opacity     = 1,
+    color       = 'white',
+    dashArray   = '3',
+    fillOpacity = 0.5,
+    highlight   = highlightOptions(
+      weight    = 5,
+      color     = '#666',
+      dashArray = '',
+      fillOpacity  = 0.7,
+      bringToFront = FALSE),
+    label        = zone.label,
+    labelOptions = labelOptions(
+      style     = list('font-weight' = 'normal', padding = '3px 8px'),
+      textsize  = '15px',
+      direction = 'auto'),
+    group       = 'Redesign Layer') %>%
   # add legend for beat map
   addLegend(
     pal      = beat.pal, 
@@ -145,5 +165,5 @@ leaflet(beats.geo) %>%
     group    = 'Zones Layer') %>%
   # add controller for beat and zone layers
   addLayersControl(
-    baseGroups = c('Beats Layer', 'Zones Layer'),
+    baseGroups = c('Beats Layer', 'Zones Layer', 'Redesign Layer'),
     options    = layersControlOptions(collapsed = FALSE)) 
