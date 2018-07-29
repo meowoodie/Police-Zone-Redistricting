@@ -69,8 +69,8 @@ conti.neighbor = function (beat.design.df, beats, graph.df) {
 }
 
 simulated.annealing = function (beat.design.df, beats, graph.df, n=10) {
-  alpha = 0.01        # cooling rate
-  beta  = 2           # stage rate
+  alpha = 0.01      # cooling rate
+  beta  = 2         # stage rate
   ptm   = proc.time() # Start the clock!
   
   temp  = 1    # temperature

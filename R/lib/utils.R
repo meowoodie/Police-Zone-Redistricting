@@ -36,8 +36,9 @@ spatial.polygon = function(coord, ID) {
 #   https://gis.stackexchange.com/questions/180682/merge-a-list-of-spatial-polygon-objects-in-r
 # - Merge polygons of a dataframe accordingly
 #   https://gis.stackexchange.com/questions/63577/joining-polygons-in-r
-library(ggplot2)
-merge.beats = function (beat.geo, beat.design) {
+library('sp')
+library('maptools')
+merge.beats = function (beat.geo, beat.design.df) {
   # Generate SpatialPolygons objects for each of beats according to 
   # their coordinates in geojson
   beats        = c()
@@ -45,16 +46,23 @@ merge.beats = function (beat.geo, beat.design) {
   polygons     = list()
   for (i in 1:length(beats.geo@polygons)) {
     beat      = as.character(beats.geo@data$BEAT[i])
-    zone      = as.character(beat.design[beat.design$beat==beat, 'zone'])
+    zone      = as.character(beat.design.df[beat.design.df$beat==beat, 'zone'])
     if (length(zone) == 0) {
       zone = as.character(substr(as.character(beat), 1, 1))
+      print(zone)
+      print(beat)
     }
-    coord     = beats.geo@polygons[[i]]@Polygons[[1]]@coords
-    polygon   = spatial.polygon(coord, beat)
+    # TODO: Fix the issue if the polygons object have multiple polygons
+    coord = beats.geo@polygons[[i]]@Polygons[[1]]@coords
+    # Patch:
+    if (beat == '406') {
+      coord = beats.geo@polygons[[i]]@Polygons[[2]]@coords
+    }
+    polygon  = spatial.polygon(coord, beat)
     # append to the lists
-    polygons     = append(polygons, polygon)
-    beats        = c(beats, beat)
-    zones        = c(zones, zone)
+    polygons = append(polygons, polygon)
+    beats    = c(beats, beat)
+    zones    = c(zones, zone)
   }
   # Remove No. 9 elements (corresponding to beat 606),
   # which is an invalid polygons due to data imperfection
@@ -67,7 +75,7 @@ merge.beats = function (beat.geo, beat.design) {
   # Add features to the merged spatial polygons data frame
   merged$zone = sort(unique(zones))
   merged$workload = sapply(sort(unique(zones)), function (zone) {
-    workload = sum(beat.design[beat.design$zone==zone, 'workload'])
+    workload = sum(beat.design.df[beat.design.df$zone==zone, 'workload'])
     return(workload)
   })
   return(merged)

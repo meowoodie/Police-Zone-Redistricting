@@ -21,6 +21,7 @@ zone.geo.path = paste(root.dir, 'data/apd_zone.geojson', sep='/')
 redesign.path = paste(root.dir, 'data/redesign.csv', sep='/')
 
 source(paste(root.dir, 'R/lib/preproc.R', sep='/'))
+source(paste(root.dir, 'R/lib/utils.R', sep='/'))
 
 workload.df   = read.workload(workload.path)
 new.design.df = read.csv(redesign.path, header = TRUE, row.names = 1, 
@@ -53,6 +54,9 @@ zones.geo$workload = sapply(zones.geo$ZONE, function (zone) {
   return(workload)
 })
 
+# Spatial Polygons Object for the redesign.
+merged = merge.beats(beat.geo, new.design.df)
+
 # title settings
 title = tags$div(HTML(sprintf(
   '<a href="https://cran.r-project.org/"> \
@@ -70,6 +74,10 @@ beat.label = sprintf(
 zone.label = sprintf(
   '<strong>Zone %s</strong><br/>%g hours / year',
   zones.geo$ZONE, zones.geo$workload
+) %>% lapply(htmltools::HTML)
+redesign.label = sprintf(
+  '<strong>Zone %s</strong><br/>%g hours / year',
+  merged$zone, merged$workload
 ) %>% lapply(htmltools::HTML)
 
 # loading data into the initial map and adding background tiles
@@ -141,7 +149,7 @@ leaflet(beats.geo) %>%
       dashArray = '',
       fillOpacity  = 0.7,
       bringToFront = FALSE),
-    label        = zone.label,
+    label        = redesign.label,
     labelOptions = labelOptions(
       style     = list('font-weight' = 'normal', padding = '3px 8px'),
       textsize  = '15px',
@@ -166,4 +174,4 @@ leaflet(beats.geo) %>%
   # add controller for beat and zone layers
   addLayersControl(
     baseGroups = c('Beats Layer', 'Zones Layer', 'Redesign Layer'),
-    options    = layersControlOptions(collapsed = FALSE)) 
+    options    = layersControlOptions(collapsed = FALSE))
