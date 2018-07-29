@@ -49,8 +49,6 @@ merge.beats = function (beat.geo, beat.design.df) {
     zone      = as.character(beat.design.df[beat.design.df$beat==beat, 'zone'])
     if (length(zone) == 0) {
       zone = as.character(substr(as.character(beat), 1, 1))
-      print(zone)
-      print(beat)
     }
     # TODO: Fix the issue if the polygons object have multiple polygons
     coord = beats.geo@polygons[[i]]@Polygons[[1]]@coords
