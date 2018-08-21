@@ -3,7 +3,7 @@
 # By Shixiang Zhu
 # Contact: shixiang.zhu@gatech.edu
 
-root.dir           = 'Desktop/workspace/Atlanta-Zoning'
+root.dir           = 'Desktop/workspace/Zoning-Analysis'
 workload.path      = paste(root.dir, 'data/workload.csv', sep='/')
 beats.graph.path   = paste(root.dir, 'data/beats_graph.csv', sep='/')
 beats.centers.path = paste(root.dir, 'data/beats_centroids.csv', sep='/') # for visualization

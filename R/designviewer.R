@@ -14,7 +14,7 @@ library('geojsonio')
 library('shiny')
 # devtools::install_github('rstudio/leaflet')
 
-root.dir      = 'Desktop/workspace/Atlanta-Zoning'
+root.dir      = 'Desktop/workspace/Zoning-Analysis'
 workload.path = paste(root.dir, 'data/workload.csv', sep='/')
 beat.geo.path = paste(root.dir, 'data/apd_beat.geojson', sep='/')
 zone.geo.path = paste(root.dir, 'data/apd_zone.geojson', sep='/')

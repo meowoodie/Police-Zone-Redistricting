@@ -17,7 +17,7 @@ library('igraph')
 library('rgeos')
 library('sp')
 
-root.dir      = 'Desktop/workspace/Atlanta-Zoning'
+root.dir      = 'Desktop/workspace/Zoning-Analysis'
 beat.geo.path = paste(root.dir, 'data/apd_beat.geojson', sep='/')
 redesign.path = paste(root.dir, 'data/redesign.csv', sep='/')
 colorbar      = c('gray', 'blue', 'black', 'red', 'yellow', 'purple', 'green')
@@ -105,7 +105,9 @@ plot(net, layout=as.matrix(centroids.df),
      vertex.frame.color='gray', vertex.label.color='black', 
      vertex.label.cex=0.8, vertex.label.dist=1)
 
-# # Write graph and its coordinates to local file.
-# rownames(centroids.df) = beats
-# write.csv(graph.df, file = "beats_graph.csv")
-# write.csv(centroids.df, file = "beats_centroids.csv")
+# Write graph and its coordinates to local file.
+graph.path     = paste(root.dir, 'data/beats_graph.csv', sep='/')
+centroids.path = paste(root.dir, 'data/beats_centroids.csv', sep='/')
+rownames(centroids.df) = beats
+write.csv(graph.df, file = graph.path)
+write.csv(centroids.df, file = centroids.path)
