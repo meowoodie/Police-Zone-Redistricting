@@ -3,7 +3,7 @@
 # By Shixiang Zhu
 # Contact: shixiang.zhu@gatech.edu
 
-root.dir = 'Desktop/workspace/Atlanta-Zoning'
+root.dir = 'Desktop/workspace/Zoning-Analysis'
 raw.911calls.path = paste(root.dir, 'data/APDORR Gwinn-Villaroel ICIS Data Pull.xlsx', sep='/')
 
 source(paste(root.dir, 'R/lib/combopt.R', sep='/'))
@@ -74,7 +74,7 @@ ggplot(zone.categories.count, aes(x = reorder(Offense_Descripton, n), y = n)) +
 categories.workload = raw.911calls.data %>% 
   mutate(Workload = (Approved_Date - Report_Date) + (Approved_Time - Report_Time)) %>% 
   group_by(Zone, Offense_Descripton) %>%
-  summarize(Avg_Workload = mean(Workload, na.rm = TRUE)) %>%
+  summarize(Avg_Workload = sum(Workload, na.rm = TRUE)) %>%
   as.data.frame
 zone.categories.workload = categories.workload[categories.workload$Zone==zone, c('Offense_Descripton', 'Avg_Workload')]
 zone.categories.workload$Avg_Workload_Hr = sprintf("%.2f hours", zone.categories.workload$Avg_Workload / 3600)
@@ -86,7 +86,7 @@ zone.categories.workload = zone.categories.workload[1:top.K, ]
 
 # Create the actual plot
 ggplot(zone.categories.workload, aes(x = reorder(Offense_Descripton, Avg_Workload), y = Avg_Workload)) + 
-  ggtitle(sprintf("Average Workload of Each Category in Zone %s?", zone)) + # Add the title and subtitle to the plot
+  ggtitle(sprintf("Total Workload of Each Category in Zone %s", zone)) + # Add the title and subtitle to the plot
   geom_bar(stat = "identity", 
            fill = "gray90",     
            width = 0.75) +
