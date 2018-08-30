@@ -11,7 +11,7 @@ library(tidyr)
 library(glmnet)
 library(stringr)
 library(plotmo)
-root.dir      = 'Desktop/workspace/Atlanta-Zoning'
+root.dir      = 'Desktop/workspace/Zoning-Analysis'
 data.dir      = paste(root.dir, 'data/census', sep='/')
 map.path      = paste(root.dir, 'data/cross_map.csv', sep='/')
 workload.path = paste(root.dir, 'data/workload.csv', sep='/')

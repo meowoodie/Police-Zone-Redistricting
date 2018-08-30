@@ -87,7 +87,7 @@ leaflet(beats.geo) %>%
   addTiles() %>% 
   # plot beat polygons in beats layer
   addPolygons(
-    fillColor   = ~beat.pal(workload),
+    # fillColor   = ~beat.pal(workload),
     weight      = 2,
     opacity     = 1,
     color       = 'white',
@@ -155,14 +155,14 @@ leaflet(beats.geo) %>%
       textsize  = '15px',
       direction = 'auto'),
     group       = 'Redesign Layer') %>%
-  # add legend for beat map
-  addLegend(
-    pal      = beat.pal, 
-    values   = ~workload, 
-    opacity  = 0.7, 
-    title    = 'Workload in Beats',
-    position = 'bottomright',
-    group    = 'Beats Layer') %>%
+  # # add legend for beat map
+  # addLegend(
+  #   pal      = beat.pal, 
+  #   values   = ~workload, 
+  #   opacity  = 0.7, 
+  #   title    = 'Workload in Beats',
+  #   position = 'bottomright',
+  #   group    = 'Beats Layer') %>%
   # add legend for beat map
   addLegend(
     pal      = zone.pal, 
@@ -173,5 +173,5 @@ leaflet(beats.geo) %>%
     group    = 'Zones Layer') %>%
   # add controller for beat and zone layers
   addLayersControl(
-    baseGroups = c('Beats Layer', 'Zones Layer', 'Redesign Layer'),
+    baseGroups = c('Zones Layer', 'Redesign Layer'),
     options    = layersControlOptions(collapsed = FALSE))

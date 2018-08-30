@@ -82,10 +82,10 @@ scale.df = function (df, keys) {
 # - census.df: The dataframe of census data, organized by multiple key (beat, year).
 zip2beat = function (map.path, census.zipcode.df) {
   # read cross.map into dataframe, row name is zipcode, col name is beat
-  cross.map = read.csv(map.path, header = FALSE, sep = ',', stringsAsFactors=FALSE)
-  names(cross.map)    = as.matrix(cross.map[1, ])
-  rownames(cross.map) = as.matrix(cross.map[, 1])
-  cross.map           = cross.map[-1, -1]
+  raw.cross.map = read.csv(map.path, header = FALSE, sep = ',', stringsAsFactors=FALSE)
+  cross.map           = raw.cross.map[-1, -1]
+  names(cross.map)    = as.matrix(raw.cross.map[1, -1])
+  rownames(cross.map) = as.matrix(raw.cross.map[-1, 1])
   # normalization of cross.map, make the values in each column can be added up to 1
   for (col in 1:ncol(cross.map)) {
     if (sum(cross.map[,col] != 0) != 0){
@@ -124,8 +124,10 @@ zip2beat = function (map.path, census.zipcode.df) {
             new.df = pct * census.zipcode.df[
               census.zipcode.df$Id2==as.character(zip) & census.zipcode.df$year==as.character(year),
               !(names(census.zipcode.df) %in% c('Id2', 'year'))]
-            new.df$year    = year
-            new.df$Id2     = beat
+            # new.df$year    = year
+            # new.df$Id2     = beat
+            new.df = cbind(new.df, data.frame(year=c(year)))
+            new.df = cbind(new.df, data.frame(Id2=c(beat)))
             census.beat.df = rbind(census.beat.df, new.df)
           }
         }

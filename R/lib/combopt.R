@@ -15,10 +15,17 @@
 
 # Cost function for evaluating the variance of workload over all the zones
 # given one possible solution.
+# - variance
 variance.workload = function (beat.design.df) {
   zone.workloads.df = aggregate(workload ~ zone, beat.design.df, sum)
   variance = var(zone.workloads.df$workload)
   return(variance)
+}
+# - variation (sum of pairwise differences)
+variation.workload = function (beat.design.df) {
+  zone.workloads.df = aggregate(workload ~ zone, beat.design.df, sum)
+  variation = sum(abs(apply(combn(zone.workloads.df$workload, 2), 2, diff)))
+  return(variation)
 }
 
 # A helper function for checking the connectivities of each cluster (sub graph)
