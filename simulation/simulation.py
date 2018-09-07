@@ -92,32 +92,37 @@ def simulate_2D_poisson_process(
 
 class Event(object):
     '''
+    Event Object
     '''
+
     def __init__(self, id, time, position, subr):
         self.id       = id
         self.time     = time
         self.position = position
         self.subr     = subr
-        self.waiting_times = []
+        self.waiting_time = 0
 
     def __str__(self):
-        return 'Event [%d]: total waiting time %f, number of waitings %d.' % \
-            (self.id, sum(self.waiting_times), len(self.waiting_times))
+        return 'Event [%d]: total waiting time %f' % \
+            (self.id, self.waiting_time)
 
 class Server(object):
     '''
+    Server Object
     '''
 
-    def __init__(self, region_id, start_time=0., start_position=[50., 50.], speed=10., proc_time=60.):
-        self.id             = region_id
+    def __init__(self, id,
+        start_time=0., start_position=[50., 50.],
+        speed=0.5, proc_time=1800.):
+        self.id             = id
         self.start_time     = start_time
         self.start_position = start_position
         self.speed          = speed
         self.proc_time      = proc_time
-
+        # history
         self.served_events  = []
         self.idle_times     = []
-
+        # status
         self.cur_time       = start_time
         self.cur_position   = start_position
 
@@ -128,7 +133,7 @@ class Server(object):
             self.cur_time = event.time
         # event has to wait until the server finish the previous jobs.
         else:
-            event.waiting_times.append(self.cur_time - event.time)
+            event.waiting_time = self.cur_time - event.time
         # after (event waiting server / server waiting event)
         # server start to serve current event
         distance = math.hypot(
@@ -146,6 +151,7 @@ class Server(object):
 
 class Simulation(object):
     '''
+    Simulation
     '''
 
     def __init__(self, lam=10, T=86400,
@@ -174,21 +180,15 @@ class Simulation(object):
         # ids for each of the events
         self.event_ids  = [ id for id in range(len(self.positions))]
         # subregions that each of the events belongs to
-        self.event_subr = [ self._check_event_area(position) for position in self.positions ]
+        self.event_subr = [ self._check_event_subr(position) for position in self.positions ]
         # event objects
         self.events = [
             Event(id, self.times[id], self.positions[id], self.event_subr[id])
             for id in self.event_ids ]
         # server objects
         self.servers    = [
-            Server(region_id=id, start_position=position)
+            Server(id, start_position=position)
             for id, position in zip(range(self.n_subr), servers_position) ]
-
-        self.cur_time   = 0
-
-        # print(self.times)
-        # print(self.client_ids)
-        # print(self.client_area)
 
     def start_service(self):
         for id in self.event_ids:
@@ -199,30 +199,23 @@ class Simulation(object):
                 self.servers[subr[0]].serve_event(self.events[id])
             elif len(subr) == 2:
                 self.servers[max(subr)].serve_event(self.events[id])
+        # for debugging
         for event in self.events:
             print(event)
         for server in self.servers:
             print(server)
 
-    def _check_event_area(self, position):
-        areas = [ id
+    def _check_event_subr(self, position):
+        subr = [ id
             for id, subregion in zip(range(self.n_subr), self.subregions)
             if subregion.contains(Point(position))]
-        return areas
+        return subr
 
 
 
 if __name__ == '__main__':
-    # lam = 10
-    # abs_coord=[0, 0]
-    # width=180.
-    # height=100.
-    # cells_shape=[5, 9]
 
     sim = Simulation(lam=2)
     sim.start_service()
-
-    # polygon = [(0., 0.), (100., 0.), (100., 100.), (0., 100.)]
-    # p = Polygon(polygon)
-    # print(p)
-    # print(p.contains(Point([50, 150])))
+    plot_2D_poisson_process(sim.positions)
+    plot_1D_poisson_process(sim.times)
