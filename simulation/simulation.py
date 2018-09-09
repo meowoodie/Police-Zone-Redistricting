@@ -100,6 +100,7 @@ def simulate_2D_poisson_process(
     # move the points to the absolute position
     coords[:, 0] += leftbottom_coords[0]
     coords[:, 1] += leftbottom_coords[1]
+    np.random.shuffle(coords)
     return coords
 
 class Event(object):
@@ -125,7 +126,7 @@ class Server(object):
 
     def __init__(self, id,
         start_time=0., start_position=[50., 50.],
-        speed=50., proc_time=0.1):
+        speed=10., proc_time=0.1):
         self.id             = id
         self.start_time     = start_time
         self.start_position = start_position
@@ -182,15 +183,15 @@ class Simulation(object):
         '''
         self.n_subr     = len(subregion_polygons)
         self.subregions = [ Polygon(polygon) for polygon in subregion_polygons ]
-        print('[%s] initializing random events ...' % arrow.now())
+        # print('[%s] initializing random events ...' % arrow.now())
         # positions for each of the events
         self.positions  = simulate_2D_poisson_process(
             cells_shape=cells_shape, lam=lam,
             width=width, height=height, leftbottom_coords=abs_coord)
         # times for each of the events
         self.times      = simulate_1D_poisson_process(T=T, N=len(self.positions))
-        print('[%s] %d events have been created.' % (arrow.now(), len(self.positions)))
-        print('[%s] creating events and servers objects ...' % arrow.now())
+        # print('[%s] %d events have been created.' % (arrow.now(), len(self.positions)))
+        # print('[%s] creating events and servers objects ...' % arrow.now())
         # ids for each of the events
         self.event_ids  = [ id for id in range(len(self.positions))]
         # subregions that each of the events belongs to
@@ -214,7 +215,7 @@ class Simulation(object):
         move to the location of the event, and start service, then move the next
         assigned event after the completion of current job, so on so forth.
         '''
-        print('[%s] start service simulation ...' % arrow.now())
+        # print('[%s] start service simulation ...' % arrow.now())
         for event in self.events:
             if len(event.subr) > 0:
                 # check availability of each server in the order of priority,
@@ -229,7 +230,7 @@ class Simulation(object):
                     available_servers = [
                         self.servers[server_id]
                         for server_id in event.subr ]
-                # find the nearest server to the current event.
+                # assign the current event to the nearest server 
                 dists = [
                     distance(event.position, server.cur_position)
                     for server in available_servers ]
@@ -268,46 +269,55 @@ class Simulation(object):
 
 
 if __name__ == '__main__':
-    width       = 180.
+    lam = 10
+    T   = 1000
+
+    abs_coord   = [0, 0]
     height      = 100.
-    cells_shape = [100, 180]
-    servers_position   = [(50, 50), (130, 50)]
-    subregion_polygons = [
-        [(0., 0.), (100., 0.), (100., 100.), (0., 100.)],
-        [(80., 0.), (180., 0.), (180., 100.), (80., 100.)]]
+    width       = 100.
+    cells_shape = [10, 10]
+    n_epoches   = 10
 
 
-    overlap_ratio_list    = []
+    overlap_ratio_list    = np.linspace(0., 99., 100) / width
     avg_waiting_time_list = []
-    for overlap_width in np.linspace(0, 99, 100):
-        lam = 10
-        T   = 1000
+    for epoch in range(n_epoches):
+        print('[%s] Simulation epoch %d' % (arrow.now(), epoch))
+        avg_waiting_times = []
+        for overlap_width in np.linspace(0., 99., 100):
 
-        abs_coord   = [0, 0]
-        height      = 100.
-        width       = 200. - overlap_width
-        cells_shape = [5, 5]
-        servers_position   = [(50., 50.), (150. - overlap_width, 50.)]
-        subregion_polygons = [
-            [(0., 0.), (100., 0.), (100., 100.), (0., 100.)],
-            [(100. - overlap_width, 0.), (200. - overlap_width, 0.),
-             (200. - overlap_width, 100.), (100. - overlap_width, 100.)]]
+            subr_radius = (width / 2. + overlap_width / 2.) / 2.
+            servers_position   = [(subr_radius, 50.), (100. - subr_radius, 50.)]
+            subregion_polygons = [
+                [(0., 0.), (2 * subr_radius, 0.),
+                 (2 * subr_radius, 2 * subr_radius), (0., 2 * subr_radius)],
+                [(100. - 2 * subr_radius, 0.), (100., 0.),
+                 (100., 100.), (100 - 2 * subr_radius, 100.)]]
 
-        sim = Simulation(
-            lam=lam, T=T, abs_coord=abs_coord,
-            height=height, width=width, cells_shape=cells_shape,
-            servers_position=servers_position,
-            subregion_polygons=subregion_polygons)
-        sim.start_service()
+            # width       = 200. - overlap_width
+            # servers_position   = [(50., 50.), (150. - overlap_width, 50.)]
+            # subregion_polygons = [
+            #     [(0., 0.), (100., 0.), (100., 100.), (0., 100.)],
+            #     [(100. - overlap_width, 0.), (200. - overlap_width, 0.),
+            #      (200. - overlap_width, 100.), (100. - overlap_width, 100.)]]
 
-        # sim.print_service_history()
-        # plot_2D_poisson_process(sim.positions)
+            sim = Simulation(
+                lam=lam, T=T, abs_coord=abs_coord,
+                height=height, width=width, cells_shape=cells_shape,
+                servers_position=servers_position,
+                subregion_polygons=subregion_polygons)
+            sim.start_service()
 
-        overlap_ratio    = overlap_width / 100.
-        avg_waiting_time = np.mean(sim.get_avg_waiting_time())
+            # sim.print_service_history()
+            # plot_2D_poisson_process(sim.positions)
 
-        overlap_ratio_list.append(overlap_ratio)
-        avg_waiting_time_list.append(avg_waiting_time)
+            overlap_ratio    = overlap_width / 100.
+            avg_waiting_time = np.mean(sim.get_avg_waiting_time())
+
+            # overlap_ratio_list.append(overlap_ratio)
+            avg_waiting_times.append(avg_waiting_time)
+        avg_waiting_time_list.append(avg_waiting_times)
+    avg_waiting_time_list = np.array(avg_waiting_time_list).mean(axis=0)
 
     plt.plot(overlap_ratio_list, avg_waiting_time_list)
     plt.ylabel('average waiting time')
