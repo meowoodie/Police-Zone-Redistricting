@@ -268,8 +268,6 @@ class Simulation(object):
 
 
 if __name__ == '__main__':
-
-
     width       = 180.
     height      = 100.
     cells_shape = [100, 180]
@@ -301,7 +299,10 @@ if __name__ == '__main__':
             servers_position=servers_position,
             subregion_polygons=subregion_polygons)
         sim.start_service()
+
         # sim.print_service_history()
+        # plot_2D_poisson_process(sim.positions)
+
         overlap_ratio    = overlap_width / 100.
         avg_waiting_time = np.mean(sim.get_avg_waiting_time())
 
@@ -312,5 +313,3 @@ if __name__ == '__main__':
     plt.ylabel('average waiting time')
     plt.xlabel('overlap ratio')
     plt.show()
-
-    # plot_1D_poisson_process(sim.times)
