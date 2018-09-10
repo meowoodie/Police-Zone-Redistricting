@@ -61,7 +61,7 @@ def simulate_1D_poisson_process(
 # helper function for generating 2D poisson process
 def simulate_2D_poisson_process(
     cells_shape=[5, 5],        # shape of the cells organized in a square
-    lam=10,                    # lambda value for poisson distribution
+    lam=5,                    # lambda value for poisson distribution
     width=100., height=100.,   # size of the square
     leftbottom_coords=[0, 0]): # absolute position of the square
     '''
@@ -126,7 +126,7 @@ class Server(object):
 
     def __init__(self, id,
         start_time=0., start_position=[50., 50.],
-        speed=10., proc_time=0.1):
+        speed=15., proc_time=0.5):
         self.id             = id
         self.start_time     = start_time
         self.start_position = start_position
@@ -230,7 +230,7 @@ class Simulation(object):
                     available_servers = [
                         self.servers[server_id]
                         for server_id in event.subr ]
-                # assign the current event to the nearest server 
+                # assign the current event to the nearest server
                 dists = [
                     distance(event.position, server.cur_position)
                     for server in available_servers ]
@@ -250,14 +250,24 @@ class Simulation(object):
             avg_waiting_times.append(avg_waiting_time)
         return avg_waiting_times
 
+    def get_max_waiting_time(self):
+        # get average waiting time of events in terms of each server.
+        max_waiting_times = []
+        for server in self.servers:
+            served_events    = [ self.events[event_id] for event_id in server.served_events ]
+            waiting_times    = [ event.waiting_time for event in served_events ]
+            max_waiting_time = np.array(waiting_times).max()
+            max_waiting_times.append(max_waiting_time)
+        return max_waiting_times
+
     def print_service_history(self):
         # print the service history for each of the servers.
         for server in self.servers:
             served_events = [ self.events[event_id] for event_id in server.served_events ]
             print('Server [%d]' % server.id)
             for event in served_events:
-                print('Event [%d] in sub-regions %s served at %f, have been waiting for %f.' %\
-                      (event.id, event.subr, event.served_time, event.waiting_time))
+                print('Event [%d] occurred at %s (in sub-regions %s), served at %f, have been waiting for %f.' %\
+                      (event.id, event.position, event.subr, event.served_time, event.waiting_time))
 
     def _check_event_subr(self, position):
         # return the sub-region id of each event belongs to.
@@ -276,14 +286,15 @@ if __name__ == '__main__':
     height      = 100.
     width       = 100.
     cells_shape = [10, 10]
-    n_epoches   = 10
-
+    n_epoches   = 100
 
     overlap_ratio_list    = np.linspace(0., 99., 100) / width
     avg_waiting_time_list = []
+    max_waiting_time_list = []
     for epoch in range(n_epoches):
         print('[%s] Simulation epoch %d' % (arrow.now(), epoch))
         avg_waiting_times = []
+        max_waiting_times = []
         for overlap_width in np.linspace(0., 99., 100):
 
             subr_radius = (width / 2. + overlap_width / 2.) / 2.
@@ -313,13 +324,16 @@ if __name__ == '__main__':
 
             overlap_ratio    = overlap_width / 100.
             avg_waiting_time = np.mean(sim.get_avg_waiting_time())
+            max_waiting_time = np.max(sim.get_max_waiting_time())
 
             # overlap_ratio_list.append(overlap_ratio)
             avg_waiting_times.append(avg_waiting_time)
+            max_waiting_times.append(max_waiting_time)
         avg_waiting_time_list.append(avg_waiting_times)
+        max_waiting_time_list.append(max_waiting_times)
     avg_waiting_time_list = np.array(avg_waiting_time_list).mean(axis=0)
-
-    plt.plot(overlap_ratio_list, avg_waiting_time_list)
-    plt.ylabel('average waiting time')
+    max_waiting_time_list = np.array(max_waiting_time_list).mean(axis=0)
+    plt.plot(overlap_ratio_list, max_waiting_time_list)
+    plt.ylabel('maximum waiting time')
     plt.xlabel('overlap ratio')
     plt.show()
