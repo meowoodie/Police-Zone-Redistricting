@@ -37,21 +37,18 @@ check.connectivity = function (beat.design.df, graph.df) {
     sub.graph.df = graph.df[sub.beats, sub.beats]
     sub.net      = graph.adjacency(as.matrix(sub.graph.df), mode='undirected')
     if (length(subcomponent(sub.net, sub.beats[1], mode='all')) != length(sub.beats)) {
-      print('not connected!')
       return(FALSE)
     }
   }
-  print('connected!')
   return(TRUE)
 }
 
 # A helper function for checking the eccentricity of each cluster (sub graph)
 # in terms of the given beat design.
 check.eccentricity = function (beat.design.df, beats.geo) {
-  scale          = 1.1
+  scale          = 1.01
   new.zone.geo   = merge.beats(beats.geo, beat.design.df)
   eccentricities = calculate.eccentricity(new.zone.geo)
-  # print(eccentricities)
   # eccentricities should not greater than (original eccentricities times alpha)
   # 1    0.000236723272114583
   # 2    0.000220620626924161
@@ -59,18 +56,16 @@ check.eccentricity = function (beat.design.df, beats.geo) {
   # 4    0.000305890475295111
   # 5    5.60310770383178e-05
   # 6    0.000109180329312426
-  print(eccentricities)
+  # print(eccentricities)
   if (as.numeric(as.character(eccentricities[eccentricities$zone==1, 'eccentricity'])) > (0.000236723272114583 * scale) || 
       as.numeric(as.character(eccentricities[eccentricities$zone==2, 'eccentricity'])) > (0.000220620626924161 * scale) ||
       as.numeric(as.character(eccentricities[eccentricities$zone==3, 'eccentricity'])) > (0.000207236485459834 * scale) ||
       as.numeric(as.character(eccentricities[eccentricities$zone==4, 'eccentricity'])) > (0.000305890475295111 * scale) ||
       as.numeric(as.character(eccentricities[eccentricities$zone==5, 'eccentricity'])) > (5.60310770383178e-05 * scale) ||
       as.numeric(as.character(eccentricities[eccentricities$zone==6, 'eccentricity'])) > (0.000109180329312426 * scale)) {
-    print('no')
     return(FALSE)
   }
   else {
-    print('yes')
     return(TRUE)
   }
 }
@@ -102,6 +97,7 @@ conti.neighbor = function (beat.design.df, beats, graph.df, beats.geo) {
         # check the eccentricity of the new design only if it was connnected
         # since this step is time-consuming. 
         if (check.eccentricity(new.design.df, beats.geo)) {
+          print('legal solution found.')
           # append the new design to the list
           new.design.dfs = append(new.design.dfs, list(new.design.df))
         }
