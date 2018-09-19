@@ -20,8 +20,8 @@ beat.geo.path = paste(root.dir, 'data/apd_beat.geojson', sep='/')
 zone.geo.path = paste(root.dir, 'data/apd_zone.geojson', sep='/')
 redesign.path = paste(root.dir, 'data/redesign.csv', sep='/')
 
-source(paste(root.dir, 'R/lib/preproc.R', sep='/'))
-source(paste(root.dir, 'R/lib/utils.R', sep='/'))
+source(paste(root.dir, 'redesign/lib/preproc.R', sep='/'))
+source(paste(root.dir, 'redesign/lib/utils.R', sep='/'))
 
 workload.df   = read.workload(workload.path)
 new.design.df = read.csv(redesign.path, header = TRUE, row.names = 1, 
@@ -60,7 +60,7 @@ merged = merge.beats(beat.geo, new.design.df)
 # title settings
 title = tags$div(HTML(sprintf(
   '<a href="https://cran.r-project.org/"> \
-  Worload Analysis of Atlanta City in 20%s </a>', cur.year)))  
+  Worload Analysis of Atlanta City in 20%s </a>', cur.year)))
 
 # color settings
 beat.pal = colorBin('YlOrRd', domain = beats.geo$workload)
@@ -87,7 +87,7 @@ leaflet(beats.geo) %>%
   addTiles() %>% 
   # plot beat polygons in beats layer
   addPolygons(
-    # fillColor   = ~beat.pal(workload),
+    fillColor   = ~beat.pal(workload),
     weight      = 2,
     opacity     = 1,
     color       = 'white',
@@ -155,14 +155,14 @@ leaflet(beats.geo) %>%
       textsize  = '15px',
       direction = 'auto'),
     group       = 'Redesign Layer') %>%
-  # # add legend for beat map
-  # addLegend(
-  #   pal      = beat.pal, 
-  #   values   = ~workload, 
-  #   opacity  = 0.7, 
-  #   title    = 'Workload in Beats',
-  #   position = 'bottomright',
-  #   group    = 'Beats Layer') %>%
+  # add legend for beat map
+  addLegend(
+    pal      = beat.pal,
+    values   = ~workload,
+    opacity  = 0.7,
+    title    = 'Workload in Beats',
+    position = 'bottomright',
+    group    = 'Beats Layer') %>%
   # add legend for beat map
   addLegend(
     pal      = zone.pal, 
@@ -173,5 +173,5 @@ leaflet(beats.geo) %>%
     group    = 'Zones Layer') %>%
   # add controller for beat and zone layers
   addLayersControl(
-    baseGroups = c('Zones Layer', 'Redesign Layer'),
+    baseGroups = c('Beats Layer', 'Zones Layer', 'Redesign Layer'),
     options    = layersControlOptions(collapsed = FALSE))

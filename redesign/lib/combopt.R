@@ -37,10 +37,42 @@ check.connectivity = function (beat.design.df, graph.df) {
     sub.graph.df = graph.df[sub.beats, sub.beats]
     sub.net      = graph.adjacency(as.matrix(sub.graph.df), mode='undirected')
     if (length(subcomponent(sub.net, sub.beats[1], mode='all')) != length(sub.beats)) {
+      print('not connected!')
       return(FALSE)
     }
   }
+  print('connected!')
   return(TRUE)
+}
+
+# A helper function for checking the eccentricity of each cluster (sub graph)
+# in terms of the given beat design.
+check.eccentricity = function (beat.design.df, beats.geo) {
+  scale          = 1.1
+  new.zone.geo   = merge.beats(beats.geo, beat.design.df)
+  eccentricities = calculate.eccentricity(new.zone.geo)
+  # print(eccentricities)
+  # eccentricities should not greater than (original eccentricities times alpha)
+  # 1    0.000236723272114583
+  # 2    0.000220620626924161
+  # 3    0.000207236485459834
+  # 4    0.000305890475295111
+  # 5    5.60310770383178e-05
+  # 6    0.000109180329312426
+  print(eccentricities)
+  if (as.numeric(as.character(eccentricities[eccentricities$zone==1, 'eccentricity'])) > (0.000236723272114583 * scale) || 
+      as.numeric(as.character(eccentricities[eccentricities$zone==2, 'eccentricity'])) > (0.000220620626924161 * scale) ||
+      as.numeric(as.character(eccentricities[eccentricities$zone==3, 'eccentricity'])) > (0.000207236485459834 * scale) ||
+      as.numeric(as.character(eccentricities[eccentricities$zone==4, 'eccentricity'])) > (0.000305890475295111 * scale) ||
+      as.numeric(as.character(eccentricities[eccentricities$zone==5, 'eccentricity'])) > (5.60310770383178e-05 * scale) ||
+      as.numeric(as.character(eccentricities[eccentricities$zone==6, 'eccentricity'])) > (0.000109180329312426 * scale)) {
+    print('no')
+    return(FALSE)
+  }
+  else {
+    print('yes')
+    return(TRUE)
+  }
 }
 
 # A function for looking for the continuum neighborhood solutions according 
@@ -49,7 +81,7 @@ check.connectivity = function (beat.design.df, graph.df) {
 # of the adjacent nodes (in the other clusters) into the current cluster 
 # given an arbitrary node in the graph.
 library('igraph')
-conti.neighbor = function (beat.design.df, beats, graph.df) {
+conti.neighbor = function (beat.design.df, beats, graph.df, beats.geo) {
   new.design.dfs = list()
   for (beat in beat.design.df$beat) {
     # zone for the current beat
@@ -67,15 +99,20 @@ conti.neighbor = function (beat.design.df, beats, graph.df) {
       new.design.df[new.design.df$beat==beat.candidate, 'zone'] = beat.zone
       # check the connectivity of the new design
       if (check.connectivity(new.design.df, graph.df)) {
-        # append the new design to the list
-        new.design.dfs = append(new.design.dfs, list(new.design.df))
+        # check the eccentricity of the new design only if it was connnected
+        # since this step is time-consuming. 
+        if (check.eccentricity(new.design.df, beats.geo)) {
+          # append the new design to the list
+          new.design.dfs = append(new.design.dfs, list(new.design.df))
+        }
       }
     }
   }
   return(new.design.dfs)
 }
 
-simulated.annealing = function (beat.design.df, beats, graph.df, n=10) {
+# Core function for optimizing the design by simulated annealing.
+simulated.annealing = function (beat.design.df, beats, graph.df, beats.geo, n=10) {
   alpha = 0.01      # cooling rate
   beta  = 2         # stage rate
   ptm   = proc.time() # Start the clock!
@@ -89,7 +126,7 @@ simulated.annealing = function (beat.design.df, beats, graph.df, n=10) {
     print(sprintf('iter: %d', j))
     for (m in 1:stage){
       # get neighborhoods for the current solution
-      neighbors        = conti.neighbor(beat.design.df, beats, graph.df)
+      neighbors        = conti.neighbor(beat.design.df, beats, graph.df, beats.geo)
       res              = c() # init results for cost
       neighbor.indices = c() # init candidates for neighbor
       for (i in 1:length(neighbors)){

@@ -78,3 +78,34 @@ merge.beats = function (beat.geo, beat.design.df) {
   })
   return(merged)
 }
+
+# A function for calculating the eccentricity of zones in the SpatialPolygons object
+# References: original design
+# zone         eccentricity
+# 1    1 0.000236723272114583
+# 2    2 0.000220620626924161
+# 3    3 0.000207236485459834
+# 4    4 0.000305890475295111
+# 5    5 5.60310770383178e-05
+# 6    6 0.000109180329312426
+# 7   50 1.98755895981793e-05
+library('pdist')
+calculate.eccentricity = function (zones.geo) {
+  eccentricities.df = data.frame()
+  n.zones = length(zones.geo@polygons)
+  for (i in 1:n.zones) {
+    zone  = as.character(zones.geo@data$zone[i])
+    if (zone != "0") {
+      coord    = zones.geo@polygons[[i]]@Polygons[[1]]@coords
+      polygon  = spatial.polygon(coord, zone)
+      centroid = colMeans(coord)
+      eccentricity      = var(pdist(rbind(centroid, coord), 
+                                    indices.A=1, indices.B=2:nrow(coord)+1)@dist)
+      eccentricity.df   = setNames(data.frame(
+        matrix(c(zone, eccentricity), ncol = 2, nrow = 1)), 
+        c('zone', 'eccentricity'))
+      eccentricities.df = rbind(eccentricities.df, eccentricity.df)
+    }
+  }
+  return(eccentricities.df)
+}

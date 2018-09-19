@@ -5,12 +5,16 @@
 
 root.dir           = 'Desktop/workspace/Zoning-Analysis'
 workload.path      = paste(root.dir, 'data/workload.csv', sep='/')
+beat.geo.path      = paste(root.dir, 'data/apd_beat.geojson', sep='/')
 beats.graph.path   = paste(root.dir, 'data/beats_graph.csv', sep='/')
 beats.centers.path = paste(root.dir, 'data/beats_centroids.csv', sep='/') # for visualization
 
-source(paste(root.dir, 'R/lib/combopt.R', sep='/'))
-source(paste(root.dir, 'R/lib/preproc.R', sep='/'))
+source(paste(root.dir, 'redesign/lib/combopt.R', sep='/'))
+source(paste(root.dir, 'redesign/lib/preproc.R', sep='/'))
+source(paste(root.dir, 'redesign/lib/utils.R', sep='/'))
 
+# Geojson for beats area
+beats.geo    = geojsonio::geojson_read(beat.geo.path, what = 'sp')
 # Workload dataframe from local file
 workload.df  = read.workload(workload.path)
 # Graph of the connectivities of the beats according to their adjacency matrix
@@ -41,7 +45,7 @@ colnames(beat.workloads.df)[1] = 'beat'
 beat.design.df    = merge.mdf(list(beat.zones.df, beat.workloads.df), keys=c('beat'))
 
 # redesign by simulated annealing method
-final.res = simulated.annealing(beat.design.df, beats, graph.df, n=100)
+final.res = simulated.annealing(beat.design.df, beats, graph.df, beats.geo, n=100)
 print(final.res$iterations)
 print(final.res$time)
 
