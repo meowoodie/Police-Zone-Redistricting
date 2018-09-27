@@ -50,5 +50,8 @@ print(final.res$iterations)
 print(final.res$time)
 
 # Write results to local file
-redesign.path = paste(root.dir, 'data/redesign.csv', sep='/')
+redesign.path = paste(root.dir, 'data/redesign/redesign.csv', sep='/')
 write.csv(final.res$solution, file=redesign.path)
+
+# # print the variation of the design
+# print(variation.workload(beat.design.df))

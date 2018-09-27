@@ -13,15 +13,16 @@ library('leaflet')
 library('geojsonio')
 library('shiny')
 # devtools::install_github('rstudio/leaflet')
-
+setwd("/Users/woodie/")
 root.dir      = 'Desktop/workspace/Zoning-Analysis'
 workload.path = paste(root.dir, 'data/workload.csv', sep='/')
 beat.geo.path = paste(root.dir, 'data/apd_beat.geojson', sep='/')
 zone.geo.path = paste(root.dir, 'data/apd_zone.geojson', sep='/')
-redesign.path = paste(root.dir, 'data/redesign.csv', sep='/')
+redesign.path = paste(root.dir, 'data/redesign/sept.redesign.v2.csv', sep='/')
 
 source(paste(root.dir, 'redesign/lib/preproc.R', sep='/'))
 source(paste(root.dir, 'redesign/lib/utils.R', sep='/'))
+source(paste(root.dir, 'redesign/lib/optimizer.R', sep='/'))
 
 workload.df   = read.workload(workload.path)
 new.design.df = read.csv(redesign.path, header = TRUE, row.names = 1, 
@@ -175,3 +176,6 @@ leaflet(beats.geo) %>%
   addLayersControl(
     baseGroups = c('Beats Layer', 'Zones Layer', 'Redesign Layer'),
     options    = layersControlOptions(collapsed = FALSE))
+
+# print the variation of the design
+print(variation.workload(new.design.df))
