@@ -4,7 +4,7 @@
 # Contact: shixiang.zhu@gatech.edu
 
 root.dir           = 'Desktop/workspace/Zoning-Analysis'
-workload.path      = paste(root.dir, 'data/workload.csv', sep='/')
+workload.path      = paste(root.dir, 'data/workload_by_junzhuo.csv', sep='/')
 beat.geo.path      = paste(root.dir, 'data/apd_beat.geojson', sep='/')
 beats.graph.path   = paste(root.dir, 'data/beats_graph.csv', sep='/')
 beats.centers.path = paste(root.dir, 'data/beats_centroids.csv', sep='/') # for visualization
@@ -25,7 +25,7 @@ graph.df     = read.csv(beats.graph.path, header = TRUE, row.names = 1,
 centroids.df = read.csv(beats.centers.path, header = TRUE, row.names = 1, 
                         sep = ',', stringsAsFactors=FALSE)
 # The year that we are going to analyze
-cur.year     = '17'
+cur.year     = '19'
 
 # a vector of beats
 beats      = rownames(centroids.df)
@@ -50,7 +50,7 @@ print(final.res$iterations)
 print(final.res$time)
 
 # Write results to local file
-redesign.path = paste(root.dir, 'data/redesign/redesign.csv', sep='/')
+redesign.path = paste(root.dir, 'data/redesign/oct23_redesign_Jun2018.csv', sep='/')
 write.csv(final.res$solution, file=redesign.path)
 
 # # print the variation of the design

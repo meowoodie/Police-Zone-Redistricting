@@ -18,7 +18,7 @@
 # - variance
 variance.workload = function (beat.design.df) {
   zone.workloads.df = aggregate(workload ~ zone, beat.design.df, sum)
-  variance = var(zone.workloads.df$workload)
+  variance = sd(zone.workloads.df$workload)
   return(variance)
 }
 # - variation (sum of pairwise differences)
@@ -43,10 +43,31 @@ check.connectivity = function (beat.design.df, graph.df) {
   return(TRUE)
 }
 
+# A helper function for checking the customized constraints
+check.constraints = function (beat.design.df) {
+  if (beat.design.df[beat.design.df$beat=='203', 'zone'] == 1 &&
+      beat.design.df[beat.design.df$beat=='213', 'zone'] == 6 &&
+      beat.design.df[beat.design.df$beat=='506', 'zone'] == 6 &&
+      beat.design.df[beat.design.df$beat=='111', 'zone'] == 1) {
+    return(TRUE)
+  }
+  else {
+    return(FALSE)
+  }
+}
+# A helper function for applying customized constraints
+add.constraints = function (beat.design.df) {
+  beat.design.df[beat.design.df$beat=='203', 'zone'] = 1
+  beat.design.df[beat.design.df$beat=='213', 'zone'] = 6 
+  beat.design.df[beat.design.df$beat=='506', 'zone'] = 6
+  beat.design.df[beat.design.df$beat=='111', 'zone'] = 1
+  return(beat.design.df)
+}
+
 # A helper function for checking the eccentricity of each cluster (sub graph)
 # in terms of the given beat design.
 check.eccentricity = function (beat.design.df, beats.geo) {
-  scale          = 1.01
+  scale          = 1.5
   new.zone.geo   = merge.beats(beats.geo, beat.design.df)
   eccentricities = calculate.eccentricity(new.zone.geo)
   # eccentricities should not greater than (original eccentricities times alpha)
@@ -97,9 +118,11 @@ conti.neighbor = function (beat.design.df, beats, graph.df, beats.geo) {
         # check the eccentricity of the new design only if it was connnected
         # since this step is time-consuming. 
         if (check.eccentricity(new.design.df, beats.geo)) {
-          print('legal solution found.')
           # append the new design to the list
-          new.design.dfs = append(new.design.dfs, list(new.design.df))
+          if (check.constraints(new.design.df)){
+            print('legal solution found.')
+            new.design.dfs = append(new.design.dfs, list(new.design.df)) 
+          }
         }
       }
     }
@@ -109,6 +132,10 @@ conti.neighbor = function (beat.design.df, beats, graph.df, beats.geo) {
 
 # Core function for optimizing the design by simulated annealing.
 simulated.annealing = function (beat.design.df, beats, graph.df, beats.geo, n=10) {
+  # add constraints
+  beat.design.df = add.constraints(beat.design.df)
+  
+  # init params
   alpha = 0.01      # cooling rate
   beta  = 2         # stage rate
   ptm   = proc.time() # Start the clock!

@@ -15,10 +15,10 @@ library('shiny')
 # devtools::install_github('rstudio/leaflet')
 setwd("/Users/woodie/")
 root.dir      = 'Desktop/workspace/Zoning-Analysis'
-workload.path = paste(root.dir, 'data/workload.csv', sep='/')
+workload.path = paste(root.dir, 'data/workload_by_junzhuo.csv', sep='/')
 beat.geo.path = paste(root.dir, 'data/apd_beat.geojson', sep='/')
 zone.geo.path = paste(root.dir, 'data/apd_zone.geojson', sep='/')
-redesign.path = paste(root.dir, 'data/redesign/sept.redesign.v2.csv', sep='/')
+redesign.path = paste(root.dir, 'data/redesign/oct23_constrained_redesign_Jun2018.csv', sep='/')
 
 source(paste(root.dir, 'redesign/lib/preproc.R', sep='/'))
 source(paste(root.dir, 'redesign/lib/utils.R', sep='/'))
@@ -29,7 +29,7 @@ new.design.df = read.csv(redesign.path, header = TRUE, row.names = 1,
                          sep = ',', stringsAsFactors=FALSE, check.names=FALSE) 
 beats.geo   = geojsonio::geojson_read(beat.geo.path, what = 'sp')
 zones.geo   = geojsonio::geojson_read(zone.geo.path, what = 'sp')
-cur.year    = '17'
+cur.year    = '19'
 
 # add information into geojson
 # - zone number
@@ -61,7 +61,7 @@ merged = merge.beats(beat.geo, new.design.df)
 # title settings
 title = tags$div(HTML(sprintf(
   '<a href="https://cran.r-project.org/"> \
-  Worload Analysis of Atlanta City in 20%s </a>', cur.year)))
+  Workload Analysis of Atlanta City in 20%s </a>', cur.year)))
 
 # color settings
 beat.pal = colorBin('YlOrRd', domain = beats.geo$workload)
@@ -169,7 +169,7 @@ leaflet(beats.geo) %>%
     pal      = zone.pal, 
     values   = ~workload, 
     opacity  = 0.7, 
-    title    = 'Worload in Zones',
+    title    = 'Workload in Zones',
     position = 'bottomleft',
     group    = 'Zones Layer') %>%
   # add controller for beat and zone layers
@@ -178,4 +178,5 @@ leaflet(beats.geo) %>%
     options    = layersControlOptions(collapsed = FALSE))
 
 # print the variation of the design
+print(variance.workload(new.design.df))
 print(variation.workload(new.design.df))

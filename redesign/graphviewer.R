@@ -18,11 +18,11 @@ library('rgeos')
 library('sp')
 
 root.dir      = 'Desktop/workspace/Zoning-Analysis'
-beat.geo.path = paste(root.dir, 'data/apd_beat.geojson', sep='/')
-redesign.path = paste(root.dir, 'data/redesign.csv', sep='/')
+beat.geo.path = paste(root.dir, 'data/apd_beats_Jun2018.geojson', sep='/')
+redesign.path = paste(root.dir, 'data/redesign/aug.redesign.csv', sep='/')
 colorbar      = c('gray', 'blue', 'black', 'red', 'yellow', 'purple', 'green')
 
-source(paste(root.dir, 'R/lib/utils.R', sep='/'))
+source(paste(root.dir, 'redesign/lib/utils.R', sep='/'))
 
 # read geojson into beats.geo
 beats.geo = geojsonio::geojson_read(beat.geo.path, what = 'sp')
@@ -30,24 +30,24 @@ beats.geo = geojsonio::geojson_read(beat.geo.path, what = 'sp')
 n.beats   = length(beats.geo@polygons)
 
 # zone information for each of the beats
-# # - original zone design
-# beats.color = sapply(beats.geo$BEAT, function (beat) {
-#   zone  = as.numeric(substr(as.character(beat), 1, 1))
-#   color = colorbar[zone + 1]
-#   return(color)
-# })
-# - new zone design from local file
-new.design.df = read.csv(redesign.path, header = TRUE, row.names = 1, 
-                         sep = ',', stringsAsFactors=FALSE, check.names=FALSE) 
-beats.color = unlist(sapply(beats.geo$BEAT, function (beat) {
-  zone = as.numeric(new.design.df[new.design.df$beat==beat, 'zone'])
-  # if zone is not available for some beats, use the original beat design.
-  if (length(zone) == 0) {
-    zone = as.numeric(substr(as.character(beat), 1, 1))
-  }
+# - original zone design
+beats.color = sapply(beats.geo$BEAT, function (beat) {
+  zone  = as.numeric(substr(as.character(beat), 1, 1))
   color = colorbar[zone + 1]
   return(color)
-}))
+})
+# # - new zone design from local file
+# new.design.df = read.csv(redesign.path, header = TRUE, row.names = 1, 
+#                          sep = ',', stringsAsFactors=FALSE, check.names=FALSE) 
+# beats.color = unlist(sapply(beats.geo$BEAT, function (beat) {
+#   zone = as.numeric(new.design.df[new.design.df$beat==beat, 'zone'])
+#   # if zone is not available for some beats, use the original beat design.
+#   if (length(zone) == 0) {
+#     zone = as.numeric(substr(as.character(beat), 1, 1))
+#   }
+#   color = colorbar[zone + 1]
+#   return(color)
+# }))
 
 # Generate SpatialPolygons objects for each of beats according to 
 # their coordinates in geojson
@@ -71,6 +71,21 @@ polygons[[9]] = NULL
 centroids.df  = centroids.df[-9,]
 beats.color   = beats.color[-9]
 n.beats       = n.beats - 1
+# Remove No. 81 elements (corresponding to beat 608),
+# which is an invalid polygons due to data imperfection
+beats         = beats[-80]
+polygons[[80]] = NULL
+centroids.df  = centroids.df[-80,]
+beats.color   = beats.color[-80]
+n.beats       = n.beats - 1
+# Remove No. 81 elements (corresponding to beat 0),
+# which is an invalid polygons due to data imperfection
+beats         = beats[-80]
+polygons[[80]] = NULL
+centroids.df  = centroids.df[-80,]
+beats.color   = beats.color[-80]
+n.beats       = n.beats - 1
+
 # # Remove duplicate elements in beats and polygons
 # # (due to the redundancies in the geojson file)
 # dups.inds = which(duplicated(beats) %in% c(TRUE))
@@ -106,8 +121,8 @@ plot(net, layout=as.matrix(centroids.df),
      vertex.label.cex=0.8, vertex.label.dist=1)
 
 # Write graph and its coordinates to local file.
-graph.path     = paste(root.dir, 'data/beats_graph.csv', sep='/')
-centroids.path = paste(root.dir, 'data/beats_centroids.csv', sep='/')
+graph.path     = paste(root.dir, 'data/beats_graph_Jun2018.csv', sep='/')
+centroids.path = paste(root.dir, 'data/beats_centroids_Jun2018.csv', sep='/')
 rownames(centroids.df) = beats
 write.csv(graph.df, file = graph.path)
 write.csv(centroids.df, file = centroids.path)
