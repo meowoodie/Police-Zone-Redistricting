@@ -2,22 +2,6 @@
 # -*- coding: utf-8 -*-
 
 """
-Gas Station Refueling example
-
-Covers:
-
-- Resources: Resource
-- Resources: Container
-- Waiting for other processes
-
-Scenario:
-  A gas station has a limited number of gas pumps that share a common
-  fuel reservoir. Cars randomly arrive at the gas station, request one
-  of the fuel pumps and start refueling from that reservoir.
-
-  A gas station control process observes the gas station's fuel level
-  and calls a tank truck for refueling if the station's level drops
-  below a threshold.
 
 """
 
@@ -106,23 +90,18 @@ def event(name, env, police, lam, location):
         done_time = env.now
         # print('[%.1f] <%s> finished service in %.1f seconds.' % (done_time, name, done_time - arrv_time))
 
-# # Setup and start the simulation
-random.seed(RANDOM_SEED)
-
 if __name__ == '__main__':
 
     abs_coord   = [0, 0]
     height      = 100.
     width       = 100.
-    n_epoches   = 1000
+    n_epoches   = 10
 
     overlap_ratio_list    = np.linspace(0., 99., 100) / width
     avg_waiting_time_list = []
-    max_waiting_time_list = []
     for epoch in range(n_epoches):
         print('[%s] Simulation epoch %d' % (arrow.now(), epoch))
         avg_waiting_times = []
-        max_waiting_times = []
         for overlap_width in np.linspace(0., 99., 100):
 
             subr_radius = (width / 2. + overlap_width / 2.) / 2.
@@ -133,6 +112,8 @@ if __name__ == '__main__':
                 [(width - 2 * subr_radius, 0.), (width, 0.),
                  (width, height), (width - 2 * subr_radius, height)]]
 
+            # Setup and start the simulation
+            # random.seed(RANDOM_SEED)
             # Create environment and start processes
             env = simpy.Environment()
             # Create polices
@@ -152,16 +133,18 @@ if __name__ == '__main__':
             # Create process for generating events iteratively
             env.process(event_generator(env, [ police1, police2 ], event_lam=.3, service_lam=1.))
             # Execute
-            env.run(until=100)
+            env.run(until=10000)
 
             overlap_ratio    = overlap_width / 100.
             avg_waiting_time = np.mean(waiting_times)
+            # avg_waiting_time = np.max(waiting_times)
 
             avg_waiting_times.append(avg_waiting_time)
         avg_waiting_time_list.append(avg_waiting_times)
     avg_waiting_time_list = np.array(avg_waiting_time_list).mean(axis=0)
 
     plt.plot(overlap_ratio_list, avg_waiting_time_list)
-    plt.ylabel('average waiting time')
+    plt.ylabel('average waiting times')
+    # plt.ylabel('percentage of waiting times larger than mean + 2*std')
     plt.xlabel('overlap ratio')
     plt.show()
