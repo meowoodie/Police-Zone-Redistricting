@@ -92,7 +92,7 @@ def plot_t_distribution(tuples, savepath, t_annotation="t1"):
     
     with PdfPages(savepath) as pdf:
         fig, ax = plt.subplots(1, 1)
-        sns.set(color_codes=True)
+        # sns.set(color_codes=True)
         for zone in tdist:
             print(zone)
             print(len(tdist[zone]))
@@ -103,6 +103,7 @@ def plot_t_distribution(tuples, savepath, t_annotation="t1"):
         ax.set_title("distribution over zones", fontweight="bold")
         ax.legend(frameon=False)
         pdf.savefig(fig)
+        plt.clf()
         
 
 if __name__ == "__main__":
@@ -125,4 +126,3 @@ if __name__ == "__main__":
         savepath = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/all-t3.pdf"
         plot_t_distribution(t3_tuples, savepath, t_annotation="t3")
 
-        
