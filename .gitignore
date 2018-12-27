@@ -1,2 +1,5 @@
 .DS_Store
-results/archive
+.gitignore
+results
+temp
+data
