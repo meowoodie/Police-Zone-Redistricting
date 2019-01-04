@@ -79,32 +79,35 @@ class T(object):
                 return name
         return None
 
+import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from scipy.stats import gamma
 from collections import defaultdict
 from matplotlib.backends.backend_pdf import PdfPages
 
-def plot_t_distribution(tuples, savepath, t_annotation="t1"):
+def plot_t_distribution(tuples, savepath, t_lim, t_annotation="t1"):
     tdist = defaultdict(lambda: [])
     for t, zone in tuples:
-        if zone and t:
-            tdist[zone].append(t)
+        tdist[zone].append(t)
     
     with PdfPages(savepath) as pdf:
         fig, ax = plt.subplots(1, 1)
-        # sns.set(color_codes=True)
         for zone in tdist:
             print(zone)
             print(len(tdist[zone]))
             print(max(tdist[zone]))
-            sns.distplot(tdist[zone],
-                hist=False, rug=False, ax=ax, label="zone %s (%d)" % (zone, len(tdist[zone])))
+            shape, loc, scale = gamma.fit(tdist[zone], floc=0)
+            x = np.linspace(0, t_lim, 1000)
+            y = gamma.pdf(x, shape, 0, scale)
+            ax.plot(x, y, label="zone %s (%d)" % (zone, len(tdist[zone])))
+            # sns.distplot(tdist[zone],
+            #     bins=50, hist=True, rug=False, kde=False, ax=ax, label="zone %s (%d)" % (zone, len(tdist[zone])))
         ax.set(xlabel=t_annotation, ylabel="frequency")
-        ax.set_title("distribution over zones", fontweight="bold")
+        ax.set_title("Distribution of all categories over zones", fontweight="bold")
         ax.legend(frameon=False)
         pdf.savefig(fig)
         plt.clf()
-        
 
 if __name__ == "__main__":
     domvio_911calls  = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/domvio.rawdata.txt"
@@ -115,14 +118,14 @@ if __name__ == "__main__":
                    for t1, t2, t3, lat, lng, zone in T(f, geojson=apd_zone_geojson) 
                    if zone and zone != 50 ]
 
-        t1_tuples = [ [ t1, zone ] for t1, t2, t3, zone in tuples if t1 ]
-        t2_tuples = [ [ t2, zone ] for t1, t2, t3, zone in tuples if t2 ]
-        t3_tuples = [ [ t3, zone ] for t1, t2, t3, zone in tuples if t3 ]
+        t1_tuples = [ [ t1, zone ] for t1, t2, t3, zone in tuples if zone and t1 and t1 > 0 and t1 < 4000]
+        t2_tuples = [ [ t2, zone ] for t1, t2, t3, zone in tuples if zone and t2 and t2 > 0 and t2 < 4000]
+        t3_tuples = [ [ t3, zone ] for t1, t2, t3, zone in tuples if zone and t3 and t3 > 0 and t3 < 50000]
 
         savepath = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/all-t1.pdf"
-        plot_t_distribution(t1_tuples, savepath, t_annotation="t1")
+        plot_t_distribution(t1_tuples, savepath, 4000, t_annotation="t1")
         savepath = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/all-t2.pdf"
-        plot_t_distribution(t2_tuples, savepath, t_annotation="t2")
+        plot_t_distribution(t2_tuples, savepath, 4000, t_annotation="t2")
         savepath = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/all-t3.pdf"
-        plot_t_distribution(t3_tuples, savepath, t_annotation="t3")
+        plot_t_distribution(t3_tuples, savepath, 50000, t_annotation="t3")
 
