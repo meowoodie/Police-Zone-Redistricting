@@ -81,6 +81,9 @@ redesign.label = sprintf(
   merged$zone, merged$workload
 ) %>% lapply(htmltools::HTML)
 
+# zones.geo = zones.geo[zones.geo$ID == 6,]
+# merged    = merged[merged$zone == 6,]
+
 # loading data into the initial map and adding background tiles
 leaflet(beats.geo) %>%
   addControl(title, position = "topright") %>%
@@ -119,10 +122,10 @@ leaflet(beats.geo) %>%
     data        = zones.geo,
     fillColor   = ~zone.pal(workload),
     weight      = 2,
-    opacity     = 1,
+    opacity     = .5,
     color       = 'white',
     dashArray   = '3',
-    fillOpacity = 0.5,
+    fillOpacity = .1,
     highlight   = highlightOptions(
       weight    = 5,
       color     = '#666',
@@ -140,10 +143,10 @@ leaflet(beats.geo) %>%
     data        = merged,
     fillColor   = ~zone.pal(workload),
     weight      = 2,
-    opacity     = 1,
+    opacity     = 0.5,
     color       = 'white',
     dashArray   = '3',
-    fillOpacity = 0.5,
+    fillOpacity = 0.1,
     highlight   = highlightOptions(
       weight    = 5,
       color     = '#666',
