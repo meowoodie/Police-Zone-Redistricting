@@ -82,7 +82,7 @@ class T(object):
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-from scipy.stats import gamma
+from scipy.stats import gamma, kstest
 from collections import defaultdict
 from matplotlib.backends.backend_pdf import PdfPages
 
@@ -91,18 +91,27 @@ def plot_t_distribution(tuples, savepath, t_lim, t_annotation="t1"):
     for t, zone in tuples:
         tdist[zone].append(t)
     
+    cm = ['blue', 'red', 'green', 'orange', 'purple', 'brown']
+    plt.rc('text', usetex=True)
+    plt.rc('font', family='serif')
     with PdfPages(savepath) as pdf:
-        fig, ax = plt.subplots(1, 1)
-        for zone in tdist:
+        fig, ax = plt.subplots(figsize=(8, 6))
+        zones   = list(tdist.keys())
+        zones.sort()
+        for zone in zones:
             print(zone)
             print(len(tdist[zone]))
             print(max(tdist[zone]))
+            # fitting
             shape, loc, scale = gamma.fit(tdist[zone], floc=0)
+            mu = shape * scale
+            # check goodness of the fit
+            ks, _ = kstest(tdist[zone], gamma(shape, scale=scale).cdf)
+            # plotting
             x = np.linspace(0, t_lim, 1000)
             y = gamma.pdf(x, shape, 0, scale)
-            ax.plot(x, y, label="zone %s (%d)" % (zone, len(tdist[zone])))
-            # sns.distplot(tdist[zone],
-            #     bins=50, hist=True, rug=False, kde=False, ax=ax, label="zone %s (%d)" % (zone, len(tdist[zone])))
+            ax.plot(x, y, label=r'zone %s ($n=%d$, $k=%.2f$, $\theta=%.2f$, $\mu=%.2f$, $p=%.3f$)' % (zone, len(tdist[zone]), shape, scale, mu, ks), c=cm[zone-1])
+            # plt.axvline(x=mu, linestyle='-.', c=cm[zone-1], linewidth=1)
         ax.set(xlabel=t_annotation, ylabel="frequency")
         ax.set_title("Distribution of all categories over zones", fontweight="bold")
         ax.legend(frameon=False)
@@ -123,9 +132,9 @@ if __name__ == "__main__":
         t3_tuples = [ [ t3, zone ] for t1, t2, t3, zone in tuples if zone and t3 and t3 > 0 and t3 < 50000]
 
         savepath = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/all-t1.pdf"
-        plot_t_distribution(t1_tuples, savepath, 4000, t_annotation="t1")
+        plot_t_distribution(t1_tuples, savepath, 4000, t_annotation=r'$t_1$')
         savepath = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/all-t2.pdf"
-        plot_t_distribution(t2_tuples, savepath, 4000, t_annotation="t2")
+        plot_t_distribution(t2_tuples, savepath, 4000, t_annotation=r'$t_2$')
         savepath = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/all-t3.pdf"
-        plot_t_distribution(t3_tuples, savepath, 50000, t_annotation="t3")
+        plot_t_distribution(t3_tuples, savepath, 50000, t_annotation=r'$t_3$')
 
