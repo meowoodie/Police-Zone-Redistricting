@@ -18,7 +18,8 @@ root.dir      = 'Desktop/workspace/Zoning-Analysis'
 workload.path = paste(root.dir, 'data/workload_by_junzhuo.csv', sep='/')
 beat.geo.path = paste(root.dir, 'data/apd_beat.geojson', sep='/')
 zone.geo.path = paste(root.dir, 'data/apd_zone.geojson', sep='/')
-redesign.path = paste(root.dir, 'data/redesign/oct23_constrained_redesign_Jun2018.csv', sep='/')
+redesign.path = paste(root.dir, 'gurobi/opt_result.csv', sep='/')
+# redesign.path = paste(root.dir, 'data/redesign/oct23_constrained_redesign_Jun2018.csv', sep='/')
 
 source(paste(root.dir, 'redesign/lib/preproc.R', sep='/'))
 source(paste(root.dir, 'redesign/lib/utils.R', sep='/'))
@@ -125,7 +126,7 @@ leaflet(beats.geo) %>%
     opacity     = .5,
     color       = 'white',
     dashArray   = '3',
-    fillOpacity = .1,
+    fillOpacity = .7,
     highlight   = highlightOptions(
       weight    = 5,
       color     = '#666',
@@ -146,7 +147,7 @@ leaflet(beats.geo) %>%
     opacity     = 0.5,
     color       = 'white',
     dashArray   = '3',
-    fillOpacity = 0.1,
+    fillOpacity = 0.7,
     highlight   = highlightOptions(
       weight    = 5,
       color     = '#666',

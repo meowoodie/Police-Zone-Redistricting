@@ -1,10 +1,17 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+Zone Reconfiguration problem solved Gurobi.
+"""
+
 from gurobipy import *
-
 import csv
-import numpy as np
+import sys
 
-m = 7 # number of zones
+m = 6 # number of zones
 
+# load meta data / data
 with open("../data/beats_graph.csv", newline="") as farcs, \
      open("./workload.txt", "r") as fworkload:
     data  = list(csv.reader(farcs))
@@ -59,10 +66,28 @@ model.addConstrs(( y[i,j,k] + y[j,i,k] <= (q - 1) * x[j,k] for i in nodes for j 
 # - j: non-negative net flow
 model.addConstrs(( y[i,j,k] >= 0 for i in nodes for j in nodes for k in zones ), "j")
 
+# quadratic objective
 model.setObjective(
     sum([ (sum([ x[i,k] * u[i] for i in nodes ]) - sum([ u[i] for i in nodes ]) / m) * \
           (sum([ x[i,k] * u[i] for i in nodes ]) - sum([ u[i] for i in nodes ]) / m) \
           for k in zones ]), 
     GRB.MINIMIZE)
 
+# Solve model
 model.optimize()
+
+# Organize results
+if model.SolCount == 0:
+    print('No solution found, optimization status = %d' % model.Status, file=sys.stderr)
+else:
+    print('Solution found, objective = %g' % model.ObjVal, file=sys.stderr)
+    with open("./opt_result.csv", "w") as fresult:
+        fresult.write(",beat,zone,workload\n")
+        no = 1
+        for v in model.getVars():
+            if v.X == 1. and v.VarName[0] == "x":
+                node = v.VarName[2:5]
+                zone = v.VarName[6]
+                fresult.write("%d,%s,%s,%f\n" % (no, node, zone, workloads[node]))
+                print("beat %s in zone %s" % (node, zone), file=sys.stderr)
+                no += 1
