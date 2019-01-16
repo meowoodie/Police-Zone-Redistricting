@@ -3,8 +3,7 @@ from gurobipy import *
 import csv
 import numpy as np
 
-m = 7  # number of zones
-q = 30 # the maximum number of beats to be chosen in a zone.
+m = 7 # number of zones
 
 with open("../data/beats_graph.csv", newline="") as farcs, \
      open("./workload.txt", "r") as fworkload:
@@ -20,9 +19,8 @@ with open("../data/beats_graph.csv", newline="") as farcs, \
     workloads = [ workload.strip("\n").split(",") for workload in fworkload.readlines() ]
     workloads = { workload[0]: float(workload[1]) for workload in workloads }
 
-print(workloads)
-print(nodes)
-print(arcs)
+n = len(nodes)
+q = n - m + 1 # the maximum number of beats to be chosen in a zone.
 
 # create gurobi model
 model = Model("Zone Reconfiguration")
@@ -44,20 +42,22 @@ u = workloads
 model.addConstrs(( x.sum(i,"*") == 1 for i in nodes ), "b")
 # - c: the net outflow from each node
 model.addConstrs(( 
-    sum([ y[i,j,k] for j in arcs[i] ]) - sum([ y[j,i,k] for j in arcs[i] ]) <= x[i,k] - q * w[i,k]
+    sum([ y[i,j,k] for j in arcs[i] ]) - sum([ y[j,i,k] for j in arcs[i] ]) >= x[i,k] - q * w[i,k]
     for i in nodes for k in zones ), "c")
 # - d: specify the number of nodes that can be used as sinks.
 model.addConstr(w.sum() == m, "d")
 # - e: ensure that each zone must have only one sink
-model.addConstrs(( w.sum(i,"*") == 1 for i in nodes ), "e")
+model.addConstrs(( w.sum("*",j) == 1 for j in zones ), "e")
 # - f: ensure that there is no flow into any node i from outside of zone k (where xik = 0), 
 #      and that the total inflow of any node in zone k (where xik = 1) does not exceed q − 1.
-model.addConstrs(( sum([ y[i,j,k] for j in arcs[i] ]) <= (q - 1) * x[i,k] for i in nodes for k in zones ), "f")
+model.addConstrs(( sum([ y[j,i,k] for j in arcs[i] ]) <= (q - 1) * x[i,k] for i in nodes for k in zones ), "f")
 # - g: ensure unless a node i is included in zone k, the node k cannot be a sink in zone k.
 model.addConstrs(( w[i,k] - x[i,k] <= 0 for i in nodes for k in zones ), "g")
 # - h, i: ensure that there is no flows (inflows and outflows) between different zones which forces eligible contiguity.
-model.addConstrs(( y[i,j,k] + y[i,j,k] <= (q - 1) * x[i,k] for i in nodes for j in nodes for k in zones ), "h")
-model.addConstrs(( y[i,j,k] + y[i,j,k] <= (q - 1) * x[j,k] for i in nodes for j in nodes for k in zones ), "i")
+model.addConstrs(( y[i,j,k] + y[j,i,k] <= (q - 1) * x[i,k] for i in nodes for j in nodes for k in zones ), "h")
+model.addConstrs(( y[i,j,k] + y[j,i,k] <= (q - 1) * x[j,k] for i in nodes for j in nodes for k in zones ), "i")
+# - j: non-negative net flow
+model.addConstrs(( y[i,j,k] >= 0 for i in nodes for j in nodes for k in zones ), "j")
 
 model.setObjective(
     sum([ (sum([ x[i,k] * u[i] for i in nodes ]) - sum([ u[i] for i in nodes ]) / m) * \
@@ -66,5 +66,3 @@ model.setObjective(
     GRB.MINIMIZE)
 
 model.optimize()
-
-print(model)
