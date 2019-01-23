@@ -9,11 +9,13 @@ from gurobipy import *
 import csv
 import sys
 
-m = 6 # number of zones
+lam = 1. # weigth of compactness  
+m   = 6  # number of zones
 
 # load meta data / data
 with open("../data/beats_graph.csv", newline="") as farcs, \
-     open("./workload.txt", "r") as fworkload:
+     open("./workload.txt", "r") as fworkload, \
+     open("../data/beats_centroids_Jun2018.csv", newline="") as fcentroid:
     data  = list(csv.reader(farcs))
     # lists of nodes
     nodes = [ d for d in data[0] if d != "" ] 
@@ -25,6 +27,9 @@ with open("../data/beats_graph.csv", newline="") as farcs, \
     # workloads of nodes represented by a dictionary where keys are the nodes, values are the workloads
     workloads = [ workload.strip("\n").split(",") for workload in fworkload.readlines() ]
     workloads = { workload[0]: float(workload[1]) for workload in workloads }
+    # centroids of nodes represented by a dictionary where keys are the nodes, values are the locations of the centroids.
+    centroids = list(csv.reader(fcentroid))
+    centroids = { centroid[0]: [float(centroid[1]), float(centroid[2])] for centroid in centroids[1:] }
 
 n = len(nodes)
 q = n - m + 1 # the maximum number of beats to be chosen in a zone.
@@ -43,6 +48,7 @@ y = model.addVars(nodes, nodes, zones, name="y", vtype=GRB.CONTINUOUS)
 # Data
 # - workload in node i
 u = workloads
+s = centroids
 
 # Constraints
 # - b: each node can only be allocated to one zone
@@ -66,17 +72,30 @@ model.addConstrs(( y[i,j,k] + y[j,i,k] <= (q - 1) * x[j,k] for i in nodes for j 
 # - j: non-negative net flow
 model.addConstrs(( y[i,j,k] >= 0 for i in nodes for j in nodes for k in zones ), "j")
 
-# quadratic objective
-model.setObjective(
-    sum([ (sum([ x[i,k] * u[i] for i in nodes ]) - sum([ u[i] for i in nodes ]) / m) * \
-          (sum([ x[i,k] * u[i] for i in nodes ]) - sum([ u[i] for i in nodes ]) / m) \
-          for k in zones ]), 
+# objective 1: balancing workload between zones
+obj_balance_workload = sum([ 
+    (sum([ x[i,k] * u[i] for i in nodes ]) - sum([ u[i] for i in nodes ]) / m) * \
+    (sum([ x[i,k] * u[i] for i in nodes ]) - sum([ u[i] for i in nodes ]) / m) \
+    for k in zones ])
+# objective 2: shape compactness
+# obj_compactness = sum([ 
+#     sum([ x[ei,k] * x[ej,k] * ((s[ei][0] - s[ej][0]) ** 2 + (s[ei][1] - s[ej][1]) ** 2) # distance between node i and node j in zone k
+#           for i, ei in enumerate(nodes) for j, ej in enumerate(nodes) if i > j ]) - 
+#     sum([ x[ei,k] * x[ej,k] * ((s[ei][0] - s[ej][0]) ** 2 + (s[ei][1] - s[ej][1]) ** 2) 
+#           for i, ei in enumerate(nodes) for j, ej in enumerate(nodes) if i > j ]) / 
+#     sum([ x[ei,k] * x[ej,k]
+#           for i, ei in enumerate(nodes) for j, ej in enumerate(nodes) if i > j ])
+#     for k in zones ])
+obj_compactness = sum([ x[ei,k] * x[ej,k] * ((s[ei][0] - s[ej][0]) ** 2 + (s[ei][1] - s[ej][1]) ** 2) 
+    for i, ei in enumerate(nodes) for j, ej in enumerate(nodes) for k in zones if i > j ])
+# set objective for the model
+model.setObjective(obj_balance_workload + lam * obj_compactness, 
     GRB.MINIMIZE)
 
-# Solve model
+# solve model
 model.optimize()
 
-# Organize results
+# organize results
 if model.SolCount == 0:
     print('No solution found, optimization status = %d' % model.Status, file=sys.stderr)
 else:
