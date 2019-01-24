@@ -66,7 +66,7 @@ title = tags$div(HTML(sprintf(
 
 # color settings
 beat.pal = colorBin('YlOrRd', domain = beats.geo$workload)
-zone.pal = colorBin('viridis', domain = zones.geo$workload, reverse = TRUE)
+zone.pal = colorBin('viridis', domain = merged$workload, reverse = TRUE)
 
 # label settings
 beat.label = sprintf(
