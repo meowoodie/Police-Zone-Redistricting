@@ -77,6 +77,7 @@ obj_balance_workload = sum([
     (sum([ x[i,k] * u[i] for i in nodes ]) - sum([ u[i] for i in nodes ]) / m) * \
     (sum([ x[i,k] * u[i] for i in nodes ]) - sum([ u[i] for i in nodes ]) / m) \
     for k in zones ])
+
 # objective 2: shape compactness
 # obj_compactness = sum([ 
 #     sum([ x[ei,k] * x[ej,k] * ((s[ei][0] - s[ej][0]) ** 2 + (s[ei][1] - s[ej][1]) ** 2) # distance between node i and node j in zone k
@@ -86,11 +87,26 @@ obj_balance_workload = sum([
 #     sum([ x[ei,k] * x[ej,k]
 #           for i, ei in enumerate(nodes) for j, ej in enumerate(nodes) if i > j ])
 #     for k in zones ])
-obj_compactness = sum([ x[ei,k] * x[ej,k] * ((s[ei][0] - s[ej][0]) ** 2 + (s[ei][1] - s[ej][1]) ** 2) 
-    for i, ei in enumerate(nodes) for j, ej in enumerate(nodes) for k in zones if i > j ])
+# obj_compactness = sum([ x[ei,k] * x[ej,k] * ((s[ei][0] - s[ej][0]) ** 2 + (s[ei][1] - s[ej][1]) ** 2) 
+#     for i, ei in enumerate(nodes) for j, ej in enumerate(nodes) for k in zones if i > j ])
+
 # set objective for the model
-model.setObjective(obj_balance_workload + lam * obj_compactness, 
+model.setObjective(obj_balance_workload, # + lam * obj_compactness, 
     GRB.MINIMIZE)
+
+# Decision initialization
+b = []
+z = []
+for i in nodes:
+    for k in zones:
+        # if int(i[0]) == int(k+1):
+        #     b.append(int(i))
+        #     x[i,k].start = 1
+        # else:
+        #     x[i,k].start = 0
+        x[i,k].start = 1 if int(i[0]) == int(k+1) else 0
+            # w[i,k].start = 1 if int(i[1]) == 0 and int(i[-1]) == int(k) else 0 
+            # y[i,j,k].start = 
 
 # solve model
 model.optimize()
