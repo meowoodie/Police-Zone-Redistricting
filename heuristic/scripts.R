@@ -6,8 +6,8 @@
 root.dir = 'Desktop/workspace/Zoning-Analysis'
 raw.911calls.path = paste(root.dir, 'data/APDORR Gwinn-Villaroel ICIS Data Pull.xlsx', sep='/')
 
-source(paste(root.dir, 'R/lib/combopt.R', sep='/'))
-source(paste(root.dir, 'R/lib/preproc.R', sep='/'))
+source(paste(root.dir, 'heuristic/lib/combopt.R', sep='/'))
+source(paste(root.dir, 'heuristic/lib/preproc.R', sep='/'))
 
 top.K = 30
 zone  = '7'

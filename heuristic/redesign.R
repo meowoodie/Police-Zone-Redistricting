@@ -9,9 +9,9 @@ beat.geo.path      = paste(root.dir, 'data/apd_beat.geojson', sep='/')
 beats.graph.path   = paste(root.dir, 'data/beats_graph.csv', sep='/')
 beats.centers.path = paste(root.dir, 'data/beats_centroids.csv', sep='/') # for visualization
 
-source(paste(root.dir, 'redesign/lib/optimizer.R', sep='/'))
-source(paste(root.dir, 'redesign/lib/preproc.R', sep='/'))
-source(paste(root.dir, 'redesign/lib/utils.R', sep='/'))
+source(paste(root.dir, 'heuristic/lib/optimizer.R', sep='/'))
+source(paste(root.dir, 'heuristic/lib/preproc.R', sep='/'))
+source(paste(root.dir, 'heuristic/lib/utils.R', sep='/'))
 
 # Geojson for beats area
 beats.geo    = geojsonio::geojson_read(beat.geo.path, what = 'sp')

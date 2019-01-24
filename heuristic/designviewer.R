@@ -18,12 +18,12 @@ root.dir      = 'Desktop/workspace/Zoning-Analysis'
 workload.path = paste(root.dir, 'data/workload_by_junzhuo.csv', sep='/')
 beat.geo.path = paste(root.dir, 'data/apd_beat.geojson', sep='/')
 zone.geo.path = paste(root.dir, 'data/apd_zone.geojson', sep='/')
-redesign.path = paste(root.dir, 'gurobi/opt_result.csv', sep='/')
+redesign.path = paste(root.dir, 'mip/opt_result.csv', sep='/')
 # redesign.path = paste(root.dir, 'data/redesign/oct23_constrained_redesign_Jun2018.csv', sep='/')
 
-source(paste(root.dir, 'redesign/lib/preproc.R', sep='/'))
-source(paste(root.dir, 'redesign/lib/utils.R', sep='/'))
-source(paste(root.dir, 'redesign/lib/optimizer.R', sep='/'))
+source(paste(root.dir, 'heuristic/lib/preproc.R', sep='/'))
+source(paste(root.dir, 'heuristic/lib/utils.R', sep='/'))
+source(paste(root.dir, 'heuristic/lib/optimizer.R', sep='/'))
 
 workload.df   = read.workload(workload.path)
 new.design.df = read.csv(redesign.path, header = TRUE, row.names = 1, 

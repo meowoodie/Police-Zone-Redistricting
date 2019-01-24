@@ -20,7 +20,7 @@ beat.geo.path = paste(root.dir, 'data/apd_beats_Jun2018.geojson', sep='/')
 zone.geo.path = paste(root.dir, 'data/apd_zone_Jun2018.geojson', sep='/')
 redesign.path = paste(root.dir, 'data/redesign.csv', sep='/')
 
-source(paste(root.dir, 'redesign/lib/preproc.R', sep='/'))
+source(paste(root.dir, 'heuristic/lib/preproc.R', sep='/'))
 
 workload.df   = read.workload(workload.path)
 new.design.df = read.csv(redesign.path, header = TRUE, row.names = 1, 
