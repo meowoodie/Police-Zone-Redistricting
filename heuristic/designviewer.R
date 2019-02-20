@@ -16,10 +16,10 @@ library('shiny')
 setwd("/Users/woodie/")
 root.dir      = 'Desktop/workspace/Zoning-Analysis'
 workload.path = paste(root.dir, 'data/workload_by_junzhuo.csv', sep='/')
-beat.geo.path = paste(root.dir, 'data/apd_beat.geojson', sep='/')
-zone.geo.path = paste(root.dir, 'data/apd_zone.geojson', sep='/')
-redesign.path = paste(root.dir, 'mip/opt_result.csv', sep='/')
-# redesign.path = paste(root.dir, 'data/redesign/oct23_constrained_redesign_Jun2018.csv', sep='/')
+beat.geo.path = paste(root.dir, 'data/apd_beat_with_FID.geojson', sep='/')
+zone.geo.path = paste(root.dir, 'data/apd_zone_with_FID.geojson', sep='/')
+# redesign.path = paste(root.dir, 'mip/opt_result.csv', sep='/')
+redesign.path = paste(root.dir, 'data/redesign/Feb19_redesign_with_FID_V2.csv', sep='/')
 
 source(paste(root.dir, 'heuristic/lib/preproc.R', sep='/'))
 source(paste(root.dir, 'heuristic/lib/utils.R', sep='/'))
@@ -144,10 +144,10 @@ leaflet(beats.geo) %>%
     data        = merged,
     fillColor   = ~zone.pal(workload),
     weight      = 2,
-    opacity     = 0.5,
+    opacity     = .5,
     color       = 'white',
     dashArray   = '3',
-    fillOpacity = 0.7,
+    fillOpacity = .7,
     highlight   = highlightOptions(
       weight    = 5,
       color     = '#666',

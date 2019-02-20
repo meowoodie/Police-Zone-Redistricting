@@ -113,16 +113,18 @@ def plot_t_distribution(tuples, savepath, t_lim, t_annotation="t1"):
             ax.plot(x, y, label=r'zone %s ($n=%d$, $k=%.2f$, $\theta=%.2f$, $\mu=%.2f$, $p=%.3f$)' % (zone, len(tdist[zone]), shape, scale, mu, ks), c=cm[zone-1])
             # plt.axvline(x=mu, linestyle='-.', c=cm[zone-1], linewidth=1)
         ax.set(xlabel=t_annotation, ylabel="frequency")
-        ax.set_title("Distribution of all categories over zones", fontweight="bold")
+        ax.set_title("Distribution of burglary over zones", fontweight="bold")
         ax.legend(frameon=False)
         pdf.savefig(fig)
         plt.clf()
 
 if __name__ == "__main__":
-    domvio_911calls  = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/domvio.rawdata.txt"
-    all_911calls     = "/Users/woodie/Desktop/workspace/Crime-Pattern-Detection-for-APD/data/records_380k/raw_data.txt"
-    apd_zone_geojson = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/apd_zone.geojson"
-    with open(all_911calls, "r", encoding="utf8", errors='ignore') as f:
+    domvio_911calls   = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/domvio.rawdata.txt"
+    burglary_911calls = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/burglary.rawdata.txt"
+    robbery_911calls  = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/robbery.rawdata.txt"
+    all_911calls      = "/Users/woodie/Desktop/workspace/Crime-Pattern-Detection-for-APD/data/records_380k/raw_data.txt"
+    apd_zone_geojson  = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/apd_zone.geojson"
+    with open(burglary_911calls, "r", encoding="utf8", errors='ignore') as f:
         tuples = [ [ t1, t2, t3, zone ] 
                    for t1, t2, t3, lat, lng, zone in T(f, geojson=apd_zone_geojson) 
                    if zone and zone != 50 ]
@@ -131,10 +133,10 @@ if __name__ == "__main__":
         t2_tuples = [ [ t2, zone ] for t1, t2, t3, zone in tuples if zone and t2 and t2 > 0 and t2 < 4000]
         t3_tuples = [ [ t3, zone ] for t1, t2, t3, zone in tuples if zone and t3 and t3 > 0 and t3 < 50000]
 
-        savepath = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/all-t1.pdf"
+        savepath = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/burglary-t1.pdf"
         plot_t_distribution(t1_tuples, savepath, 4000, t_annotation=r'$t_1$')
-        savepath = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/all-t2.pdf"
+        savepath = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/burglary-t2.pdf"
         plot_t_distribution(t2_tuples, savepath, 4000, t_annotation=r'$t_2$')
-        savepath = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/all-t3.pdf"
+        savepath = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/burglary-t3.pdf"
         plot_t_distribution(t3_tuples, savepath, 50000, t_annotation=r'$t_3$')
 

@@ -117,13 +117,13 @@ conti.neighbor = function (beat.design.df, beats, graph.df, beats.geo) {
       if (check.connectivity(new.design.df, graph.df)) {
         # check the eccentricity of the new design only if it was connnected
         # since this step is time-consuming. 
-        if (check.eccentricity(new.design.df, beats.geo)) {
+        # if (check.eccentricity(new.design.df, beats.geo)) {
           # append the new design to the list
           if (check.constraints(new.design.df)){
-            print('legal solution found.')
+            # print('legal solution found.')
             new.design.dfs = append(new.design.dfs, list(new.design.df)) 
           }
-        }
+        # }
       }
     }
   }

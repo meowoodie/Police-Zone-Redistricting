@@ -5,9 +5,9 @@
 
 root.dir           = 'Desktop/workspace/Zoning-Analysis'
 workload.path      = paste(root.dir, 'data/workload_by_junzhuo.csv', sep='/')
-beat.geo.path      = paste(root.dir, 'data/apd_beat.geojson', sep='/')
-beats.graph.path   = paste(root.dir, 'data/beats_graph.csv', sep='/')
-beats.centers.path = paste(root.dir, 'data/beats_centroids.csv', sep='/') # for visualization
+beat.geo.path      = paste(root.dir, 'data/apd_beat_with_FID.geojson', sep='/')
+beats.graph.path   = paste(root.dir, 'data/beats_with_FID_graph_V2.csv', sep='/')
+beats.centers.path = paste(root.dir, 'data/beats_with_FID_centroids.csv', sep='/') # for visualization
 
 source(paste(root.dir, 'heuristic/lib/optimizer.R', sep='/'))
 source(paste(root.dir, 'heuristic/lib/preproc.R', sep='/'))
@@ -28,10 +28,15 @@ centroids.df = read.csv(beats.centers.path, header = TRUE, row.names = 1,
 cur.year     = '19'
 
 # a vector of beats
-beats      = rownames(centroids.df)
+beats        = rownames(centroids.df)
 # a vector of initial zones
 init.zones = sapply(beats, function (beat) {
-  zone = as.numeric(substr(as.character(beat), 1, 1))
+  if (beat == "FID_South" || beat == "FID_North"){
+    zone = 1
+  }
+  else{
+    zone = as.numeric(substr(as.character(beat), 1, 1))
+  }
   return(zone)
 })
 # dataframe for zones of each beats (columns: beat, zone)
@@ -50,7 +55,7 @@ print(final.res$iterations)
 print(final.res$time)
 
 # Write results to local file
-redesign.path = paste(root.dir, 'data/redesign/oct23_redesign_Jun2018.csv', sep='/')
+redesign.path = paste(root.dir, 'data/redesign/Feb19_redesign_with_FID_V2.csv', sep='/')
 write.csv(final.res$solution, file=redesign.path)
 
 # # print the variation of the design

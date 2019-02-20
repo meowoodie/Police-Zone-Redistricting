@@ -16,8 +16,8 @@ library('shiny')
 
 root.dir      = 'Desktop/workspace/Zoning-Analysis'
 workload.path = paste(root.dir, 'data/workload.csv', sep='/')
-beat.geo.path = paste(root.dir, 'data/apd_beats_Jun2018.geojson', sep='/')
-zone.geo.path = paste(root.dir, 'data/apd_zone_Jun2018.geojson', sep='/')
+beat.geo.path = paste(root.dir, 'data/apd_beat_with_FID.geojson', sep='/')
+zone.geo.path = paste(root.dir, 'data/apd_zone.geojson', sep='/')
 redesign.path = paste(root.dir, 'data/redesign.csv', sep='/')
 
 source(paste(root.dir, 'heuristic/lib/preproc.R', sep='/'))

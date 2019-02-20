@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Zone Reconfiguration problem solved Gurobi.
+Zone Reconfiguration MIP problem solved by Gurobi.
 """
 
 from gurobipy import *
@@ -78,7 +78,7 @@ model.addConstrs(( f[i,j,k] + f[j,i,k] <= (q - 1) * x[j,k] for i in nodes for j 
 # - j: non-negative net flow
 model.addConstrs(( f[i,j,k] >= 0 for i in nodes for j in nodes for k in zones ), "j")
 
-# objective 1: balancing workload between zones in quadratic form.
+# objective 1: balancing workload between zones in quadratic form. (not work very well in Gurobi)
 # obj_balance_workload = sum([ 
 #     (sum([ x[i,k] * w[i] for i in nodes ]) - sum([ w[i] for i in nodes ]) / m) * \
 #     (sum([ x[i,k] * w[i] for i in nodes ]) - sum([ w[i] for i in nodes ]) / m) \
