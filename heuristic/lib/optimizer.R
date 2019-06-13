@@ -119,10 +119,10 @@ conti.neighbor = function (beat.design.df, beats, graph.df, beats.geo) {
         # since this step is time-consuming. 
         # if (check.eccentricity(new.design.df, beats.geo)) {
           # append the new design to the list
-          if (check.constraints(new.design.df)){
+          # if (check.constraints(new.design.df)){
             # print('legal solution found.')
             new.design.dfs = append(new.design.dfs, list(new.design.df)) 
-          }
+          # }
         # }
       }
     }
@@ -133,7 +133,7 @@ conti.neighbor = function (beat.design.df, beats, graph.df, beats.geo) {
 # Core function for optimizing the design by simulated annealing.
 simulated.annealing = function (beat.design.df, beats, graph.df, beats.geo, n=10) {
   # add constraints
-  beat.design.df = add.constraints(beat.design.df)
+  # beat.design.df = add.constraints(beat.design.df)
   
   # init params
   alpha = 0.01      # cooling rate
@@ -143,6 +143,7 @@ simulated.annealing = function (beat.design.df, beats, graph.df, beats.geo, n=10
   temp  = 1    # temperature
   stage = 1    # length of stage m   
   
+  k     = 0
   cost  = variance.workload(beat.design.df)
   iters = c() # init iteration results of cost
   for (j in 1:n){
@@ -180,6 +181,8 @@ simulated.annealing = function (beat.design.df, beats, graph.df, beats.geo, n=10
         beat.design.df = cand.neighbor
         cost           = cand.cost
         iters          = c(iters, cost)
+        k = k + 1
+        write.csv(beat.design.df, file=sprintf('Desktop/workspace/Zoning-Analysis/data/redesign_animation/redesign_%d.csv', k))
       }
     }
     # update temperature and stage

@@ -62,14 +62,15 @@ merge.beats = function (beat.geo, beat.design.df) {
     beats    = c(beats, beat)
     zones    = c(zones, zone)
   }
+  print(beats)
   # Remove No. 9 elements (corresponding to beat 606),
   # which is an invalid polygons due to data imperfection
-  beats          = beats[-11]
-  zones          = zones[-11]
-  beats          = beats[-10] # beat 050
-  zones          = zones[-10] # beat 050
-  polygons[[11]] = NULL
-  polygons[[10]] = NULL      # beat 050
+  beats          = beats[-9]
+  zones          = zones[-9]
+  beats          = beats[-8] # beat 050
+  zones          = zones[-8] # beat 050
+  polygons[[9]] = NULL
+  polygons[[8]]  = NULL      # beat 050
   # Merge spatial polygons objects into one
   joined = SpatialPolygons(lapply(polygons, function(x){x@polygons[[1]]}))
   merged = unionSpatialPolygons(joined, zones)
