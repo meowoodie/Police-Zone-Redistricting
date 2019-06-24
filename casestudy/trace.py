@@ -35,17 +35,17 @@ with open("patrol.trace.txt", "r") as f:
 print(len(traces))
 off_list  = list(traces.keys())
 off_list.sort()
-locations = [ [ p["lat"], -1 * p["lng"] ] for p in traces["3761"] ]
+
+# PLOTTING TRAJECTORY POINTS ON THE MAP
 
 import folium
 import webbrowser
 import numpy as np
 import matplotlib.pyplot as plt
-
 geojson_path = '/Users/woodie/Desktop/workspace/Zoning-Analysis/data/apd_beat.geojson'
 html_path    = 'trace.html'
 center       = [33.796480, -84.394220]
-
+locations = [ [ p["lat"], -1 * p["lng"] ] for p in traces["3761"] ]
 m = folium.Map(location=center, zoom_start=11, zoom_control=True, max_zoom=15, min_zoom=9)
 m.choropleth(
     geo_data=open(geojson_path).read(),
@@ -54,8 +54,8 @@ m.choropleth(
     line_opacity=1.,
     highlight=True
 )
-
 for coord in locations:
     folium.CircleMarker(location=coord, color="red", radius=1).add_to(m)
 folium.LayerControl().add_to(m)
 m.save(html_path)
+
