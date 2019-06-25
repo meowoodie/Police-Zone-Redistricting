@@ -30,32 +30,64 @@ with open("patrol.trace.txt", "r") as f:
         off_id = data[0]
         lat, lng, call_t, disp_t, arv_t, clr_t = [ float(d) for d in data[1:] ]
         # print(off_id, lat, lng, call_t, disp_t, arv_t, clr_t)
-        traces[off_id].append({"lat": lat, "lng": lng, "call": call_t, "disp": disp_t, "arv": arv_t, "clr": clr_t})
+        traces[off_id].append({
+            "lat": lat, "lng": lng, 
+            "call": call_t, "disp": disp_t, "arv": arv_t, "clr": clr_t,
+            "dt": arv_t - disp_t})
 
 print(len(traces))
 off_list  = list(traces.keys())
 off_list.sort()
 
-# PLOTTING TRAJECTORY POINTS ON THE MAP
-
+# PLOTTING TRAJECTORIES ON THE MAP
+import branca
 import folium
 import webbrowser
 import numpy as np
 import matplotlib.pyplot as plt
+# configuration
 geojson_path = '/Users/woodie/Desktop/workspace/Zoning-Analysis/data/apd_beat.geojson'
-html_path    = 'trace.html'
+trace        = traces["3761"]
 center       = [33.796480, -84.394220]
-locations = [ [ p["lat"], -1 * p["lng"] ] for p in traces["3761"] ]
-m = folium.Map(location=center, zoom_start=11, zoom_control=True, max_zoom=15, min_zoom=9)
+# data preparation
+times     = np.array([ p["call"] for p in trace ]) # len: N
+travel_t  = np.array([ p["dt"] for p in trace ])   # N
+locations = np.array([ [ p["lat"], -1 * p["lng"] ] for p in trace ]) # N
+t_order   = np.argsort(times)
+travel_t  = travel_t[t_order]                      # N
+locations = locations[t_order]                     # N
+# calculate distances and speeds
+distances = np.array([ # len: N-1
+    abs(locations[i][0] - locations[i-1][0]) + \
+    abs(locations[i][1] - locations[i-1][1]) 
+    for i in range(1, len(locations)) ])       
+speeds    = np.array([ # N-1
+    distances[i] / travel_t[i+1] if travel_t[i+1] != 0 else -1 
+    for i in range(0, len(travel_t) - 1)])     
+idx       = np.array([ # N-1
+    i for i in range(0, len(distances))                 
+    if travel_t[i+1] < 3600 and travel_t[i+1] > 0 ]) # remove zero travel time
+
+# print(min(np.exp(speeds[idx])), max(np.exp(speeds[idx])))
+print(min(travel_t[idx+1]), max(travel_t[idx+1]))
+
+# map initialization
+html_path = 'trace.html'
+cm        = branca.colormap.linear.YlOrRd_09.scale(min(travel_t[idx+1]), max(travel_t[idx+1]))
+m         = folium.Map(
+    location=center, zoom_start=11, zoom_control=True, max_zoom=20, min_zoom=9)
 m.choropleth(
     geo_data=open(geojson_path).read(),
     fill_color='YlGn',
     fill_opacity=0.1,
     line_opacity=1.,
-    highlight=True
-)
-for coord in locations:
-    folium.CircleMarker(location=coord, color="red", radius=1).add_to(m)
+    highlight=True)
+# plot dots and lines
+for i in idx:
+    folium.CircleMarker(
+        location=locations[i+1], color="red", radius=.1).add_to(m)
+    folium.PolyLine(
+        [locations[i+1], locations[i]], weight=2., color=cm(travel_t[i+1]), opacity=.8).add_to(m)
 folium.LayerControl().add_to(m)
 m.save(html_path)
 
