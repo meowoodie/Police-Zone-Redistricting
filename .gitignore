@@ -1,5 +1,8 @@
 .DS_Store
 .gitignore
+mip/*.csv
+mip/*.txt
+mip/*.log
 results
 temp
 data
