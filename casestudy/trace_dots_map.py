@@ -40,8 +40,13 @@ for officer in traces:
     for i in range(n_stops-1):
         start = traces[officer][i]
         end   = traces[officer][i+1]
-        if start["beat"] is not "" and end["beat"] is not "":
-            route = [start["beat"], end["beat"], str(start["dt"])]
+        if start["beat"] is not "" and end["beat"] is not "" and \
+           start["lat"] is not "" and start["lng"] is not "" and \
+           end["lat"] is not "" and end["lng"] is not "":
+            route = [
+                start["beat"], start["lat"], start["lng"], 
+                end["beat"], end["lat"], end["lng"], 
+                str(start["dt"])]
             # routes.append(route)
             print("\t".join(route))
 
