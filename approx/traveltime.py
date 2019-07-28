@@ -98,7 +98,7 @@ def travel_time_vs_hamming_distance(p_beats, p_tau, d_beats, d_tau):
     # p_beats, p_tau = travel_time_from_patrol()
     # d_beats, d_tau = travel_time_from_distance()
     # construct x: distance of centroids, y: travel time
-    X, Y = [], []
+    X, Y, pairs = [], [], []
     for start_beat in d_beats:
         for end_beat in d_beats:
             if start_beat in p_beats and end_beat in p_beats:
@@ -108,12 +108,45 @@ def travel_time_vs_hamming_distance(p_beats, p_tau, d_beats, d_tau):
                     x, y = d_tau[d_start_beat_idx][d_end_beat_idx], p_tau[p_start_beat_idx][p_end_beat_idx]
                     X.append(x)
                     Y.append(y)
+                    pairs.append([start_beat, end_beat])
 
-    # plot
-    plt.scatter(X, Y, s=0.1)
-    plt.xlabel("distance")
-    plt.ylabel("travel time")
-    plt.show()
+    def annotate_point(ax, start_beat, end_beat, c="r", upsidedown=-1):
+        d_start_beat_idx = d_beats.index(start_beat)
+        d_end_beat_idx   = d_beats.index(end_beat)
+        p_start_beat_idx = p_beats.index(start_beat)
+        p_end_beat_idx   = p_beats.index(end_beat)
+        print(start_beat, end_beat)
+        ax.scatter(
+            d_tau[d_start_beat_idx][d_end_beat_idx], 
+            p_tau[p_start_beat_idx][p_end_beat_idx], s=15, c=c)
+        ax.annotate("from beat %s to beat %s" % (start_beat, end_beat),
+            xy=(d_tau[d_start_beat_idx][d_end_beat_idx], 
+                p_tau[p_start_beat_idx][p_end_beat_idx]), 
+            xycoords='data',
+            xytext=(-120, -1*upsidedown*80), textcoords='offset points',
+            arrowprops=dict(arrowstyle="->",
+                            connectionstyle="angle3,angleA=0,angleB=90"))
+
+    # plot all points
+    with PdfPages("result/dist_vs_tau.pdf") as pdf:
+        fig, ax = plt.subplots(figsize=(10,10))
+        ax.scatter(X, Y, s=1)
+        ax.set_xlabel("Manhattan distance between beats")
+        ax.set_ylabel("Average travel time (s)")
+
+        # plot selected points
+        annotate_point(ax, start_beat="303", end_beat="202", c="red")
+        annotate_point(ax, start_beat="211", end_beat="111", c="red")
+
+        # plot extreme points
+        max_t_pair = pairs[np.array(Y).argsort()[-1]]
+        max_d_pair = pairs[np.array(X).argsort()[-1]]
+        annotate_point(ax, start_beat=max_t_pair[0], end_beat=max_t_pair[1], c="red", upsidedown=1)
+        annotate_point(ax, start_beat=max_d_pair[1], end_beat=max_d_pair[0], c="red")
+
+        pdf.savefig(fig)
+
+
 
     ### Deprecated ###
     # # helper function for Hamming distance
@@ -138,26 +171,28 @@ def travel_time_vs_hamming_distance(p_beats, p_tau, d_beats, d_tau):
 
 if __name__ == "__main__":
     p_beats, p_tau = travel_time_from_patrol()
-    # d_beats, d_tau = travel_time_from_distance()
+    d_beats, d_tau = travel_time_from_distance()
     
-    imputer   = SimpleImputer(missing_values=0., strategy='mean')  
-    tau_prime = imputer.fit_transform(p_tau)
+    # # complete the missing entries in tau matrix
+    # imputer   = SimpleImputer(missing_values=0., strategy='mean')  
+    # tau_prime = imputer.fit_transform(p_tau)
+    # print(tau_prime)
+    # np.save("data/tau", tau_prime)
 
-    print(tau_prime)
-    np.save("data/tau", tau_prime)
-    with PdfPages("result/tau_prime.pdf") as pdf:
-        fig, ax = plt.subplots(1, 1)
-        plt.rc('xtick',labelsize=.1)
-        plt.rc('ytick',labelsize=.1)
-        ticks        = [7, 20, 33, 46, 59, 72]
-        ticks_labels = ["zone 1", "zone 2", "zone 3", "zone 4", "zone 5", "zone 6"]
-        # plt.imshow(np.log(p_tau + 1e-8))
-        plt.imshow(tau_prime)
-        ax.grid(False)
-        ax.set_xticks(ticks)
-        ax.set_yticks(ticks)
-        ax.set_xticklabels(ticks_labels)
-        ax.set_yticklabels(ticks_labels)
-        pdf.savefig(fig)
+    # # plot tau matrix
+    # with PdfPages("result/tau_prime.pdf") as pdf:
+    #     fig, ax = plt.subplots(1, 1)
+    #     plt.rc('xtick',labelsize=.1)
+    #     plt.rc('ytick',labelsize=.1)
+    #     ticks        = [7, 20, 33, 46, 59, 72]
+    #     ticks_labels = ["zone 1", "zone 2", "zone 3", "zone 4", "zone 5", "zone 6"]
+    #     # plt.imshow(np.log(p_tau + 1e-8))
+    #     plt.imshow(tau_prime)
+    #     ax.grid(False)
+    #     ax.set_xticks(ticks)
+    #     ax.set_yticks(ticks)
+    #     ax.set_xticklabels(ticks_labels)
+    #     ax.set_yticklabels(ticks_labels)
+    #     pdf.savefig(fig)
 
-    # travel_time_vs_hamming_distance(p_beats, tau_prime, d_beats, d_tau)
+    travel_time_vs_hamming_distance(p_beats, p_tau, d_beats, d_tau)
