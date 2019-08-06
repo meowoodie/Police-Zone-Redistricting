@@ -1,3 +1,4 @@
+import sys
 import arrow
 import numpy as np
 from collections import defaultdict
@@ -25,24 +26,24 @@ with open("data/911.calls.concise.txt", "r", encoding='utf-8', errors='ignore') 
             beat_info[beat][year]["count"]    += 1
 mu      = float(serv_t) / float(n_calls)                       # service rate Mu
 w_beats = list(beat_info.keys())
-print("[%s] workload for beats: %s" % (arrow.now(), w_beats))
+print("[%s] workload for beats: %s" % (arrow.now(), w_beats), file=sys.stderr)
 
 # 3. get travel time (for building the traffic matrix `T`)
 t_beats, Tau = travel_time_from_patrol()
 # - complete the missing entries in tau matrix
 imputer = SimpleImputer(missing_values=0., strategy='mean')
 Tau     = imputer.fit_transform(Tau)                           # traffic matrix
-print("[%s] travel time for beats: %s" % (arrow.now(), t_beats))
+print("[%s] travel time for beats: %s" % (arrow.now(), t_beats), file=sys.stderr)
 
 # 4. get beats pairwise distance (for building the preference matrix `P`)
 d_beats, Dist = travel_time_from_distance()                    # preference matrix                                     
-print("[%s] beats distance for beats: %s" % (arrow.now(), d_beats))
+print("[%s] beats distance for beats: %s" % (arrow.now(), d_beats), file=sys.stderr)
 
 # 5. get current design (`D`)
 design  = defaultdict(lambda: [])                              # zone design
 for beat in w_beats:
     design[beat[0]].append(beat)
-print("[%s] current design: %s" % (arrow.now(), design))
+print("[%s] current design: %s" % (arrow.now(), design), file=sys.stderr)
 
 
 
@@ -59,18 +60,21 @@ for zone in design.keys():
         n_atoms = len(beats)
         Eta     = np.array([ beat_info[beat][year]["count"] for beat in beats ])
         Lam     = np.array([ beat_info[beat][year]["count"] for beat in beats ]) # TODO: Use lam estimation
+        Lam     = Lam / Lam.sum()
         T       = matrix_selection(Tau, beats, t_beats)
         P       = matrix_selection(Dist, beats, d_beats).argsort()
-        print("[%s] for zone %s, year %s" % (arrow.now(), zone, year))
-        print("n_atoms", n_atoms)
-        print("Lam", Lam)
-        print("T", T)
-        print("P", P)
+        print("[%s] for zone %s, year %s" % (arrow.now(), zone, year), file=sys.stderr)
+        print("n_atoms", n_atoms, file=sys.stderr)
+        print("Lam", Lam, file=sys.stderr)
+        print("T", T, file=sys.stderr)
+        print("P", P, file=sys.stderr)
         hq = HypercubeQ(n_atoms, Lam=Lam, T=T, P=P, cap="inf", max_iter=10, q_len=100)
-        print("[%s] check hq model (%f)" % (arrow.now(), hq.Pi.sum() + hq.Pi_Q.sum()))
+        print("[%s] check hq model (%f)" % (arrow.now(), hq.Pi.sum() + hq.Pi_Q.sum()), file=sys.stderr)
         avg_T = hq.Tu               #
         Frac  = hq.Rho_1 + hq.Rho_2
         Y_hat = (Frac * Eta.sum() * (avg_T + mu)).sum()
         Y     = sum([ beat_info[beat][year]["workload"] for beat in beats ])
-        print(Y_hat, Y)
+        print(Y_hat, Y, file=sys.stderr)
+        print("%s\t%s\t%f\t%f" % (beat, year, Y, Y_hat))
+
         
