@@ -138,5 +138,5 @@ if __name__ == "__main__":
         savepath = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/burglary-t2.pdf"
         plot_t_distribution(t2_tuples, savepath, 4000, t_annotation=r'$t_2$')
         savepath = "/Users/woodie/Desktop/workspace/Zoning-Analysis/data/casestudy/burglary-t3.pdf"
-        plot_t_distribution(t3_tuples, savepath, 50000, t_annotation=r'$t_3$')
+        plot_t_distribution(t3_tuples, savepath, 50000, t_annotation=r'serice rate $\mu$')
 

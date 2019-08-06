@@ -1,3 +1,4 @@
+import sys
 import math
 import arrow
 import numpy as np
@@ -36,7 +37,7 @@ class HypercubeQ(object):
         # - arrival rates vector: arrival rates for each atom
         self.Lam     = np.array(Lam, dtype=float) if Lam is not None else np.random.rand(self.n_atoms)
         # - traffic matrix:       average traffic time from atom i to atom j
-        self.T       = np.array(T, dtype=float) if T is not None else np.random.rand(self.n_atoms, self.n_atoms)
+        self.T       = np.array(T, dtype=float) if T is not None else np.random.rand(self.n_atoms, self.n_atoms) * 1000
         # - preference matrix:    preference matrix indicates the priority of response units to each atom
         self.P       = np.array(P, dtype=int) if P is not None else np.random.rand(self.n_atoms, self.n_atoms).argsort()
 
@@ -50,10 +51,10 @@ class HypercubeQ(object):
         self.all_busy_state_idx = np.array([ self.S[i].sum() for i in range(2 ** self.n_atoms) ]).argmax()
         self.all_zero_state_idx = 0
         # - upward transition rates matrix: a dictionary { (i,j) : lam_ij } (due to the sparsity of the matrix in nature)
-        print("[%s] calculating upward transition rates ..." % arrow.now())
+        print("[%s] calculating upward transition rates ..." % arrow.now(), file=sys.stderr)
         self.Lam_ij = self._upward_transition_rates()
         # - steady-state probability for unsaturate states
-        print("[%s] calculating steady-state probabilities ..." % arrow.now())
+        print("[%s] calculating steady-state probabilities ..." % arrow.now(), file=sys.stderr)
         self.Pi         = self._steady_state_probs(cap=self.cap, max_iter=max_iter)
         # - steady-state probability for saturate states (only for infinite-line capacity)
         self.Pi_Q       = np.array([ self._steady_state_probs_in_queue(j) for j in range(1, q_len) ]) if self.cap == "inf" else []
@@ -62,10 +63,10 @@ class HypercubeQ(object):
 
         # Model evaluation metrics
         # - fraction of dispatches that send a unit n to a particular geographical atom j
-        print("[%s] calculating dispatch fraction ..." % arrow.now())
+        print("[%s] calculating dispatch fraction ..." % arrow.now(), file=sys.stderr)
         self.Rho_1, self.Rho_2 = self._dispatch_fraction(cap=self.cap)
         # - average travel time of each disptach for each response unit
-        print("[%s] calculating average travel time ..." % arrow.now())
+        print("[%s] calculating average travel time ..." % arrow.now(), file=sys.stderr)
         self.Tu = self._average_travel_time(cap=self.cap)
 
     def _tour(self):
@@ -280,3 +281,58 @@ class HypercubeQ(object):
                 denominator = self.Rho_1[n,:].sum() + self.Pi_Q_prime / self.n_atoms
                 Tu[n]       = numerator / denominator
         return Tu
+
+if __name__ == "__main__":
+    np.random.seed(0)
+
+    # RANDOM INITIALIZED MODEL WITH ZERO-LINE CAPACITY
+    # - model initialization
+    start_t = arrow.now()
+    hq      = HypercubeQ(n_atoms=10, cap="zero", max_iter=10)
+    end_t   = arrow.now()
+    print("Calculation time: [%s]" % (end_t - start_t))
+    # - steady-state probability
+    print(hq.Pi)
+    print(hq.Pi.sum())
+    # - fraction of dispatches that send a unit n to a particular geographical atom j
+    print(hq.Rho_1)
+    print(hq.Rho_1.sum())
+    # - average travel time per dispatch for each unit
+    print(hq.Tu)
+
+
+
+    # RANDOM INITIALIZED MODEL WITH INFINITE-LINE CAPACITY
+    # - model initialization
+    hq = HypercubeQ(n_atoms=10, cap="inf", max_iter=10)
+    # - steady-state probability
+    print(hq.Pi)    # steady-state probability for unsaturate states
+    print(hq.Pi_Q)  # steady-state probability for saturate states (only for infinite-line capacity)
+    print(hq.Pi.sum() + hq.Pi_Q.sum())
+    # - fraction of dispatches that send a unit n to a particular geographical atom j
+    print(hq.Rho_1) # fraction of all dispatches that send unit n to atom j and incur no queue delay
+    print(hq.Rho_2) # fraction of all dispatches that send unit n to atom j and do incur a positive
+    print(hq.Rho_1.sum() + hq.Rho_2.sum())
+    # - average travel time per dispatch for each unit
+    print(hq.Tu)
+
+
+
+    # USER CUSTOMIZED MODEL WITH ZERO-LINE CAPACITY
+    # - model configuration
+    n_atoms = 3
+    Lam     = [1, 1, 1]
+    P       = [[0, 1, 2],
+            [1, 0, 2],
+            [2, 0, 1]]
+    T       = np.random.rand(n_atoms, n_atoms)
+    # - model initialization
+    hq = HypercubeQ(n_atoms=3, Lam=Lam, P=P, T=T, cap="zero", max_iter=10)
+    # - steady-state probability
+    print(hq.Pi)
+    print(hq.Pi.sum())
+    # - fraction of dispatches that send a unit n to a particular geographical atom j
+    print(hq.Rho_1)
+    print(hq.Rho_1.sum())
+    # - average travel time per dispatch for each unit
+    print(hq.Tu)
