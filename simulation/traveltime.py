@@ -13,7 +13,7 @@ def travel_time_from_patrol():
     # extract route data from file
     routes = []
     beats  = set()
-    with open("data/patrol.route.txt", "r") as f:
+    with open("data/traffic_time/patrol.route.txt", "r") as f:
         for line in f.readlines():
             data = line.strip().split("\t")
             start_beat, end_beat, dt = data[0], data[1], float(data[2])
@@ -24,8 +24,6 @@ def travel_time_from_patrol():
     beats   = list(beats)
     beats.sort()
     n_beats = len(beats) 
-    print(beats)
-    print(n_beats)
 
     # calculate total travel time per route (start beat, end beat, travel time)
     total_t = np.zeros((n_beats, n_beats)) # total travel time per route
@@ -52,12 +50,11 @@ def travel_time_from_patrol():
             n_intrazone_routes += 1
         else:
             n_interzone_routes += 1
-    print(n_interzone_routes, n_intrazone_routes, n_missing_routes, n_zero_routes)
+    # print(n_interzone_routes, n_intrazone_routes, n_missing_routes, n_zero_routes)
 
     # travel time estimation (missing samples are set to be zero)
     Tau = np.divide(total_t, total_n, out=np.zeros_like(total_t), where=total_n!=0)
     # np.save("data/p_tau", Tau)
-    print(Tau)
     return beats, Tau
 
 def travel_time_from_distance():
@@ -86,9 +83,6 @@ def travel_time_from_distance():
             to_beat_idx   = beats.index(to_beat)
             Tau[from_beat_idx][to_beat_idx] = hamming(beats_centroids[from_beat], beats_centroids[to_beat])
     # np.save("data/d_tau", Tau)
-    print(beats)
-    print(n_beats)
-    print(Tau)
     return beats, Tau
 
 def travel_time_vs_hamming_distance(p_beats, p_tau, d_beats, d_tau):
