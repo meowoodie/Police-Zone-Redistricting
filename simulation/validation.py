@@ -191,8 +191,8 @@ def main_2():
 
     Xs = []
     Ys = []
-    for beats in new_designs[:2]:
-        for year in years[:2]:
+    for beats in new_designs:
+        for year in years:
             n_atoms = len(beats)
             Eta     = np.array([ beat_info[beat][year]["count"] for beat in beats ])
             Lam     = np.array([ beat_info[beat][year]["count"] for beat in beats ]) # TODO: Use lam estimation
