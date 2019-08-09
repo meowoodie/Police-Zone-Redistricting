@@ -77,4 +77,58 @@ for zone in design.keys():
         print(Y_hat, Y, file=sys.stderr)
         print("%s\t%s\t%f\t%f" % (beat, year, Y, Y_hat))
 
+# from mpl_toolkits.mplot3d import Axes3D
+# import matplotlib.pyplot as plt
+# from matplotlib.backends.backend_pdf import PdfPages
+
+# def plot_barchart(x_name, x, y_name, title, data_1, data_2, path):
+#     with PdfPages(path) as pdf:
+#         # Create lists for the plot
         
+#         x_pos   = np.arange(data_1.shape[0])
+
+#         x_pos_1 = np.arange(data_1.shape[0]) - 0.15
+#         CTEs_1  = data_1.mean(axis=1)
+#         error_1 = data_1.std(axis=1)
+
+#         x_pos_2 = np.arange(data_2.shape[0]) + 0.15
+#         CTEs_2  = data_2.mean(axis=1)
+#         error_2 = data_2.std(axis=1)
+
+#         # Build the plot
+#         fig, ax = plt.subplots()
+#         b1 = ax.bar(x_pos_1, CTEs_1, 
+#             yerr=error_1, align='center', alpha=0.5, ecolor='black', capsize=3, width=.3)
+#         b2 = ax.bar(x_pos_2, CTEs_2, 
+#             yerr=error_2, align='center', alpha=0.5, ecolor='black', capsize=3, width=.3)
+#         ax.set_ylabel(y_name)
+#         ax.set_xlabel(x_name)
+#         ax.set_xticks(x_pos)
+#         ax.set_xticklabels(x)
+#         # ax.set_title(title)
+#         ax.yaxis.grid(True)
+
+#         ax.legend((b1[0], b2[0]), ('simulated output', 'real data'))
+
+#         # Save the figure and show
+#         plt.tight_layout()
+#         # plt.show()
+#         pdf.savefig(fig)
+
+# if __name__ == "__main__":
+#     with open("/Users/woodie/Dropbox (GaTech)/Apps/Overleaf/2019 Doing Good with Good OR/references/results.csv") as f:
+#         data  = [ line.strip("\n").split(",") for line in list(f)[1:] ]
+#         print(data)
+#         zones = list(set([ d[0] for d in data ]))
+#         years = list(set([ d[1] for d in data ]))
+#         zones.sort()
+#         years.sort()
+#         Y     = np.zeros((len(years), len(zones)))
+#         Y_hat = np.zeros((len(years), len(zones)))
+#         for d in data:
+#             zone, year   = d[0], d[1]
+#             z_idx, y_idx = zones.index(zone), years.index(year)
+#             Y_hat[y_idx, z_idx] = d[2]
+#             Y[y_idx, z_idx]     = d[3]    
+
+#         plot_barchart("Years", years, "Zone workload (seconds)", "Zone workload over each year", Y_hat, Y, "comparison-year.pdf")
