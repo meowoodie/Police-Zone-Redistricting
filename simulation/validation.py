@@ -186,9 +186,14 @@ def main_2():
 
     beat_info, mu, t_beats, Tau, d_beats, Dist, old_design = data_preparation()
 
-    new_designs = generate_design(old_design, min_rmv=5, n_rmv=6)
+    new_designs = generate_design(old_design, min_rmv=2, n_rmv=6)
 
-    print(len(new_designs) * len(years))
+    # random select designs
+    ids          = list(range(len(new_designs)))
+    np.random.shuffle(ids)
+    selected_ids = ids[:100]
+    print(selected_ids)
+    new_designs  = [ new_designs[idx] for idx in selected_ids ]
 
     Xs = []
     Ys = []
