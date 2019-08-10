@@ -9,6 +9,7 @@ from collections import defaultdict
 from hypercubeq import HypercubeQ
 from traveltime import travel_time_from_patrol, travel_time_from_distance
 from sklearn.impute import SimpleImputer
+from tqdm import tqdm
 
 # year configuration
 years = ["2013", "2014", "2015", "2016", "2017"]
@@ -191,7 +192,7 @@ def main_2():
 
     Xs = []
     Ys = []
-    for beats in new_designs:
+    for beats in tqdm(new_designs):
         for year in years:
             n_atoms = len(beats)
             Eta     = np.array([ beat_info[beat][year]["count"] for beat in beats ])
@@ -199,17 +200,17 @@ def main_2():
             Lam     = Lam / Lam.sum()
             T       = matrix_selection(Tau, beats, t_beats)
             P       = matrix_selection(Dist, beats, d_beats).argsort()
-            print("[%s] for beats comb %s, year %s" % (arrow.now(), beats, year), file=sys.stderr)
-            print("n_atoms", n_atoms, file=sys.stderr)
-            print("Lam", Lam, file=sys.stderr)
-            print("T", T, file=sys.stderr)
-            print("P", P, file=sys.stderr)
+            # print("[%s] for beats comb %s, year %s" % (arrow.now(), beats, year), file=sys.stderr)
+            # print("n_atoms", n_atoms, file=sys.stderr)
+            # print("Lam", Lam, file=sys.stderr)
+            # print("T", T, file=sys.stderr)
+            # print("P", P, file=sys.stderr)
             hq    = HypercubeQ(n_atoms, Lam=Lam, T=T, P=P, cap="inf", max_iter=10, q_len=100)
-            print("[%s] check hq model (%f)" % (arrow.now(), hq.Pi.sum() + hq.Pi_Q.sum()), file=sys.stderr)
+            # print("[%s] check hq model (%f)" % (arrow.now(), hq.Pi.sum() + hq.Pi_Q.sum()), file=sys.stderr)
             avg_T = hq.Tu               #
             Frac  = hq.Rho_1 + hq.Rho_2
             Y_hat = (Frac * Eta.sum() * (avg_T + mu)).sum()
-            print("%s\t%s\t%f" % (beats, year, Y_hat))
+            # print("%s\t%s\t%f" % (beats, year, Y_hat))
             Xs.append([year] + beats)
             Ys.append(Y_hat)
     

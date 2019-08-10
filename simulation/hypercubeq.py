@@ -51,10 +51,10 @@ class HypercubeQ(object):
         self.all_busy_state_idx = np.array([ self.S[i].sum() for i in range(2 ** self.n_atoms) ]).argmax()
         self.all_zero_state_idx = 0
         # - upward transition rates matrix: a dictionary { (i,j) : lam_ij } (due to the sparsity of the matrix in nature)
-        print("[%s] calculating upward transition rates ..." % arrow.now(), file=sys.stderr)
+        # print("[%s] calculating upward transition rates ..." % arrow.now(), file=sys.stderr)
         self.Lam_ij = self._upward_transition_rates()
         # - steady-state probability for unsaturate states
-        print("[%s] calculating steady-state probabilities ..." % arrow.now(), file=sys.stderr)
+        # print("[%s] calculating steady-state probabilities ..." % arrow.now(), file=sys.stderr)
         self.Pi         = self._steady_state_probs(cap=self.cap, max_iter=max_iter)
         # - steady-state probability for saturate states (only for infinite-line capacity)
         self.Pi_Q       = np.array([ self._steady_state_probs_in_queue(j) for j in range(1, q_len) ]) if self.cap == "inf" else []
@@ -63,10 +63,10 @@ class HypercubeQ(object):
 
         # Model evaluation metrics
         # - fraction of dispatches that send a unit n to a particular geographical atom j
-        print("[%s] calculating dispatch fraction ..." % arrow.now(), file=sys.stderr)
+        # print("[%s] calculating dispatch fraction ..." % arrow.now(), file=sys.stderr)
         self.Rho_1, self.Rho_2 = self._dispatch_fraction(cap=self.cap)
         # - average travel time of each disptach for each response unit
-        print("[%s] calculating average travel time ..." % arrow.now(), file=sys.stderr)
+        # print("[%s] calculating average travel time ..." % arrow.now(), file=sys.stderr)
         self.Tu = self._average_travel_time(cap=self.cap)
 
     def _tour(self):
