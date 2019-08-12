@@ -45,6 +45,10 @@ results = model.fit()
 print(results.summary())
 print(results.mse_total)
 
+# fig, ax = plt.subplots(figsize=(12, 8))
+# fig = sm.graphics.plot_fit(results, "x1", ax=ax)
+# plt.show()
+
 import branca
 import folium
 import matplotlib
@@ -83,7 +87,7 @@ def plot_vals_on_map(val_vec, name, path):
     # save the map
     _map.save(path)
 
-plot_vals_on_map(results.params, "coef", "params.html")
-plot_vals_on_map(results.tvalues, "t-values", "tvalues.html")
-plot_vals_on_map(results.pvalues, "p-values", "pvalues.html")
-plot_vals_on_map(results.bse, "std error", "stderror.html")
+# plot_vals_on_map(results.params, "coef", "params.html")
+# plot_vals_on_map(results.tvalues, "t-values", "tvalues.html")
+# plot_vals_on_map(results.pvalues, "p-values", "pvalues.html")
+# plot_vals_on_map(results.bse, "std error", "stderror.html")
