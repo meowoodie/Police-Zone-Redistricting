@@ -15,11 +15,11 @@ library('shiny')
 # devtools::install_github('rstudio/leaflet')
 setwd("/Users/woodie/")
 root.dir      = 'Desktop/workspace/Zoning-Analysis'
-workload.path = paste(root.dir, 'data/workload_by_junzhuo.csv', sep='/')
-beat.geo.path = paste(root.dir, 'data/apd_beat.geojson', sep='/')
-zone.geo.path = paste(root.dir, 'data/apd_zone.geojson', sep='/')
+workload.path = paste(root.dir, 'heuristic_result/data/final_workload.csv', sep='/')
+beat.geo.path = paste(root.dir, 'data/geodata/apd_beat.geojson', sep='/')
+zone.geo.path = paste(root.dir, 'data/geodata/apd_zone.geojson', sep='/')
 # redesign.path = paste(root.dir, 'mip/opt_result.csv', sep='/')
-redesign.path = paste(root.dir, 'data/redesign/oct23_nonconstrained_redesign_Jun2018.csv', sep='/')
+redesign.path = paste(root.dir, 'data/redesign/sept.redesign.v2.csv', sep='/')
 
 source(paste(root.dir, 'heuristic/lib/preproc.R', sep='/'))
 source(paste(root.dir, 'heuristic/lib/utils.R', sep='/'))
@@ -65,8 +65,8 @@ title = tags$div(HTML(sprintf(
   Workload Analysis of Atlanta City in 20%s </a>', cur.year)))
 
 # color settings
-beat.pal = colorBin('YlOrRd', domain = beats.geo$workload)
-zone.pal = colorBin('viridis', domain = c(merged$workload, zones.geo$workload), reverse = TRUE)
+beat.pal = colorBin('YlOrRd', domain = workload.df$workload[workload.df$workload > 10000])
+zone.pal = colorBin('viridis', domain = c(merged$workload, zones.geo$workload, 155000000, 250000000), reverse = TRUE)
 
 # label settings
 beat.label = sprintf(

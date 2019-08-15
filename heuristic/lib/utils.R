@@ -69,7 +69,7 @@ merge.beats = function (beat.geo, beat.design.df) {
   zones          = zones[-9]
   beats          = beats[-8] # beat 050
   zones          = zones[-8] # beat 050
-  polygons[[9]] = NULL
+  polygons[[9]]  = NULL
   polygons[[8]]  = NULL      # beat 050
   # Merge spatial polygons objects into one
   joined = SpatialPolygons(lapply(polygons, function(x){x@polygons[[1]]}))
