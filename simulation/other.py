@@ -32,10 +32,10 @@ with PdfPages("workload-var-line-chart.pdf") as pdf:
 
     color = 'tab:red'
     ax1.set_xlabel('year')
-    ax1.set_ylabel('total workload (seconds)', color=color)
+    ax1.set_ylabel('total workload (hours/year)', color=color)
     ax1.plot(t, total_w, color=color)
-    ax1b1 = ax1.plot(markers_on, total_w[:5], 'x', color=color)
-    ax1b2 = ax1.plot([2018, 2019], total_w[-2:], 'o', color=color)
+    ax1.plot(markers_on, total_w[:5], 'x', color=color)
+    ax1.plot([2018, 2019], total_w[-2:], 'o', color=color)
     ax1.tick_params(axis='y', labelcolor=color)
     # ax1.yaxis.grid(True, color=color, linestyle='--')
 
@@ -44,15 +44,22 @@ with PdfPages("workload-var-line-chart.pdf") as pdf:
     color = 'tab:blue'
     ax2.set_ylabel('variance of zone workload', color=color)  # we already handled the x-label with ax1
     ax2.plot(t, var_w, color=color)
-    ax2b1 = ax2.plot(markers_on, var_w[:5], 'x', color=color)
-    ax2b2 = ax2.plot([2018, 2019], var_w[-2:], 'o', color=color)
+    ax2.plot(markers_on, var_w[:5], 'x', color=color)
+    ax2.plot([2018, 2019], var_w[-2:], 'o', color=color)
     ax2.tick_params(axis='y', labelcolor=color)
     ax2.yaxis.grid(True, linestyle='--')
+
+    color = 'tab:blue'
+    ax2.plot([2018, 2019], [161256471666666.53, 190791481666666.66], '*', color=color)
+    # plot vertical dash line
+    ax2.plot([2018, 2018], [161256471666666.53, var_w[5]], 'k--', lw=.8)
+    ax2.plot([2019, 2019], [190791481666666.66, var_w[6]], 'k--', lw=.8)
 
     axl = plt.gca()
     axl1 = axl.plot([], [], 'x', color='gray')
     axl2 = axl.plot([], [], 'o', color='gray')
-    axl.legend((axl1[0], axl2[0]), ('data', 'prediction'), loc=2)
+    axl3 = axl.plot([], [], '*', color='blue')
+    axl.legend((axl1[0], axl2[0], axl3[0]), ('data with existing plan', 'prediction with existing plan', 'prediction with redesigned plan'), loc=2)
 
     ax2.set_yticks(np.linspace(ax2.get_yticks()[0], ax2.get_yticks()[-1], len(ax1.get_yticks())))
 
