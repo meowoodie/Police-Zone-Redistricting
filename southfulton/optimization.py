@@ -6,7 +6,8 @@ from collections import defaultdict
 from designinit import visualize_grid, beat_with_max_workload
 
 # load data
-fname   = "Jan-APR-2019-PD-nbeat-19"
+# fname   = "Jan-APR-2019-PD-nbeat-15"
+fname   = "regression-workload-2021-nbeat-18"
 design  = np.load("result/grid-%s.npy" % fname) # a design includes multiple pairs of (grid_id, beat_id, grid_workload)
 adj_mat = np.load("data/adjacency_matrix.npy")  # adjacency between grids
 
@@ -71,7 +72,7 @@ def check_contiguous(x, adj_mat):
     # reference: https://stackoverflow.com/questions/46659203/python-function-check-for-connectivity-in-adjacency-matrix
     return True
 
-def check_compact(x, coords, thresholds=None, ratio=1.001):
+def check_compact(x, coords, thresholds=None, ratio=1.00001):
     """
     check if each beat are compact.
     """
@@ -150,14 +151,18 @@ if __name__ == "__main__":
             x   = cand_x
             obj = cand_obj
     
-    print(x)
+    print(set(x))
     final_design = cand_design
 
     _, _, init_beats_workload  = beat_with_max_workload(design)
     _, _, final_beats_workload = beat_with_max_workload(final_design)
-    # min_val = min([min(init_beats_workload), min(final_beats_workload)])
-    # max_val = max([max(init_beats_workload), max(final_beats_workload)])
-    visualize_grid(final_design, "grids", 
-        map_fname="redesign-%s" % fname, 
-        min_val=min(init_beats_workload)/3600, max_val=max(init_beats_workload)/3600)
+    # # min_val = min([min(init_beats_workload), min(final_beats_workload)])
+    # # max_val = max([max(init_beats_workload), max(final_beats_workload)])
+    # visualize_grid(
+    #     design, "grids", map_fname=fname,
+    #     min_val=min(init_beats_workload)/3600, max_val=max(init_beats_workload)/3600)
+    # visualize_grid(
+    #     final_design, "grids", 
+    #     map_fname="redesign-%s" % fname, 
+    #     min_val=min(init_beats_workload)/3600, max_val=max(init_beats_workload)/3600)
     np.save("result/grid-redesign-%s.npy" % fname, final_design)
