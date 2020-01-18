@@ -69,7 +69,7 @@ def visualize_grid(grid_table, geo_fname, map_fname, min_val=None, max_val=None)
         beat_id = grid_table[i, 1]
         val     = beats_workload[beats_set.index(beat_id)] / 3600
         val_dict[grid_id] = val
-    # map initialization
+    # map initializationc 
     _map       = folium.Map(location=center, zoom_start=11, zoom_control=True, max_zoom=17, min_zoom=8)
     # continuous color map intialization
     if min_val is None and max_val is None:
