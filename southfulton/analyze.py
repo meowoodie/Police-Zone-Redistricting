@@ -40,29 +40,29 @@ if __name__ == "__main__":
     plt.rc("text", usetex=True)
 
     with PdfPages("workload-nbeats.pdf") as pdf:
-        fig, ax = plt.subplots(1, 2, figsize=(12,5))
+        fig, ax = plt.subplots()
 
-        ax1, ax2 = ax
+        # ax1, ax2 = ax
 
-        ax1.plot(n_beat_range, reds_beat_means/365)
-        ax1.set_xlabel('Number of beats')
-        ax1.set_ylabel('Average beat workload (hours/day)')
-        ax1.grid(linestyle=':', linewidth='0.5', color='black')
-        ax1.set_xticks(n_beat_range)
-        # ax1.tight_layout()
-        # pdf.savefig(fig)
+        ax.plot(n_beat_range, reds_beat_means/365)
+        ax.set_xlabel('Number of beats')
+        ax.set_ylabel('Average beat workload (hours/day)')
+        # ax1.grid(linestyle='--', linewidth='0.1', color='black')
+        ax.set_xticks(n_beat_range)
+        plt.tight_layout()
+        pdf.savefig(fig)
 
-    # with PdfPages("workload-var-chart.pdf") as pdf:
-    #     fig, ax = plt.subplots()
+    with PdfPages("workload-var-chart.pdf") as pdf:
+        fig, ax = plt.subplots()
 
-        l1 = ax2.plot(n_beat_range, init_beat_vars, linewidth=3)
-        l2 = ax2.plot(n_beat_range, reds_beat_vars, linewidth=3)
-        ax2.set_xlabel('Number of beats')
-        ax2.set_ylabel('Variance of beat workloads')
-        ax2.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
-        ax2.grid(linestyle=':', linewidth='0.5', color='black')
-        ax2.legend(('greedy exploration', 'refined by optimization'))
-        ax2.set_xticks(n_beat_range)
+        l1 = ax.plot(n_beat_range, init_beat_vars, linewidth=3)
+        l2 = ax.plot(n_beat_range, reds_beat_vars, linewidth=3)
+        ax.set_xlabel('Number of beats')
+        ax.set_ylabel('Variance of beat workloads')
+        ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+        # ax2.grid(linestyle='--', linewidth='0.1', color='black')
+        ax.legend(('greedy exploration', 'refined by optimization'))
+        ax.set_xticks(n_beat_range)
         plt.tight_layout()
         pdf.savefig(fig)
 
