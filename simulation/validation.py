@@ -1,6 +1,7 @@
 import sys
 import arrow
 import copy
+import random
 import numpy as np
 import matplotlib.pyplot as plt
 from itertools import combinations
@@ -29,9 +30,10 @@ def data_preparation():
     # 1. get workload and count per beat (for building the arrival rates vectors `Lam`)
     beat_info = defaultdict(lambda: defaultdict(lambda: {"workload": 0, "count": 0}))
     n_calls, serv_t = 0, 0
-    with open("data/911.calls.concise.txt", "r", encoding='utf-8', errors='ignore') as f:
+    with open("../data/rawdata/911.calls.concise.txt", "r", encoding='utf-8', errors='ignore') as f:
         for line in f.readlines():
             off_id, lat, lng, beat, call_t, disp_t, arv_t, clr_t = line.strip("\n").split("\t")
+            beat     = beat.strip()
             n_calls += 1
             serv_t  += float(clr_t) - float(arv_t)
             workload = float(clr_t) - float(disp_t)
@@ -105,49 +107,83 @@ def plot_barchart(x_name, x, y_name, title, data_1, data_2, path):
 def generate_design(old_design, min_rmv=2, n_rmv=5):
     """Generate random design given the adjacency strucutre of beats and original design"""
 
-    with open("data/beats_graph.csv") as f:
+    with open("../data/beats_graph.csv") as f:
         data      = list(f)
         all_beats = [ beat.strip('"') for beat in data[0].strip("\n").split(",")[1:] ]
         graph     = np.zeros((len(all_beats), len(all_beats)))
         for i in range(1, len(data)):
             graph[i-1, :] =  np.array([ int(d.strip('"')) for d in data[i].strip("\n").split(",")[1:] ])
-        # print(graph)
-        # print(len(all_beats))
 
-    def is_zone_bound(beat, beats):
-        beat_id        = all_beats.index(beat)
-        neighbor_beats = [ all_beats[i] for i in np.where(graph[beat_id] == 1)[0] ]
-        out_zone_beats = [ beat for beat in neighbor_beats if beat not in beats ]
-        if len(out_zone_beats) >= 1:
-            return True
-        else:
-            return False
-
-    new_designs = []
-    for zone in old_design:
-        if zone == "7":
-            continue
-        beats       = old_design[zone]
-        bound_beats = [ beat 
-            for beat in beats 
-            if is_zone_bound(beat, beats) ]
-        # print("zone", zone)
-        # print("beats:\t", beats)
-        # print("bound_beats:\t", bound_beats)
+    def adjacent_designs(design):
+        adj_designs = []
+        for zone in design:
+            if zone == "7":
+                continue
+            for beat in design[zone]:
+                beat_id        = all_beats.index(beat)
+                neighbor_beats = [ all_beats[i] for i in np.where(graph[beat_id] == 1)[0] ]
+                # for each boundary beat
+                # if it is out of the zone, then put it into the zone
+                for nbeat in neighbor_beats:
+                    nzone = None
+                    for z in design:
+                        if nbeat in design[z]:
+                            nzone = z
+                            break
+                    if nzone != zone and nzone is not None:
+                        adj_design = copy.deepcopy(design)
+                        adj_design[zone].append(nbeat)
+                        adj_design[nzone].pop(adj_design[nzone].index(nbeat))
+                        print("find a new adjacent design!")
+                        print("move beat", nbeat)
+                        print("from zone", nzone, adj_design[nzone])
+                        print("to zone", zone, adj_design[zone])
+                        # add an adjacent design
+                        adj_designs.append(adj_design)
+        return adj_designs
         
-        n_rmv   = n_rmv if n_rmv > len(bound_beats) else len(bound_beats)
-        min_rmv = min_rmv if min_rmv < len(bound_beats) else len(bound_beats)
-        for n in range(min_rmv, n_rmv):
-            # print("remove", n, "beat")
-            for rmv_beats in combinations(bound_beats, n):
-                # print("remove", rmv_beats)
-                new_beats = copy.deepcopy(beats)
-                for b in rmv_beats:
-                    new_beats.pop(new_beats.index(b))
-                # print("new beats:\t", new_beats)
-                print(",".join(beats))
-                new_designs.append(new_beats)
-    return new_designs
+    # select a random subset of the old design as initial design
+    n = 5 # number of dropout
+    for zone in old_design:
+        # get current beats set of the zone
+        beats            = old_design[zone]
+        random.shuffle(beats)
+        # drop out n beats from each zone
+        beats            = beats[:len(beats)-5]
+        old_design[zone] = beats
+    
+    # find the adjacent designs
+    adj_designs = adjacent_designs(old_design)
+    print(len(adj_designs))
+        
+    return adj_designs
+    # new_designs = {}
+    # for zone in old_design:
+    #     if zone == "7":
+    #         continue
+    #     beats       = old_design[zone]
+    #     bound_beats = [ beat 
+    #         for beat in beats 
+    #         if is_zone_bound(beat, beats) ]
+    #     # print("zone", zone)
+    #     # print("beats:\t", beats)
+    #     # print("bound_beats:\t", bound_beats)
+        
+    #     n_rmv   = n_rmv if n_rmv > len(bound_beats) else len(bound_beats)
+    #     min_rmv = min_rmv if min_rmv < len(bound_beats) else len(bound_beats)
+    #     new_design = []
+    #     for n in range(min_rmv, n_rmv):
+    #         # print("remove", n, "beat")
+    #         for rmv_beats in combinations(bound_beats, n):
+    #             # print("remove", rmv_beats)
+    #             new_beats = copy.deepcopy(beats)
+    #             for b in rmv_beats:
+    #                 new_beats.pop(new_beats.index(b))
+    #             # print("new beats:\t", new_beats)
+    #             print(",".join(beats))
+    #             new_design.append(new_beats)
+    #     new_designs[zone] = new_design
+    # return new_designs
 
 
 
@@ -155,6 +191,8 @@ def main_1():
     """Evaluate the simulation model"""
 
     beat_info, mu, t_beats, Tau, d_beats, Dist, design = data_preparation()
+
+    print("finish data preprocessing")
 
     for zone in design.keys():
         for year in years:
@@ -186,42 +224,40 @@ def main_2():
 
     beat_info, mu, t_beats, Tau, d_beats, Dist, old_design = data_preparation()
 
-    new_designs = generate_design(old_design, min_rmv=2, n_rmv=6)
+    print("finish data preprocessing")
 
-    # random select designs
-    ids          = list(range(len(new_designs)))
-    np.random.shuffle(ids)
-    selected_ids = ids[:100]
-    print(selected_ids)
-    new_designs  = [ new_designs[idx] for idx in selected_ids ]
+    new_designs = generate_design(old_design, min_rmv=2, n_rmv=4)
+
+    print("finish design generation")
 
     Xs = []
     Ys = []
-    for beats in tqdm(new_designs):
-        for year in years:
-            n_atoms = len(beats)
-            Eta     = np.array([ beat_info[beat][year]["count"] for beat in beats ])
-            Lam     = np.array([ beat_info[beat][year]["count"] for beat in beats ]) # TODO: Use lam estimation
-            Lam     = Lam / Lam.sum()
-            T       = matrix_selection(Tau, beats, t_beats)
-            P       = matrix_selection(Dist, beats, d_beats).argsort()
-            # print("[%s] for beats comb %s, year %s" % (arrow.now(), beats, year), file=sys.stderr)
-            # print("n_atoms", n_atoms, file=sys.stderr)
-            # print("Lam", Lam, file=sys.stderr)
-            # print("T", T, file=sys.stderr)
-            # print("P", P, file=sys.stderr)
-            hq    = HypercubeQ(n_atoms, Lam=Lam, T=T, P=P, cap="inf", max_iter=10, q_len=100)
-            # print("[%s] check hq model (%f)" % (arrow.now(), hq.Pi.sum() + hq.Pi_Q.sum()), file=sys.stderr)
-            avg_T = hq.Tu               #
-            Frac  = hq.Rho_1 + hq.Rho_2
-            Y_hat = (Frac * Eta.sum() * (avg_T + mu)).sum()
-            # print("%s\t%s\t%f" % (beats, year, Y_hat))
-            Xs.append([year] + beats)
-            Ys.append(Y_hat)
+    for year in years:
+        for design in tqdm(new_designs):
+            Y = []
+            for zone in design:
+                beats   = design[zone]
+                n_atoms = len(beats)
+                Eta     = np.array([ beat_info[beat][year]["count"] for beat in beats ])
+                Lam     = np.array([ beat_info[beat][year]["count"] for beat in beats ]) # TODO: Use lam estimation
+                Lam     = Lam / Lam.sum()
+                T       = matrix_selection(Tau, beats, t_beats)
+                P       = matrix_selection(Dist, beats, d_beats).argsort()
+                hq    = HypercubeQ(n_atoms, Lam=Lam, T=T, P=P, cap="inf", max_iter=10, q_len=100)
+                avg_T = hq.Tu               
+                Frac  = hq.Rho_1 + hq.Rho_2
+                Y_hat = (Frac * Eta.sum() * (avg_T + mu)).sum()
+                Y.append(Y_hat)
+            output = [year, sum(Y)] + Y
+            print(output)
+            Ys.append(output)
+                # Xs.append([year] + beats)
+                # Ys.append(Y_hat)
     
     with open("results.txt", "w") as f:
         for i in range(len(Xs)):
             f.write("%s\t%f\n" % (",".join(Xs[i]), Ys[i]))
+
 
 
 def main_3():
@@ -244,7 +280,51 @@ def main_3():
 
         plot_barchart("Years", years, "Zone workload (seconds)", "Zone workload over each year", Y_hat, Y, "comparison-year.pdf")
 
+        
+
+def main_4():
+    """Generate random valid design and get corresponding simulation output"""
+
+    beat_info, mu, t_beats, Tau, d_beats, Dist, old_design = data_preparation()
+
+    print("finish data preprocessing")
+
+    new_designs = generate_design(old_design, min_rmv=2, n_rmv=4)
+
+    print("finish design generation")
+
+    Xs = []
+    Ys = []
+    for year in years:
+        for design in tqdm(new_designs):
+            Y = []
+            for zone in design:
+                if zone == "7":
+                    continue
+                beats   = design[zone]
+                n_atoms = len(beats)
+                Eta     = np.array([ beat_info[beat][year]["count"] for beat in beats ])
+                Lam     = np.array([ beat_info[beat][year]["count"] for beat in beats ]) # TODO: Use lam estimation
+                Lam     = Lam / Lam.sum()
+                T       = matrix_selection(Tau, beats, t_beats)
+                P       = matrix_selection(Dist, beats, d_beats).argsort()
+                hq    = HypercubeQ(n_atoms, Lam=Lam, T=T, P=P, cap="inf", max_iter=10, q_len=100)
+                avg_T = hq.Tu               
+                Frac  = hq.Rho_1 + hq.Rho_2
+                Y_hat = (Frac * Eta.sum() * (avg_T + mu)).sum()
+                Y.append(Y_hat)
+            output = [year, sum(Y)] + Y
+            print(output)
+            Ys.append(output)
+                # Xs.append([year] + beats)
+                # Ys.append(Y_hat)
+    
+    # with open("results.txt", "w") as f:
+    #     for i in range(len(Xs)):
+    #         f.write("%s\t%f\n" % (",".join(Xs[i]), Ys[i]))
+
+
 
 
 if __name__ == "__main__":
-    main_2()
+    main_4()
