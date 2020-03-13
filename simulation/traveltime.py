@@ -13,7 +13,7 @@ def travel_time_from_patrol():
     # extract route data from file
     routes = []
     beats  = set()
-    with open("data/traffic_time/patrol.route.txt", "r") as f:
+    with open("../data/traffic_time/patrol.route.txt", "r") as f:
         for line in f.readlines():
             data = line.strip().split("\t")
             start_beat, end_beat, dt = data[0], data[1], float(data[2])
@@ -63,7 +63,7 @@ def travel_time_from_distance():
     """
     # extract centroids data from file
     beats_centroids = {}
-    with open("data/beats_centroids.csv", "r") as f:
+    with open("../data/beats_centroids.csv", "r") as f:
         for line in f.readlines():
             beat, lng, lat = line.strip().split(",")
             beats_centroids[beat] = [float(lat), float(lng)]

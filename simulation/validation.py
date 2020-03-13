@@ -4,6 +4,8 @@ import copy
 import random
 import numpy as np
 import matplotlib.pyplot as plt
+import statsmodels.api as sm
+import statistics as stats
 from itertools import combinations
 from matplotlib.backends.backend_pdf import PdfPages
 from collections import defaultdict
@@ -117,6 +119,7 @@ def generate_design(old_design, min_rmv=2, n_rmv=5):
     def adjacent_designs(design):
         adj_designs = []
         for zone in design:
+            moved_beat = []
             if zone == "7":
                 continue
             for beat in design[zone]:
@@ -130,14 +133,15 @@ def generate_design(old_design, min_rmv=2, n_rmv=5):
                         if nbeat in design[z]:
                             nzone = z
                             break
-                    if nzone != zone and nzone is not None:
+                    if nzone != zone and nzone is not None and nbeat not in moved_beat:
                         adj_design = copy.deepcopy(design)
                         adj_design[zone].append(nbeat)
                         adj_design[nzone].pop(adj_design[nzone].index(nbeat))
-                        print("find a new adjacent design!")
-                        print("move beat", nbeat)
-                        print("from zone", nzone, adj_design[nzone])
-                        print("to zone", zone, adj_design[zone])
+                        # print("find a new adjacent design!")
+                        # print("move beat", nbeat)
+                        # print("from zone", nzone, adj_design[nzone])
+                        # print("to zone", zone, adj_design[zone])
+                        moved_beat.append(nbeat)
                         # add an adjacent design
                         adj_designs.append(adj_design)
         return adj_designs
@@ -149,42 +153,22 @@ def generate_design(old_design, min_rmv=2, n_rmv=5):
         beats            = old_design[zone]
         random.shuffle(beats)
         # drop out n beats from each zone
-        beats            = beats[:len(beats)-5]
+        beats            = beats[:len(beats)-n]
         old_design[zone] = beats
     
     # find the adjacent designs
-    adj_designs = adjacent_designs(old_design)
-    print(len(adj_designs))
-        
-    return adj_designs
-    # new_designs = {}
-    # for zone in old_design:
-    #     if zone == "7":
-    #         continue
-    #     beats       = old_design[zone]
-    #     bound_beats = [ beat 
-    #         for beat in beats 
-    #         if is_zone_bound(beat, beats) ]
-    #     # print("zone", zone)
-    #     # print("beats:\t", beats)
-    #     # print("bound_beats:\t", bound_beats)
-        
-    #     n_rmv   = n_rmv if n_rmv > len(bound_beats) else len(bound_beats)
-    #     min_rmv = min_rmv if min_rmv < len(bound_beats) else len(bound_beats)
-    #     new_design = []
-    #     for n in range(min_rmv, n_rmv):
-    #         # print("remove", n, "beat")
-    #         for rmv_beats in combinations(bound_beats, n):
-    #             # print("remove", rmv_beats)
-    #             new_beats = copy.deepcopy(beats)
-    #             for b in rmv_beats:
-    #                 new_beats.pop(new_beats.index(b))
-    #             # print("new beats:\t", new_beats)
-    #             print(",".join(beats))
-    #             new_design.append(new_beats)
-    #     new_designs[zone] = new_design
-    # return new_designs
+    new_designs  = []
+    new_designs += adjacent_designs(old_design)
+    print("swap 1 beat", len(new_designs))
+    new_designs += adjacent_designs(new_designs[-1])
+    print("swap 2 beats", len(new_designs))
+    new_designs += adjacent_designs(new_designs[-1])
+    print("swap 3 beats", len(new_designs))
+    new_designs += adjacent_designs(new_designs[-1])
+    print("swap 4 beats", len(new_designs))
+    new_designs += adjacent_designs(new_designs[-1])
 
+    return new_designs
 
 
 def main_1():
@@ -218,48 +202,6 @@ def main_1():
             print("%s\t%s\t%f\t%f" % (zone, year, Y, Y_hat))
 
 
-
-def main_2():
-    """Generate random valid design and get corresponding simulation output"""
-
-    beat_info, mu, t_beats, Tau, d_beats, Dist, old_design = data_preparation()
-
-    print("finish data preprocessing")
-
-    new_designs = generate_design(old_design, min_rmv=2, n_rmv=4)
-
-    print("finish design generation")
-
-    Xs = []
-    Ys = []
-    for year in years:
-        for design in tqdm(new_designs):
-            Y = []
-            for zone in design:
-                beats   = design[zone]
-                n_atoms = len(beats)
-                Eta     = np.array([ beat_info[beat][year]["count"] for beat in beats ])
-                Lam     = np.array([ beat_info[beat][year]["count"] for beat in beats ]) # TODO: Use lam estimation
-                Lam     = Lam / Lam.sum()
-                T       = matrix_selection(Tau, beats, t_beats)
-                P       = matrix_selection(Dist, beats, d_beats).argsort()
-                hq    = HypercubeQ(n_atoms, Lam=Lam, T=T, P=P, cap="inf", max_iter=10, q_len=100)
-                avg_T = hq.Tu               
-                Frac  = hq.Rho_1 + hq.Rho_2
-                Y_hat = (Frac * Eta.sum() * (avg_T + mu)).sum()
-                Y.append(Y_hat)
-            output = [year, sum(Y)] + Y
-            print(output)
-            Ys.append(output)
-                # Xs.append([year] + beats)
-                # Ys.append(Y_hat)
-    
-    with open("results.txt", "w") as f:
-        for i in range(len(Xs)):
-            f.write("%s\t%f\n" % (",".join(Xs[i]), Ys[i]))
-
-
-
 def main_3():
     """Simulation Model Evaluation"""
 
@@ -286,45 +228,114 @@ def main_4():
     """Generate random valid design and get corresponding simulation output"""
 
     beat_info, mu, t_beats, Tau, d_beats, Dist, old_design = data_preparation()
-
     print("finish data preprocessing")
 
     new_designs = generate_design(old_design, min_rmv=2, n_rmv=4)
-
     print("finish design generation")
+
+    validbeats = []
+    for z in old_design:
+        if z != "7":
+            validbeats += [ beat for beat in old_design[z] ]
+    print(validbeats)
 
     Xs = []
     Ys = []
-    for year in years:
-        for design in tqdm(new_designs):
-            Y = []
-            for zone in design:
-                if zone == "7":
-                    continue
-                beats   = design[zone]
-                n_atoms = len(beats)
-                Eta     = np.array([ beat_info[beat][year]["count"] for beat in beats ])
-                Lam     = np.array([ beat_info[beat][year]["count"] for beat in beats ]) # TODO: Use lam estimation
-                Lam     = Lam / Lam.sum()
-                T       = matrix_selection(Tau, beats, t_beats)
-                P       = matrix_selection(Dist, beats, d_beats).argsort()
-                hq    = HypercubeQ(n_atoms, Lam=Lam, T=T, P=P, cap="inf", max_iter=10, q_len=100)
-                avg_T = hq.Tu               
-                Frac  = hq.Rho_1 + hq.Rho_2
-                Y_hat = (Frac * Eta.sum() * (avg_T + mu)).sum()
-                Y.append(Y_hat)
-            output = [year, sum(Y)] + Y
-            print(output)
-            Ys.append(output)
-                # Xs.append([year] + beats)
-                # Ys.append(Y_hat)
-    
-    # with open("results.txt", "w") as f:
-    #     for i in range(len(Xs)):
-    #         f.write("%s\t%f\n" % (",".join(Xs[i]), Ys[i]))
+    lY = []
+    lX = []
+    year = '2017'
+    for design in tqdm(new_designs):
+        Y = []
+        for zone in design:
+            if zone == "7":
+                continue
+            # build operations model
+            beats   = design[zone]
+            n_atoms = len(beats)
+            Eta     = np.array([ beat_info[beat][year]["count"] for beat in beats ])
+            Lam     = np.array([ beat_info[beat][year]["count"] for beat in beats ])
+            Lam     = Lam / Lam.sum()
+            T       = matrix_selection(Tau, beats, t_beats)
+            P       = matrix_selection(Dist, beats, d_beats).argsort()
+            hq    = HypercubeQ(n_atoms, Lam=Lam, T=T, P=P, cap="inf", max_iter=10, q_len=100)
+            avg_T = hq.Tu               
+            Frac  = hq.Rho_1 + hq.Rho_2
+            Y_hat = (Frac * Eta.sum() * (avg_T + mu)).sum()
+            Y.append(Y_hat)
+        output = [ str(year), str(stats.variance(Y)) ] + [ str(y) for y in Y ]
+        Ys.append(output)
+        # build approximation model
+        zones = list(design.keys())
+        x = np.zeros((len(validbeats), 6)) 
+        for z in design:
+            if z == "7":
+                continue
+            for beat in validbeats:
+                if beat in design[z]:
+                    x[validbeats.index(beat), zones.index(z)] = 1
+        # x = np.zeros(len(validbeats)) 
+        # for beat in validbeats:
+        #     x[validbeats.index(beat)] = beat_info[beat][year]["count"] * Tau[t_beats.index(beat),:].sum()
+        lY.append(stats.variance(Y))
+        lX.append(x.flatten())
 
+    with open("sim_output.txt", "w") as f:
+        for Y in Ys:
+            f.write("%s\n" % ",".join(Y))
+
+    # linear regression model
+    lX = np.array(lX)
+    nlX = (lX - lX.min()) / (lX.max() - lX.min())
+    lY = np.array(lY)
+    nlY = (lY - lY.min()) / (lY.max() - lY.min())
+
+    # X       = sm.add_constant(X)
+    model   = sm.OLS(nlY, nlX)
+    results = model.fit()
+    approxs = results.predict(nlX)
+    approxs = approxs * (lY.max() - lY.min()) + lY.min()
+    approxs = np.array(approxs) #.reshape([len(new_designs), 6]).sum(axis=1)
+    print(results.summary())
+    print(approxs)
+
+    with open("sim_output.txt", "w") as f:
+        for i in range(len(Ys)):
+            Ys[i].append(str(approxs[i]))
+            f.write("%s\n" % ",".join(Ys[i]))
 
 
 
 if __name__ == "__main__":
+    np.random.seed(2)
     main_4()
+
+    # import matplotlib.pyplot as plt
+    # from matplotlib.backends.backend_pdf import PdfPages
+
+    # with open("sim_output.txt", "r") as f:
+    #     data = [ line.strip("\n").split(",") for line in f ]
+
+    # x     = list(range(len(data)))
+    # y     = np.array([ float(d[1]) for d in data ]) / (10**14)
+    # y_hat = np.array([ float(d[-1]) for d in data ]) / (10**14)
+
+    # plt.rc('text', usetex=True)
+    # plt.rc("font", family="serif")
+
+    # with PdfPages("sim-approx-res.pdf") as pdf:
+    #     fig, ax = plt.subplots()
+
+    #     # Using set_dashes() to modify dashing of an existing line
+    #     line1, = ax.plot(x, y, label=r"$f(D_i)$ simulated objectives", linestyle="-", color="blue", linewidth=2)
+    #     line2, = ax.plot(x, y_hat, label=r"$\tilde{f}(D_i)$ approximated objectives", linestyle="-.", color="red", linewidth=1.5)
+
+    #     for i in [50, 77]:
+    #         plt.axvline(x=i, ymin=0, ymax=y[i] * 1.5, linestyle=":", color="gray", linewidth=1)
+
+    #     ax.set_xlabel(r"decision index $i$")
+    #     ax.set_ylabel(r"scaled objective value")
+
+    #     ax.legend()
+    #     # plt.show()
+    #     pdf.savefig(fig)
+

@@ -11,7 +11,7 @@ from collections import defaultdict
 
 data = defaultdict(lambda: defaultdict(lambda: 0))
 
-with open("heuristic_result/data/final_workload.csv") as f:
+with open("../heuristic_result/data/final_workload.csv") as f:
     for line in list(f)[1:]:
         beat, year, workload = line.strip("\n").split(",")
         zone     = beat[0]
@@ -27,6 +27,9 @@ var_w   = np.array([ np.var(list(data[year].values())) for year in data ])
 
 print(total_w)
 print(var_w)
+
+plt.rc('text', usetex=True)
+plt.rc("font", family="serif")
 with PdfPages("workload-var-line-chart.pdf") as pdf:
     fig, ax1 = plt.subplots()
 
@@ -56,9 +59,9 @@ with PdfPages("workload-var-line-chart.pdf") as pdf:
     ax2.plot([2019, 2019], [190791481666666.66, var_w[6]], 'k--', lw=.8)
 
     axl = plt.gca()
-    axl1 = axl.plot([], [], 'x', color='gray')
-    axl2 = axl.plot([], [], 'o', color='gray')
-    axl3 = axl.plot([], [], '*', color='blue')
+    axl1 = axl.plot([], [], 'x', color='gray', lw=2)
+    axl2 = axl.plot([], [], 'o', color='gray', lw=2)
+    axl3 = axl.plot([], [], '*', color='blue', lw=2)
     axl.legend((axl1[0], axl2[0], axl3[0]), ('data with existing plan', 'prediction with existing plan', 'prediction with redesigned plan'), loc=2)
 
     ax2.set_yticks(np.linspace(ax2.get_yticks()[0], ax2.get_yticks()[-1], len(ax1.get_yticks())))
